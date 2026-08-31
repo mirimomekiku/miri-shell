@@ -4,6 +4,45 @@ import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 import { PACKAGE_CATALOG, PackageDefinition, PackageCategory } from "./catalog"
 
+export interface PresetProfile {
+  id: string
+  name: string
+  icon: string
+  description: string
+  packageIds: string[]
+}
+
+export const PRESET_PROFILES: PresetProfile[] = [
+  {
+    id: "full-stack",
+    name: "Full-Stack Web",
+    icon: "globe",
+    description: "Node.js, Bun, Chrome, Postman, Tailwind, VS Code, Git, Docker, Go",
+    packageIds: ["nodejs", "bun", "chrome", "postman", "tailwindcss", "vscode", "git", "gh", "docker", "golang"],
+  },
+  {
+    id: "ai-engineer",
+    name: "AI & Agents",
+    icon: "bot",
+    description: "Python, Claude Code, Antigravity, OpenCode, MimoCode, Aider, VS Code",
+    packageIds: ["python", "claude-code", "antigravity", "opencode", "mimocode", "aider", "vscode", "git", "terminals"],
+  },
+  {
+    id: "mobile-dev",
+    name: "Mobile Suite",
+    icon: "smartphone",
+    description: "Android Studio, Platform Tools, React Native, Flutter, Dart, VS Code",
+    packageIds: ["nodejs", "android-tools", "android-studio", "react-native", "flutter", "vscode", "git"],
+  },
+  {
+    id: "cli-power",
+    name: "Terminal & CLI",
+    icon: "terminal",
+    description: "Kitty, Ptyxis, Zsh, Starship prompt, eza, bat, ripgrep, LazyGit, Fonts",
+    packageIds: ["terminals", "shells", "cli-tools", "fonts", "git", "gh", "lazygit"],
+  },
+]
+
 class InstallerService {
   private _selectedIds = createState<string[]>(
     PACKAGE_CATALOG.filter((p) => p.defaultSelected).map((p) => p.id)
@@ -20,6 +59,7 @@ class InstallerService {
   private _completedCount = createState<number>(0)
   private _successIds = createState<string[]>([])
   private _failedIds = createState<string[]>([])
+  private _statusToast = createState<string>("")
 
   public readonly selectedIds = this._selectedIds[0]
   public readonly installedIds = this._installedIds[0]
@@ -33,6 +73,7 @@ class InstallerService {
   public readonly completedCount = this._completedCount[0]
   public readonly successIds = this._successIds[0]
   public readonly failedIds = this._failedIds[0]
+  public readonly statusToast = this._statusToast[0]
 
   public readonly filteredPackages = createComputed<PackageDefinition[]>(() => {
     const cat = this.activeCategory()
@@ -107,6 +148,25 @@ class InstallerService {
     this._selectedIds[1](this.selectedIds().filter((id) => !visibleIds.includes(id)))
   }
 
+  public applyPreset(presetId: string) {
+    const preset = PRESET_PROFILES.find((p) => p.id === presetId)
+    if (preset) {
+      this._selectedIds[1](preset.packageIds)
+      this.showToast(`Applied preset: ${preset.name}`)
+    }
+  }
+
+  public showToast(msg: string) {
+    this._statusToast[1](msg)
+    setTimeout(() => this._statusToast[1](""), 2500)
+  }
+
+  public copyLogs() {
+    const logs = this.terminalLogs().join("\n")
+    execAsync(`sh -c 'wl-copy << "EOF"\n${logs}\nEOF\n 2>/dev/null || xclip -selection clipboard << "EOF"\n${logs}\nEOF\n'`).catch(() => {})
+    this.showToast("Copied terminal logs to clipboard!")
+  }
+
   public setActiveCategory(cat: PackageCategory | "all") {
     this._activeCategory[1](cat)
   }
@@ -121,7 +181,6 @@ class InstallerService {
 
   private appendLog(line: string) {
     const logs = [...this._terminalLogs[0](), line]
-    // Keep last 1000 lines
     if (logs.length > 1000) logs.shift()
     this._terminalLogs[1](logs)
   }
@@ -139,7 +198,7 @@ class InstallerService {
 
     this.appendLog(`=======================================================`)
     this.appendLog(`🚀 Starting Miri Developer Setup Installation`)
-    this.appendLog(`📦 Selected Tools (${selected.length}): ${selected.map((p) => p.name).join(", ")}`)
+    this.appendLog(`📦 Selected Packages (${selected.length}): ${selected.map((p) => p.name).join(", ")}`)
     this.appendLog(`=======================================================\n`)
 
     for (const pkg of selected) {

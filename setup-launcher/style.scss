@@ -40,7 +40,8 @@ label.icon,
 .tool-icon,
 .check-icon,
 .search-icon,
-.status-icon {
+.status-icon,
+.preset-icon {
   font-family: "lucide" !important;
   font-size: 16px;
 }
@@ -60,7 +61,7 @@ window.SetupWindow {
 .setup-header {
   background-color: #14151a;
   border-bottom: 1px solid $bar-border;
-  padding: 14px 20px;
+  padding: 14px 22px;
 
   .app-logo-badge {
     background: rgba(67, 123, 246, 0.2);
@@ -108,10 +109,10 @@ window.SetupWindow {
 }
 
 // ------------------------------------------
-// 2. Body & Toolbar
+// 2. Body & Package List Toolbar
 // ------------------------------------------
 .setup-body {
-  padding: 16px 20px;
+  padding: 16px 22px;
 }
 
 .PackageListView {
@@ -166,6 +167,10 @@ window.SetupWindow {
           color: $color-dim;
         }
 
+        .icon {
+          font-size: 13px;
+        }
+
         &:hover {
           background: #313547;
           label {
@@ -175,6 +180,45 @@ window.SetupWindow {
       }
     }
 
+    // Presets Row
+    .presets-row {
+      padding: 2px 0;
+
+      .presets-label {
+        font-size: 12px;
+        font-weight: 800;
+        color: $color-subtle;
+      }
+
+      .preset-chip-btn {
+        background: #1e202a;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 5px 10px;
+        transition: all 120ms ease;
+
+        .preset-icon {
+          font-size: 13px;
+          color: $accent-blue;
+        }
+
+        .preset-name {
+          font-size: 12px;
+          font-weight: 700;
+          color: $color-dim;
+        }
+
+        &:hover {
+          background: #2b2f3e;
+          border-color: rgba(67, 123, 246, 0.4);
+          .preset-name {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+
+    // Category Pills
     .categories-bar {
       padding: 4px 0;
 
@@ -196,6 +240,15 @@ window.SetupWindow {
           color: $color-dim;
         }
 
+        .cat-count-badge {
+          font-size: 10.5px;
+          font-weight: 800;
+          background: #14151a;
+          border-radius: 9999px;
+          padding: 1px 6px;
+          color: $color-subtle;
+        }
+
         &:hover {
           background: #282c3c;
           .cat-label { color: #ffffff; }
@@ -212,6 +265,11 @@ window.SetupWindow {
           .cat-label {
             color: #ffffff;
             font-weight: 800;
+          }
+
+          .cat-count-badge {
+            background: $accent-blue;
+            color: #ffffff;
           }
         }
       }
@@ -327,6 +385,19 @@ window.SetupWindow {
           color: $color-dim;
         }
 
+        .tags-row {
+          padding-top: 2px;
+
+          .tag-chip {
+            font-size: 10px;
+            font-weight: 700;
+            color: $color-subtle;
+            background: #18191c;
+            border-radius: 4px;
+            padding: 1px 5px;
+          }
+        }
+
         &:hover {
           background: $card-hover-bg;
           border-color: rgba(255, 255, 255, 0.1);
@@ -352,6 +423,15 @@ window.SetupWindow {
       font-size: 13px;
       font-weight: 700;
       color: $color-dim;
+    }
+
+    .status-toast {
+      font-size: 12px;
+      font-weight: 800;
+      color: #89b4fa;
+      background: rgba(67, 123, 246, 0.15);
+      border-radius: 8px;
+      padding: 3px 8px;
     }
 
     .install-now-btn {
@@ -417,16 +497,39 @@ window.SetupWindow {
       color: #ffffff;
     }
 
+    .status-pill {
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 9999px;
+      padding: 2px 7px;
+
+      &.in-progress {
+        background: rgba(249, 226, 175, 0.15);
+        color: $color-warn;
+      }
+
+      &.done {
+        background: rgba(166, 227, 161, 0.15);
+        color: $color-success;
+      }
+    }
+
     .status-subheadline {
       font-size: 12px;
       font-weight: 600;
       color: $color-dim;
     }
 
-    .progress-percent-label {
-      font-size: 18px;
-      font-weight: 900;
-      color: $accent-blue;
+    .progress-percent-badge {
+      background: #22242e;
+      border-radius: 12px;
+      padding: 6px 12px;
+
+      .progress-percent-label {
+        font-size: 18px;
+        font-weight: 900;
+        color: $accent-blue;
+      }
     }
 
     .custom-progress-container {
@@ -450,43 +553,102 @@ window.SetupWindow {
   }
 
   // Live Terminal Logs Output View
-  .terminal-scrollable {
+  .terminal-wrapper {
     background: #101114;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 16px;
-    padding: 12px 16px;
+    padding: 0;
 
-    .terminal-log-box {
-      .log-line {
-        font-family: "JetBrains Mono", "MesloLGS Nerd Font", monospace;
+    .terminal-titlebar {
+      background: #14151a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px 16px 0 0;
+      padding: 8px 14px;
+
+      .term-dot {
+        min-width: 10px;
+        min-height: 10px;
+        border-radius: 9999px;
+
+        &.red { background: #ff5555; }
+        &.yellow { background: #f1fa8c; }
+        &.green { background: #50fa7b; }
+      }
+
+      .terminal-title {
         font-size: 12px;
-        font-weight: 500;
-        color: #cdd6f4;
-        padding: 1px 0;
+        font-weight: 700;
+        color: $color-dim;
+        margin-left: 4px;
+      }
 
-        &.highlight {
-          color: #89b4fa;
-          font-weight: 700;
+      .term-action-btn {
+        background: #22242e;
+        border-radius: 6px;
+        padding: 4px 8px;
+
+        .icon {
+          font-size: 12px;
+          color: $color-dim;
         }
 
-        &.success {
-          color: $color-success;
+        label {
+          font-size: 11px;
           font-weight: 700;
+          color: $color-dim;
         }
 
-        &.warn {
-          color: $color-warn;
+        &:hover {
+          background: #313547;
+          label, .icon { color: #ffffff; }
         }
+      }
+    }
 
-        &.error {
-          color: $color-error;
-          font-weight: 700;
+    .terminal-scrollable {
+      padding: 12px 16px;
+
+      .terminal-log-box {
+        .log-line {
+          font-family: "JetBrains Mono", "MesloLGS Nerd Font", monospace;
+          font-size: 12px;
+          font-weight: 500;
+          color: #cdd6f4;
+          padding: 1px 0;
+
+          &.highlight {
+            color: #89b4fa;
+            font-weight: 700;
+          }
+
+          &.success {
+            color: $color-success;
+            font-weight: 700;
+          }
+
+          &.warn {
+            color: $color-warn;
+          }
+
+          &.error {
+            color: $color-error;
+            font-weight: 700;
+          }
         }
       }
     }
   }
 
   .progress-footer-bar {
+    .status-toast {
+      font-size: 12px;
+      font-weight: 800;
+      color: #89b4fa;
+      background: rgba(67, 123, 246, 0.15);
+      border-radius: 8px;
+      padding: 3px 8px;
+    }
+
     .done-btn {
       background: #22242e;
       border: 1px solid rgba(255, 255, 255, 0.08);

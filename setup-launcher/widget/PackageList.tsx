@@ -1,13 +1,13 @@
 import { Gtk } from "ags/gtk3"
 import { createRoot, createComputed } from "gnim"
-import Installer from "../service/installer"
-import { CATEGORIES } from "../service/catalog"
+import Installer, { PRESET_PROFILES } from "../service/installer"
+import { CATEGORIES, PACKAGE_CATALOG } from "../service/catalog"
 import { Lucide } from "../service/icons"
 
 export default function PackageList() {
   return (
     <box class="PackageListView" orientation={Gtk.Orientation.VERTICAL} spacing={12} hexpand={true} vexpand={true}>
-      {/* 1. Header Toolbar: Search + Category Filters */}
+      {/* 1. Header Toolbar: Search + Preset Selectors */}
       <box class="toolbar-box" orientation={Gtk.Orientation.VERTICAL} spacing={10}>
         <box spacing={12} valign={Gtk.Align.CENTER}>
           {/* Search Box */}
@@ -15,7 +15,7 @@ export default function PackageList() {
             <label class="search-icon icon" label={Lucide["search"]} />
             <entry
               class="search-entry"
-              placeholderText="Filter developer tools, runtimes, IDEs, or tags..."
+              placeholderText="Filter developer tools, runtimes, IDEs, or tags (e.g. docker, python, react)..."
               text={Installer.searchQuery}
               onChanged={(self) => Installer.setSearchQuery(self.get_text())}
             />
@@ -32,12 +32,35 @@ export default function PackageList() {
           {/* Batch Selection Buttons */}
           <box class="batch-buttons" spacing={6} valign={Gtk.Align.CENTER}>
             <button class="batch-btn select-all" onClicked={() => Installer.selectAll()}>
-              <label label="Select All" />
+              <box spacing={4} valign={Gtk.Align.CENTER}>
+                <label class="icon" label={Lucide["check"]} />
+                <label label="Select All" />
+              </box>
             </button>
             <button class="batch-btn deselect-all" onClicked={() => Installer.deselectAll()}>
-              <label label="Deselect All" />
+              <box spacing={4} valign={Gtk.Align.CENTER}>
+                <label class="icon" label={Lucide["x"]} />
+                <label label="Deselect All" />
+              </box>
             </button>
           </box>
+        </box>
+
+        {/* Preset Profiles Quick Bar */}
+        <box class="presets-row" spacing={8} valign={Gtk.Align.CENTER}>
+          <label class="presets-label" label="Presets:" />
+          {PRESET_PROFILES.map((preset) => (
+            <button
+              class="preset-chip-btn"
+              tooltipText={preset.description}
+              onClicked={() => Installer.applyPreset(preset.id)}
+            >
+              <box spacing={6} valign={Gtk.Align.CENTER}>
+                <label class="icon preset-icon" label={Lucide[preset.icon] || Lucide["sparkles"]} />
+                <label class="preset-name" label={preset.name} />
+              </box>
+            </button>
+          ))}
         </box>
 
         {/* Category Filter Pills (Scrollable) */}
@@ -50,6 +73,10 @@ export default function PackageList() {
           <box class="categories-bar" spacing={6} valign={Gtk.Align.CENTER}>
             {CATEGORIES.map((cat) => {
               const isActive = createComputed(() => Installer.activeCategory() === cat.id)
+              const count = cat.id === "all"
+                ? PACKAGE_CATALOG.length
+                : PACKAGE_CATALOG.filter((p) => p.category === cat.id).length
+
               return (
                 <button
                   class={createComputed(() => `category-pill ${isActive() ? "active" : ""}`)}
@@ -58,6 +85,7 @@ export default function PackageList() {
                   <box spacing={6} valign={Gtk.Align.CENTER}>
                     <label class="icon cat-icon" label={cat.icon} />
                     <label class="cat-label" label={cat.label} />
+                    <label class="cat-count-badge" label={String(count)} />
                   </box>
                 </button>
               )
@@ -133,7 +161,7 @@ export default function PackageList() {
                           </box>
 
                           {/* Package Info */}
-                          <box orientation={Gtk.Orientation.VERTICAL} spacing={3} hexpand={true}>
+                          <box orientation={Gtk.Orientation.VERTICAL} spacing={4} hexpand={true}>
                             <box spacing={8} valign={Gtk.Align.CENTER}>
                               <label class="pkg-title" label={pkg.name} xalign={0} />
                               <label class="pkg-category-badge" label={pkg.categoryLabel} />
@@ -145,6 +173,13 @@ export default function PackageList() {
                               ) : null}
                             </box>
                             <label class="pkg-desc" label={pkg.description} xalign={0} wrap={true} />
+
+                            {/* Tags Chips */}
+                            <box class="tags-row" spacing={6} valign={Gtk.Align.CENTER}>
+                              {pkg.tags.slice(0, 4).map((tag) => (
+                                <label class="tag-chip" label={`#${tag}`} />
+                              ))}
+                            </box>
                           </box>
                         </box>
                       </button>
@@ -165,9 +200,14 @@ export default function PackageList() {
       </scrollable>
 
       {/* 3. Bottom Action Bar */}
-      <box class="bottom-action-bar" spacing={12} valign={Gtk.Align.CENTER}>
+      <box class="bottom-action-bar" spacing={14} valign={Gtk.Align.CENTER}>
         <box spacing={8} hexpand={true} valign={Gtk.Align.CENTER}>
           <label class="selection-summary" label={createComputed(() => `${Installer.selectedCount()} tools selected for installation`)} />
+          <label
+            class="status-toast"
+            label={Installer.statusToast}
+            visible={createComputed(() => Boolean(Installer.statusToast()))}
+          />
         </box>
 
         <button
@@ -177,7 +217,7 @@ export default function PackageList() {
         >
           <box spacing={8} valign={Gtk.Align.CENTER}>
             <label class="icon" label={Lucide["download"]} />
-            <label class="btn-label" label="Install Selected Tools" />
+            <label class="btn-label" label={createComputed(() => `Install ${Installer.selectedCount()} Selected Tools`)} />
           </box>
         </button>
       </box>
