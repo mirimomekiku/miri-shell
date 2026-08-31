@@ -10,44 +10,31 @@ export interface BluetoothDevice {
   icon: string
 }
 
-function getDeviceIcon(name: string): string {
-  const n = name.toLowerCase()
-  if (n.includes("bud") || n.includes("head") || n.includes("pod") || n.includes("pro") || n.includes("xm4") || n.includes("audio") || n.includes("apollo")) {
-    return "󰋋" // Headset / Earbuds
-  }
-  if (n.includes("speaker") || n.includes("sound") || n.includes("boom")) {
-    return "󰓃" // Speaker
-  }
-  if (n.includes("mouse") || n.includes("trackpad")) {
-    return "󰍽" // Mouse
-  }
-  if (n.includes("key") || n.includes("board")) {
-    return "󰌌" // Keyboard
-  }
-  if (n.includes("gamepad") || n.includes("controller") || n.includes("dualsense") || n.includes("xbox")) {
-    return "󰊴" // Controller
-  }
-  if (n.includes("phone") || n.includes("pixel") || n.includes("iphone") || n.includes("galaxy")) {
-    return "󰏲" // Phone
-  }
-  return "󰂯" // Generic Bluetooth
-}
-
 class BluetoothService {
   private _isExpanded = createState<boolean>(false)
   private _isScanning = createState<boolean>(false)
   private _statusMessage = createState<string>("")
   private _devices = createState<BluetoothDevice[]>([])
+  private _controllerName = createState<string>("mirimomekiku")
 
   public readonly isExpanded = this._isExpanded[0]
   public readonly isScanning = this._isScanning[0]
   public readonly statusMessage = this._statusMessage[0]
   public readonly devices = this._devices[0]
+  public readonly controllerName = this._controllerName[0]
+
+  public readonly visibleAsText = createComputed(() => {
+    return `Visible as "${this.controllerName()}"`
+  })
 
   // Poll bluetooth adapter power status every 3 seconds
   public readonly isPowered = createPoll(false, 3000, async () => {
     try {
       const out = await execAsync("bluetoothctl show")
+      const nameMatch = out.match(/Name:\s+(.+)/)
+      if (nameMatch && nameMatch[1]) {
+        this._controllerName[1](nameMatch[1].trim())
+      }
       return out.includes("Powered: yes")
     } catch {
       return false
@@ -149,12 +136,14 @@ class BluetoothService {
           const mac = parts[1]
           const name = parts.slice(2).join(" ")
           if (mac && name) {
+            const isPaired = pairedSet.has(mac)
+            const isConn = connSet.has(mac)
             map.set(mac, {
               mac,
               name,
-              paired: pairedSet.has(mac),
-              connected: connSet.has(mac),
-              icon: getDeviceIcon(name),
+              paired: isPaired,
+              connected: isConn,
+              icon: isConn ? "󰂯" : isPaired ? "󰌷" : "󰂯",
             })
           }
         }
@@ -222,6 +211,17 @@ class BluetoothService {
       await this.refreshDevices()
     } catch {
       this._statusMessage[1](`Failed to disconnect`)
+    }
+  }
+
+  public async forget(dev: BluetoothDevice) {
+    this._statusMessage[1](`Removing ${dev.name}...`)
+    try {
+      await execAsync(`bluetoothctl remove ${dev.mac}`)
+      this._statusMessage[1](`Removed ${dev.name}`)
+      await this.refreshDevices()
+    } catch {
+      this._statusMessage[1](`Failed to remove`)
     }
   }
 

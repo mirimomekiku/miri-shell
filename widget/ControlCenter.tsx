@@ -1,4 +1,4 @@
-import { Gtk } from "ags/gtk3"
+import { Gtk, Gdk } from "ags/gtk3"
 import { createComputed } from "gnim"
 import Brightness from "../service/brightness"
 import Bluetooth, { BluetoothDevice } from "../service/bluetooth"
@@ -58,32 +58,36 @@ export default function ControlCenterWidget() {
         </button>
       </box>
 
-      {/* 2. Expandable Bluetooth Devices Container */}
+      {/* 2. Expandable Bluetooth Devices Container (Matching Image 2 Reference Design) */}
       <revealer
         revealChild={Bluetooth.isExpanded}
         transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
         transitionDuration={200}
       >
         <box class="bluetooth-expanded-panel" orientation={Gtk.Orientation.VERTICAL} spacing={8}>
-          {/* Bluetooth Subheader */}
-          <box class="bt-sub-header" spacing={8} valign={Gtk.Align.CENTER}>
-            <label class="bt-title" label="Bluetooth Devices" hexpand={true} xalign={0} />
+          {/* Bluetooth Subheader (Title + "Visible as ...") */}
+          <box class="bt-sub-header" orientation={Gtk.Orientation.VERTICAL} spacing={2}>
+            <box spacing={8} valign={Gtk.Align.CENTER}>
+              <label class="bt-title" label="Bluetooth" hexpand={true} xalign={0} />
 
-            <button
-              class={createComputed(() => `bt-rescan-btn ${Bluetooth.isScanning() ? "spinning" : ""}`)}
-              valign={Gtk.Align.CENTER}
-              onClicked={() => Bluetooth.rescan()}
-            >
-              <label label="󰑐" />
-            </button>
+              <button
+                class={createComputed(() => `bt-rescan-btn ${Bluetooth.isScanning() ? "spinning" : ""}`)}
+                valign={Gtk.Align.CENTER}
+                onClicked={() => Bluetooth.rescan()}
+              >
+                <label label="󰑐" />
+              </button>
 
-            <button
-              class="bt-power-btn"
-              valign={Gtk.Align.CENTER}
-              onClicked={() => Bluetooth.togglePower()}
-            >
-              <label label="󰐥" />
-            </button>
+              <button
+                class="bt-power-btn"
+                valign={Gtk.Align.CENTER}
+                onClicked={() => Bluetooth.togglePower()}
+              >
+                <label label="󰐥" />
+              </button>
+            </box>
+
+            <label class="bt-visible-text" label={Bluetooth.visibleAsText} xalign={0} />
           </box>
 
           {/* Status Message Banner if any */}
@@ -97,7 +101,7 @@ export default function ControlCenterWidget() {
             </box>
           </revealer>
 
-          {/* Bluetooth Devices Scrollable List */}
+          {/* Bluetooth Devices Pill List (Image 2 Style) */}
           <scrollable
             class="bt-scrollable"
             hscroll={Gtk.PolicyType.NEVER}
@@ -106,7 +110,7 @@ export default function ControlCenterWidget() {
             <box
               class="bt-device-list"
               orientation={Gtk.Orientation.VERTICAL}
-              spacing={3}
+              spacing={6}
               $={(self) => {
                 const render = () => {
                   self.get_children().forEach((ch) => ch.destroy())
@@ -129,33 +133,45 @@ export default function ControlCenterWidget() {
                     )
                   } else {
                     for (const dev of list.slice(0, 10)) {
+                      const isConn = dev.connected
+                      const isPaired = dev.paired
+
                       const btn = (
                         <button
-                          class={`bt-item-btn ${dev.connected ? "connected-item" : ""}`}
+                          class={`bt-pill-item ${isConn ? "connected-pill" : "available-pill"}`}
                           onClicked={() => Bluetooth.handleDeviceClick(dev)}
+                          onButtonPressEvent={(_, event) => {
+                            const [, button] = event.get_button()
+                            // Right-click to forget paired device
+                            if (button === 3 && isPaired) {
+                              Bluetooth.forget(dev)
+                              return true
+                            }
+                            return false
+                          }}
                         >
-                          <box spacing={10} valign={Gtk.Align.CENTER}>
-                            {/* Device Icon */}
-                            <label class="bt-device-icon" label={dev.icon} />
+                          <box spacing={12} valign={Gtk.Align.CENTER}>
+                            {/* Icon (Linked chain for paired, Bluetooth for connected/available) */}
+                            <label
+                              class={`bt-pill-icon ${isConn ? "conn-icon" : ""}`}
+                              label={isConn ? "󰂯" : isPaired ? "󰌷" : "󰂯"}
+                            />
 
-                            {/* Device Name */}
+                            {/* Device Name & Subtitle */}
                             <box orientation={Gtk.Orientation.VERTICAL} spacing={1} hexpand={true}>
                               <label
-                                class="bt-device-name"
+                                class={`bt-device-name ${isConn ? "conn-text" : ""}`}
                                 label={dev.name}
                                 xalign={0}
                                 ellipsize={3}
-                                maxWidthChars={22}
+                                maxWidthChars={20}
                               />
                               <label
-                                class="bt-device-sub"
-                                label={dev.connected ? "Connected" : dev.paired ? "Paired" : "Available"}
+                                class={`bt-device-sub ${isConn ? "conn-sub" : ""}`}
+                                label={isConn ? "Connected" : isPaired ? "Paired • right-click to forget" : "Not paired"}
                                 xalign={0}
                               />
                             </box>
-
-                            {/* Connected Indicator / Action */}
-                            {dev.connected ? <label class="check-icon" label="✓" /> : null}
                           </box>
                         </button>
                       )
@@ -174,18 +190,6 @@ export default function ControlCenterWidget() {
               }}
             />
           </scrollable>
-
-          {/* Footer Divider & Bluetooth Settings Button */}
-          <box class="bt-footer" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
-            <box class="footer-divider" />
-            <button
-              class="all-bt-btn"
-              xalign={0}
-              onClicked={() => Bluetooth.openSettings()}
-            >
-              <label class="all-bt-text" label="Bluetooth Settings" xalign={0} />
-            </button>
-          </box>
         </box>
       </revealer>
 

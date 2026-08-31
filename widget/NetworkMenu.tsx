@@ -5,12 +5,8 @@ import Network, { WifiAccessPoint } from "../service/network"
 export default function NetworkMenu() {
   return (
     <box class="NetworkMenuCard" orientation={Gtk.Orientation.VERTICAL} spacing={10}>
-      {/* 1. Header */}
-      <box class="network-header" spacing={12} valign={Gtk.Align.CENTER}>
-        <box class="wifi-badge" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-          <label class="badge-icon" label="󰤨" />
-        </box>
-
+      {/* 1. Header (Title "Wi-Fi" + Rescan) */}
+      <box class="network-header" spacing={10} valign={Gtk.Align.CENTER}>
         <label class="header-title" label="Wi-Fi" hexpand={true} xalign={0} />
 
         <button
@@ -22,7 +18,7 @@ export default function NetworkMenu() {
         </button>
       </box>
 
-      {/* 2. Password Prompt (Revealed when network clicked needs auth) */}
+      {/* 2. Password Prompt (Revealed when network clicked needs password) */}
       <revealer
         revealChild={createComputed(() => Boolean(Network.passwordTarget()))}
         transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
@@ -31,7 +27,7 @@ export default function NetworkMenu() {
         <box class="password-box" orientation={Gtk.Orientation.VERTICAL} spacing={6}>
           <label
             class="password-prompt-label"
-            label={createComputed(() => `Password for ${Network.passwordTarget()}:`)}
+            label={createComputed(() => `Password for "${Network.passwordTarget()}":`)}
             xalign={0}
           />
           <box spacing={6} valign={Gtk.Align.CENTER}>
@@ -60,7 +56,7 @@ export default function NetworkMenu() {
         </box>
       </revealer>
 
-      {/* 3. Status Feedback Banner (if connecting or message active) */}
+      {/* 3. Status Feedback Banner */}
       <revealer
         revealChild={createComputed(() => Boolean(Network.statusMessage()))}
         transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
@@ -71,7 +67,7 @@ export default function NetworkMenu() {
         </box>
       </revealer>
 
-      {/* 4. Networks List */}
+      {/* 4. Networks Pill List (Matching Image 1 Reference Design) */}
       <scrollable
         class="network-scrollable"
         hscroll={Gtk.PolicyType.NEVER}
@@ -80,39 +76,8 @@ export default function NetworkMenu() {
         <box
           class="network-list"
           orientation={Gtk.Orientation.VERTICAL}
-          spacing={4}
+          spacing={6}
           $={(self) => {
-            const createNetworkButton = (ap: WifiAccessPoint) => (
-              <button
-                class={`network-item-btn ${ap.inUse ? "connected-item" : ""} ${ap.isSaved ? "saved-item" : "unsaved-item"}`}
-                onClicked={() => Network.handleNetworkClick(ap)}
-              >
-                <box spacing={10} valign={Gtk.Align.CENTER}>
-                  {/* Signal Icon (Blue if saved, Greyed out if unsaved) & Lock */}
-                  <box class="signal-box" spacing={2} valign={Gtk.Align.CENTER}>
-                    <label
-                      class={`signal-icon ${ap.isSaved ? "saved" : "unsaved"}`}
-                      label={ap.icon}
-                    />
-                    {ap.isLocked ? <label class="lock-icon" label="󰌾" /> : null}
-                  </box>
-
-                  {/* SSID Name */}
-                  <label
-                    class="ssid-name"
-                    label={ap.ssid}
-                    xalign={0}
-                    hexpand={true}
-                    ellipsize={3}
-                    maxWidthChars={24}
-                  />
-
-                  {/* Connected Checkmark Indicator */}
-                  {ap.inUse ? <label class="check-icon" label="✓" /> : null}
-                </box>
-              </button>
-            )
-
             const render = () => {
               self.get_children().forEach((ch) => ch.destroy())
               const list = Network.networks()
@@ -128,37 +93,39 @@ export default function NetworkMenu() {
                 )
                 self.add(emptyBox)
               } else {
-                const savedList = list.filter((ap) => ap.isSaved)
-                const unsavedList = list.filter((ap) => !ap.isSaved)
+                for (const ap of list.slice(0, 10)) {
+                  const isConn = ap.inUse
+                  const btn = (
+                    <button
+                      class={`wifi-pill-item ${isConn ? "connected-pill" : "available-pill"}`}
+                      onClicked={() => Network.handleNetworkClick(ap)}
+                    >
+                      <box spacing={12} valign={Gtk.Align.CENTER}>
+                        {/* Lock / Security Icon */}
+                        <label
+                          class={`wifi-lock-icon ${isConn ? "conn-icon" : ""}`}
+                          label={ap.isLocked ? "󰌾" : "󰤨"}
+                        />
 
-                // 1. Saved Networks Section
-                if (savedList.length > 0) {
-                  self.add(
-                    <label
-                      class="network-section-label"
-                      label="Saved Networks"
-                      xalign={0}
-                    />
+                        {/* SSID Name & Status/Percentage */}
+                        <box orientation={Gtk.Orientation.VERTICAL} spacing={1} hexpand={true}>
+                          <label
+                            class={`wifi-ssid-name ${isConn ? "conn-text" : ""}`}
+                            label={ap.ssid}
+                            xalign={0}
+                            ellipsize={3}
+                            maxWidthChars={20}
+                          />
+                          <label
+                            class={`wifi-sub-text ${isConn ? "conn-sub" : ""}`}
+                            label={isConn ? "Connected" : `${ap.signal}%`}
+                            xalign={0}
+                          />
+                        </box>
+                      </box>
+                    </button>
                   )
-                  for (const ap of savedList) {
-                    self.add(createNetworkButton(ap))
-                  }
-                }
-
-                // 2. Available Networks Section
-                if (unsavedList.length > 0) {
-                  if (savedList.length > 0) {
-                    self.add(
-                      <label
-                        class="network-section-label other"
-                        label="Available Networks"
-                        xalign={0}
-                      />
-                    )
-                  }
-                  for (const ap of unsavedList.slice(0, 10)) {
-                    self.add(createNetworkButton(ap))
-                  }
+                  self.add(btn)
                 }
               }
               self.show_all()
@@ -172,18 +139,6 @@ export default function NetworkMenu() {
           }}
         />
       </scrollable>
-
-      {/* 5. Footer Divider & "All Networks" Button */}
-      <box class="network-footer" orientation={Gtk.Orientation.VERTICAL} spacing={6}>
-        <box class="footer-divider" />
-        <button
-          class="all-networks-btn"
-          xalign={0}
-          onClicked={() => Network.openSettings()}
-        >
-          <label class="all-networks-text" label="All Networks" xalign={0} />
-        </button>
-      </box>
     </box>
   )
 }

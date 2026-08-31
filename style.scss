@@ -349,22 +349,28 @@ window.BarWindow {
   }
 
   // ------------------------------------------
-  // Bluetooth Expanded Devices Container
+  // Bluetooth Expanded Devices Container (Image 2 Style)
   // ------------------------------------------
   .bluetooth-expanded-panel {
-    background: #202330;
-    border: 1px solid rgba(137, 180, 250, 0.2);
-    border-radius: 14px;
-    padding: 12px 14px;
+    background: #1e202a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 14px 14px;
     margin: 2px 0 4px 0;
 
     .bt-sub-header {
-      padding-bottom: 2px;
+      padding: 0 2px 4px 2px;
 
       .bt-title {
-        font-size: 13.5px;
+        font-size: 16px;
         font-weight: 800;
         color: #ffffff;
+      }
+
+      .bt-visible-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #9399b2;
       }
 
       .bt-rescan-btn,
@@ -411,81 +417,62 @@ window.BarWindow {
           }
         }
 
-        .bt-item-btn {
-          background: transparent;
-          border-radius: 8px;
-          padding: 6px 8px;
-          margin: 1px 0;
-          border-left: 2px solid transparent;
+        .bt-pill-item {
+          border-radius: 14px;
+          padding: 10px 14px;
+          margin: 2px 0;
           transition: all 120ms ease-in-out;
 
-          .bt-device-icon {
-            font-size: 15px;
-            color: #89b4fa;
-          }
+          &.connected-pill {
+            background-color: #437bf6;
 
-          .bt-device-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #cdd6f4;
-          }
-
-          .bt-device-sub {
-            font-size: 11px;
-            font-weight: 500;
-            color: #9399b2;
-          }
-
-          .check-icon {
-            font-size: 13px;
-            font-weight: 800;
-            color: #89b4fa;
-          }
-
-          &.connected-item {
-            background: #272a3b;
-            border-left: 2px solid #89b4fa;
-
-            .bt-device-name {
+            .conn-icon {
               color: #ffffff;
+              font-size: 16px;
+            }
+
+            .conn-text {
+              color: #ffffff;
+              font-size: 13.5px;
+              font-weight: 800;
+            }
+
+            .conn-sub {
+              color: #dce7fe;
+              font-size: 11px;
+              font-weight: 600;
+            }
+
+            &:hover {
+              background-color: #558bf8;
             }
           }
 
-          &:hover {
-            background: #282c3d;
+          &.available-pill {
+            background-color: #232530;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+
+            .bt-pill-icon {
+              color: #ffffff;
+              font-size: 16px;
+            }
 
             .bt-device-name {
               color: #ffffff;
+              font-size: 13px;
+              font-weight: 700;
             }
-          }
-        }
-      }
-    }
 
-    .bt-footer {
-      padding-top: 2px;
+            .bt-device-sub {
+              color: #9399b2;
+              font-size: 11px;
+              font-weight: 500;
+            }
 
-      .footer-divider {
-        min-height: 1px;
-        background-color: rgba(255, 255, 255, 0.06);
-        margin: 2px 0;
-      }
-
-      .all-bt-btn {
-        background: transparent;
-        border-radius: 6px;
-        padding: 4px 6px;
-
-        .all-bt-text {
-          font-size: 12px;
-          font-weight: 600;
-          color: $color-muted;
-        }
-
-        &:hover {
-          background: #282c3d;
-          .all-bt-text {
-            color: #ffffff;
+            &:hover {
+              background-color: #2b2e3c;
+              border-color: rgba(255, 255, 255, 0.08);
+            }
           }
         }
       }
@@ -540,36 +527,23 @@ window.BarWindow {
 }
 
 // ==========================================
-// 3. Wi-Fi Dropdown Panel (Wi-Fi Icon)
+// 3. Wi-Fi Dropdown Panel (Image 1 Style)
 // ==========================================
 .NetworkMenuCard {
   background: $bar-bg;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  padding: 14px 16px;
+  padding: 16px 16px;
   margin-top: 6px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  min-width: 340px;
+  min-width: 300px;
 
   // Header
   .network-header {
-    padding-bottom: 4px;
-
-    .wifi-badge {
-      background-color: #232738;
-      border: 1px solid rgba(137, 180, 250, 0.2);
-      border-radius: 9999px;
-      min-width: 36px;
-      min-height: 36px;
-
-      .badge-icon {
-        color: $color-wifi;
-        font-size: 17px;
-      }
-    }
+    padding: 0 2px 6px 2px;
 
     .header-title {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 800;
       color: #ffffff;
     }
@@ -593,15 +567,15 @@ window.BarWindow {
   // Password Prompt Box
   .password-box {
     background: #202330;
-    border: 1px solid rgba(137, 180, 250, 0.25);
-    border-radius: 12px;
+    border: 1px solid rgba(67, 123, 246, 0.4);
+    border-radius: 14px;
     padding: 10px 12px;
     margin: 4px 0 6px 0;
 
     .password-prompt-label {
       font-size: 12px;
       font-weight: 700;
-      color: $color-wifi;
+      color: #89b4fa;
     }
 
     .password-entry {
@@ -613,7 +587,7 @@ window.BarWindow {
       font-size: 13px;
 
       &:focus {
-        border-color: $color-wifi;
+        border-color: #437bf6;
       }
 
       placeholder {
@@ -622,8 +596,8 @@ window.BarWindow {
     }
 
     .password-submit-btn {
-      background: $color-wifi;
-      color: #11111b;
+      background: #437bf6;
+      color: #ffffff;
       border-radius: 8px;
       padding: 6px 12px;
       font-weight: 800;
@@ -635,7 +609,7 @@ window.BarWindow {
       }
 
       &:hover {
-        background: #b4befe;
+        background: #558bf8;
       }
     }
 
@@ -667,28 +641,16 @@ window.BarWindow {
     .status-text {
       font-size: 12px;
       font-weight: 600;
-      color: $color-wifi;
+      color: #89b4fa;
     }
   }
 
-  // Scrollable Network List
+  // Scrollable Network List (Image 1 Pill Items)
   .network-scrollable {
     min-height: 220px;
 
     .network-list {
       padding: 2px 0;
-
-      .network-section-label {
-        font-size: 11.5px;
-        font-weight: 700;
-        color: #89b4fa;
-        padding: 4px 6px 2px 6px;
-
-        &.other {
-          color: #9399b2;
-          margin-top: 6px;
-        }
-      }
 
       .empty-networks {
         padding: 30px 0;
@@ -698,100 +660,62 @@ window.BarWindow {
         }
       }
 
-      .network-item-btn {
-        background: transparent;
-        border-radius: 10px;
-        padding: 8px 10px;
-        margin: 1px 0;
-        border-left: 2px solid transparent;
+      .wifi-pill-item {
+        border-radius: 14px;
+        padding: 10px 14px;
+        margin: 2px 0;
         transition: all 120ms ease-in-out;
 
-        .signal-box {
-          .signal-icon {
-            font-size: 14px;
+        &.connected-pill {
+          background-color: #437bf6;
 
-            &.saved {
-              color: $color-wifi;
-            }
-
-            &.unsaved {
-              color: #585b70;
-            }
+          .conn-icon {
+            color: #ffffff;
+            font-size: 15px;
           }
 
-          .lock-icon {
+          .conn-text {
+            color: #ffffff;
+            font-size: 13.5px;
+            font-weight: 800;
+          }
+
+          .conn-sub {
+            color: #dce7fe;
             font-size: 11px;
-            color: #6c7086;
-            margin-left: 2px;
+            font-weight: 600;
+          }
+
+          &:hover {
+            background-color: #558bf8;
           }
         }
 
-        .ssid-name {
-          font-size: 13.5px;
-          font-weight: 600;
-          color: #cdd6f4;
-        }
+        &.available-pill {
+          background-color: #232530;
+          border: 1px solid rgba(255, 255, 255, 0.04);
 
-        &.unsaved-item {
-          .ssid-name {
-            color: #a6adc8;
+          .wifi-lock-icon {
+            color: #ffffff;
+            font-size: 15px;
           }
-        }
 
-        .check-icon {
-          font-size: 14px;
-          font-weight: 800;
-          color: $color-wifi;
-        }
-
-        &.connected-item {
-          background: #252838;
-          border-left: 2px solid $color-wifi;
-
-          .ssid-name {
+          .wifi-ssid-name {
+            color: #ffffff;
+            font-size: 13px;
             font-weight: 700;
-            color: #ffffff;
           }
-        }
 
-        &:hover {
-          background: #222533;
-
-          .ssid-name {
-            color: #ffffff;
+          .wifi-sub-text {
+            color: #9399b2;
+            font-size: 11px;
+            font-weight: 500;
           }
-        }
-      }
-    }
-  }
 
-  // Footer Divider & "All Networks"
-  .network-footer {
-    padding-top: 2px;
-
-    .footer-divider {
-      min-height: 1px;
-      background-color: rgba(255, 255, 255, 0.06);
-      margin: 4px 0;
-    }
-
-    .all-networks-btn {
-      background: transparent;
-      border-radius: 8px;
-      padding: 6px 8px;
-      transition: all 120ms ease-in-out;
-
-      .all-networks-text {
-        font-size: 13px;
-        font-weight: 600;
-        color: $color-muted;
-      }
-
-      &:hover {
-        background: #222533;
-
-        .all-networks-text {
-          color: #ffffff;
+          &:hover {
+            background-color: #2b2e3c;
+            border-color: rgba(255, 255, 255, 0.08);
+          }
         }
       }
     }
