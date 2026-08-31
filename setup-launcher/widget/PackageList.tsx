@@ -82,10 +82,10 @@ export default function PackageList() {
                   class={createComputed(() => `category-pill ${isActive() ? "active" : ""}`)}
                   onClicked={() => Installer.setActiveCategory(cat.id)}
                 >
-                  <box spacing={6} valign={Gtk.Align.CENTER}>
-                    <label class="icon cat-icon" label={cat.icon} />
-                    <label class="cat-label" label={cat.label} />
-                    <label class="cat-count-badge" label={String(count)} />
+                  <box spacing={6} valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}>
+                    <label class="icon cat-icon" label={cat.icon} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} xalign={0.5} yalign={0.5} />
+                    <label class="cat-label" label={cat.label} valign={Gtk.Align.CENTER} />
+                    <label class="cat-count-badge" label={String(count)} valign={Gtk.Align.CENTER} />
                   </box>
                 </button>
               )
@@ -129,7 +129,7 @@ export default function PackageList() {
                       halign={Gtk.Align.CENTER}
                       valign={Gtk.Align.CENTER}
                     >
-                      <label class="empty-icon icon" label={Lucide["search"]} />
+                      <label class="empty-icon icon" label={Lucide["search"]} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} xalign={0.5} yalign={0.5} />
                       <label class="empty-title" label="No matching tools found" />
                       <label class="empty-sub" label="Try changing your search query or category filter" />
                     </box>
@@ -148,7 +148,16 @@ export default function PackageList() {
                         <box spacing={14} valign={Gtk.Align.CENTER}>
                           {/* Checkbox Indicator */}
                           <box class={`pkg-checkbox ${isSelected ? "checked" : ""}`} valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}>
-                            {isSelected ? <label class="icon check-icon" label={Lucide["check"]} /> : null}
+                            {isSelected ? (
+                              <label
+                                class="icon check-icon"
+                                label={Lucide["check"]}
+                                halign={Gtk.Align.CENTER}
+                                valign={Gtk.Align.CENTER}
+                                xalign={0.5}
+                                yalign={0.5}
+                              />
+                            ) : null}
                           </box>
 
                           {/* Tool Icon */}
@@ -157,7 +166,14 @@ export default function PackageList() {
                             valign={Gtk.Align.CENTER}
                             halign={Gtk.Align.CENTER}
                           >
-                            <label class={`icon tool-icon cat-${pkg.category}`} label={pkg.icon} />
+                            <label
+                              class={`icon tool-icon cat-${pkg.category}`}
+                              label={pkg.icon}
+                              halign={Gtk.Align.CENTER}
+                              valign={Gtk.Align.CENTER}
+                              xalign={0.5}
+                              yalign={0.5}
+                            />
                           </box>
 
                           {/* Package Info */}
@@ -167,7 +183,7 @@ export default function PackageList() {
                               <label class="pkg-category-badge" label={pkg.categoryLabel} />
                               {isInstalled ? (
                                 <box class="installed-badge" spacing={4} valign={Gtk.Align.CENTER}>
-                                  <label class="icon" label={Lucide["check"]} />
+                                  <label class="icon" label={Lucide["check"]} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} xalign={0.5} yalign={0.5} />
                                   <label class="badge-text" label="Installed" />
                                 </box>
                               ) : null}
