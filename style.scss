@@ -10,6 +10,7 @@ $color-audio: #fab387;   // Warm amber / orange
 $color-wifi: #58a6ff;    // Vivid blue
 $color-text: #ffffff;
 $color-dim: #9399b2;
+$color-muted: #9399b2;
 
 $ws-occupied-bg: #2e303e;
 $ws-focused-bg: #5c6077;
@@ -393,40 +394,41 @@ window.BarWindow {
 // 3. Wi-Fi Dropdown Panel (Wi-Fi Icon)
 // ==========================================
 .NetworkMenuCard {
-  background: #34363e;
+  background: $bar-bg;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  padding: 16px 18px;
+  border-radius: 20px;
+  padding: 14px 16px;
   margin-top: 6px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  min-width: 320px;
+  min-width: 340px;
 
   // Header
   .network-header {
-    padding-bottom: 6px;
+    padding-bottom: 4px;
 
     .wifi-badge {
-      background-color: #ff5500;
+      background-color: #232738;
+      border: 1px solid rgba(137, 180, 250, 0.2);
       border-radius: 9999px;
       min-width: 36px;
       min-height: 36px;
 
       .badge-icon {
-        color: #ffffff;
-        font-size: 18px;
+        color: $color-wifi;
+        font-size: 17px;
       }
     }
 
     .header-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: #ffffff;
     }
 
     .rescan-btn {
       background: transparent;
-      padding: 4px;
-      color: #9399b2;
+      padding: 4px 6px;
+      color: $color-muted;
       transition: all 150ms ease-in-out;
 
       label {
@@ -450,42 +452,47 @@ window.BarWindow {
         padding: 30px 0;
         .empty-text {
           font-size: 13px;
-          color: #9399b2;
+          color: $color-muted;
         }
       }
 
       .network-item-btn {
         background: transparent;
-        border-radius: 8px;
+        border-radius: 10px;
         padding: 8px 10px;
         margin: 1px 0;
+        border-left: 2px solid transparent;
         transition: all 120ms ease-in-out;
 
         .signal-box {
           .signal-icon {
             font-size: 14px;
-            color: #cdd6f4;
+            color: $color-wifi;
           }
 
           .lock-icon {
-            font-size: 10px;
-            color: #a6adc8;
+            font-size: 11px;
+            color: #6c7086;
+            margin-left: 2px;
           }
         }
 
         .ssid-name {
           font-size: 13.5px;
           font-weight: 600;
-          color: #f2f3f7;
+          color: #cdd6f4;
         }
 
         .check-icon {
           font-size: 14px;
           font-weight: 800;
-          color: #ffffff;
+          color: $color-wifi;
         }
 
         &.connected-item {
+          background: #252838;
+          border-left: 2px solid $color-wifi;
+
           .ssid-name {
             font-weight: 700;
             color: #ffffff;
@@ -493,7 +500,11 @@ window.BarWindow {
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.08);
+          background: #222533;
+
+          .ssid-name {
+            color: #ffffff;
+          }
         }
       }
     }
@@ -501,28 +512,32 @@ window.BarWindow {
 
   // Footer Divider & "All Networks"
   .network-footer {
-    padding-top: 4px;
+    padding-top: 2px;
 
     .footer-divider {
       min-height: 1px;
-      background-color: rgba(255, 255, 255, 0.12);
+      background-color: rgba(255, 255, 255, 0.06);
       margin: 4px 0;
     }
 
     .all-networks-btn {
       background: transparent;
       border-radius: 8px;
-      padding: 8px 10px;
+      padding: 6px 8px;
       transition: all 120ms ease-in-out;
 
       .all-networks-text {
-        font-size: 13.5px;
+        font-size: 13px;
         font-weight: 600;
-        color: #e0e2ec;
+        color: $color-muted;
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: #222533;
+
+        .all-networks-text {
+          color: #ffffff;
+        }
       }
     }
   }
