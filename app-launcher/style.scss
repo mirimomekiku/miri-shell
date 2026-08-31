@@ -1,13 +1,13 @@
 // ==========================================
-// Miri Spotlight App Launcher Theme (Aligned with Top-Bar)
+// Miri Spotlight App Launcher Theme (Impeccable Edition)
 // ==========================================
 
 $bar-bg: #18191c;
 $bar-border: rgba(255, 255, 255, 0.08);
 
 $card-bg: #22242e;
-$card-hover-bg: #2b2f3e;
-$card-selected-bg: #2e303e;
+$card-hover-bg: #282c3c;
+$card-selected-bg: #2e3448;
 
 $accent-blue: #437bf6;
 $accent-blue-hover: #588eff;
@@ -15,7 +15,11 @@ $accent-blue-hover: #588eff;
 $color-text: #ffffff;
 $color-dim: #9399b2;
 $color-muted: #9399b2;
-$color-key: #5c6077;
+$color-subtle: #5c6077;
+
+$color-cmd: #a6e3a1;
+$color-calc: #58a6ff;
+$color-web: #f9e2af;
 
 * {
   all: unset;
@@ -42,9 +46,9 @@ window.SpotlightWindow {
 .SpotlightCard {
   background-color: $bar-bg;
   border: 1px solid $bar-border;
-  border-radius: 20px;
-  min-width: 620px;
-  min-height: 420px;
+  border-radius: 22px;
+  min-width: 640px;
+  min-height: 440px;
   padding: 0;
   margin: 12px;
 }
@@ -55,12 +59,45 @@ window.SpotlightWindow {
 .spotlight-search-header {
   background-color: $bar-bg;
   border-bottom: 1px solid $bar-border;
-  border-radius: 20px 20px 0 0;
+  border-radius: 22px 22px 0 0;
   padding: 16px 20px;
 
   .search-lead-icon {
     font-size: 20px;
     color: $accent-blue;
+    margin-right: 2px;
+  }
+
+  .mode-badge {
+    border-radius: 8px;
+    padding: 3px 8px;
+
+    .icon {
+      font-size: 13px;
+    }
+
+    .mode-text {
+      font-size: 11.5px;
+      font-weight: 800;
+    }
+
+    &.cmd {
+      background: rgba(166, 227, 161, 0.15);
+      border: 1px solid rgba(166, 227, 161, 0.3);
+      .icon, .mode-text { color: $color-cmd; }
+    }
+
+    &.calc {
+      background: rgba(88, 166, 255, 0.15);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      .icon, .mode-text { color: $color-calc; }
+    }
+
+    &.web {
+      background: rgba(249, 226, 175, 0.15);
+      border: 1px solid rgba(249, 226, 175, 0.3);
+      .icon, .mode-text { color: $color-web; }
+    }
   }
 
   .spotlight-entry {
@@ -69,7 +106,7 @@ window.SpotlightWindow {
     color: #ffffff;
 
     placeholder {
-      color: #5c6077;
+      color: $color-subtle;
       font-size: 15px;
       font-weight: 600;
     }
@@ -81,7 +118,7 @@ window.SpotlightWindow {
     padding: 4px 8px;
 
     .icon {
-      font-size: 13px;
+      font-size: 12px;
       color: $color-dim;
     }
 
@@ -100,18 +137,18 @@ window.SpotlightWindow {
 .results-scrollable {
   background-color: $bar-bg;
   padding: 10px 14px;
-  min-height: 300px;
+  min-height: 310px;
 
   .empty-results-box {
     padding: 60px 0;
 
     .empty-icon {
-      font-size: 40px;
-      color: #5c6077;
+      font-size: 44px;
+      color: $color-subtle;
     }
 
     .empty-title {
-      font-size: 15px;
+      font-size: 15.5px;
       font-weight: 800;
       color: #ffffff;
       margin-top: 4px;
@@ -137,8 +174,11 @@ window.SpotlightWindow {
 
       .item-lucide-icon {
         font-size: 22px;
-        color: $accent-blue;
         min-width: 28px;
+
+        &.type-cmd { color: $color-cmd; }
+        &.type-calc { color: $color-calc; }
+        &.type-web { color: $color-web; }
       }
 
       .item-title {
@@ -147,10 +187,30 @@ window.SpotlightWindow {
         color: #ffffff;
       }
 
+      .item-badge {
+        font-size: 10px;
+        font-weight: 800;
+        background: #22242e;
+        border-radius: 6px;
+        padding: 1px 6px;
+        color: $color-dim;
+
+        &.type-cmd { color: $color-cmd; background: rgba(166, 227, 161, 0.12); }
+        &.type-calc { color: $color-calc; background: rgba(88, 166, 255, 0.12); }
+        &.type-web { color: $color-web; background: rgba(249, 226, 175, 0.12); }
+      }
+
       .item-subtitle {
         font-size: 12px;
         font-weight: 600;
         color: $color-dim;
+      }
+
+      .num-shortcut-badge {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: $color-subtle;
+        opacity: 0.6;
       }
 
       .enter-badge {
@@ -168,10 +228,11 @@ window.SpotlightWindow {
 
       &:hover {
         background-color: #22242e;
+        .num-shortcut-badge { opacity: 1; color: $color-dim; }
       }
 
       &.selected {
-        background-color: #2e303e;
+        background-color: $card-selected-bg;
         border-color: rgba(67, 123, 246, 0.4);
 
         .item-title {
@@ -192,8 +253,8 @@ window.SpotlightWindow {
 .spotlight-footer {
   background-color: #14151a;
   border-top: 1px solid $bar-border;
-  border-radius: 0 0 20px 20px;
-  padding: 8px 18px;
+  border-radius: 0 0 22px 22px;
+  padding: 9px 20px;
 
   .footer-chip {
     .footer-key {

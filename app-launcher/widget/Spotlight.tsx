@@ -11,10 +11,13 @@ export default function SpotlightModal() {
       name="app-launcher"
       title="Spotlight"
       application={app}
-      defaultWidth={620}
-      defaultHeight={420}
+      defaultWidth={640}
+      defaultHeight={440}
       onKeyPressEvent={(_, event) => {
         const [, keyval] = event.get_keyval()
+        const [, state] = event.get_state()
+        const isCtrl = Boolean(state & Gdk.ModifierType.CONTROL_MASK)
+        const isAlt = Boolean(state & Gdk.ModifierType.MOD1_MASK)
 
         // Escape: Close launcher
         if (keyval === Gdk.KEY_Escape) {
@@ -22,14 +25,21 @@ export default function SpotlightModal() {
           return true
         }
 
+        // Direct Index Shortcuts: Alt+1..8 or Ctrl+1..8
+        if ((isAlt || isCtrl) && keyval >= Gdk.KEY_1 && keyval <= Gdk.KEY_8) {
+          const idx = keyval - Gdk.KEY_1
+          Apps.launchByIndex(idx)
+          return true
+        }
+
         // Down / Tab: Select Next
-        if (keyval === Gdk.KEY_Down || keyval === Gdk.KEY_Tab) {
+        if (keyval === Gdk.KEY_Down || (keyval === Gdk.KEY_Tab && !isAlt)) {
           Apps.selectNext()
           return true
         }
 
-        // Up: Select Previous
-        if (keyval === Gdk.KEY_Up) {
+        // Up / Shift+Tab: Select Previous
+        if (keyval === Gdk.KEY_Up || (keyval === Gdk.KEY_ISO_Left_Tab && !isAlt)) {
           Apps.selectPrev()
           return true
         }
@@ -55,6 +65,37 @@ export default function SpotlightModal() {
         {/* 1. Spotlight Search Header */}
         <box class="spotlight-search-header" spacing={12} valign={Gtk.Align.CENTER}>
           <label class="search-lead-icon icon" label={Lucide["search"]} />
+
+          {/* Active Mode Pill Indicator */}
+          {createComputed(() => {
+            const mode = Apps.activeMode()
+            if (mode === "cmd") {
+              return (
+                <box class="mode-badge cmd" spacing={4} valign={Gtk.Align.CENTER}>
+                  <label class="icon" label={Lucide["terminal"]} />
+                  <label class="mode-text" label="Terminal" />
+                </box>
+              )
+            }
+            if (mode === "calc") {
+              return (
+                <box class="mode-badge calc" spacing={4} valign={Gtk.Align.CENTER}>
+                  <label class="icon" label={Lucide["copy"]} />
+                  <label class="mode-text" label="Calculator" />
+                </box>
+              )
+            }
+            if (mode === "web") {
+              return (
+                <box class="mode-badge web" spacing={4} valign={Gtk.Align.CENTER}>
+                  <label class="icon" label={Lucide["search"]} />
+                  <label class="mode-text" label="Web" />
+                </box>
+              )
+            }
+            return null
+          })}
+
           <entry
             class="spotlight-entry"
             hexpand={true}
@@ -63,10 +104,10 @@ export default function SpotlightModal() {
             onChanged={(self) => Apps.setQuery(self.get_text())}
             onActivate={() => Apps.launchSelected()}
             $={(self) => {
-              // Auto-focus on launch
               setTimeout(() => self.grab_focus(), 50)
             }}
           />
+
           <button
             class="search-clear-btn"
             valign={Gtk.Align.CENTER}
@@ -109,13 +150,13 @@ export default function SpotlightModal() {
                       <box
                         class="empty-results-box"
                         orientation={Gtk.Orientation.VERTICAL}
-                        spacing={6}
+                        spacing={8}
                         halign={Gtk.Align.CENTER}
                         valign={Gtk.Align.CENTER}
                       >
                         <label class="empty-icon icon" label={Lucide["search"]} />
-                        <label class="empty-title" label="No matching applications" />
-                        <label class="empty-sub" label="Type > to run a command or ? to search web" />
+                        <label class="empty-title" label="No matching applications found" />
+                        <label class="empty-sub" label="Type > to run terminal commands or ? to search the web" />
                       </box>
                     )
                     self.add(empty)
@@ -125,13 +166,16 @@ export default function SpotlightModal() {
 
                       const rowBtn = (
                         <button
-                          class={`result-item-btn ${isSelected ? "selected" : ""}`}
+                          class={`result-item-btn type-${item.type} ${isSelected ? "selected" : ""}`}
                           onClicked={() => Apps.launchItem(item)}
                         >
                           <box spacing={12} valign={Gtk.Align.CENTER}>
                             {/* App / Category Icon */}
                             {item.lucideIcon ? (
-                              <label class="item-lucide-icon icon" label={item.lucideIcon} />
+                              <label
+                                class={`item-lucide-icon icon type-${item.type}`}
+                                label={item.lucideIcon}
+                              />
                             ) : (
                               <icon
                                 class="item-app-icon"
@@ -142,28 +186,39 @@ export default function SpotlightModal() {
 
                             {/* Title & Subtitle */}
                             <box orientation={Gtk.Orientation.VERTICAL} spacing={2} hexpand={true}>
-                              <label
-                                class="item-title"
-                                label={item.name}
-                                xalign={0}
-                                ellipsize={3}
-                                maxWidthChars={35}
-                              />
+                              <box spacing={8} valign={Gtk.Align.CENTER}>
+                                <label
+                                  class="item-title"
+                                  label={item.name}
+                                  xalign={0}
+                                  ellipsize={3}
+                                  maxWidthChars={36}
+                                />
+                                {item.badge ? (
+                                  <label
+                                    class={`item-badge type-${item.type}`}
+                                    label={item.badge}
+                                  />
+                                ) : null}
+                              </box>
+
                               <label
                                 class="item-subtitle"
                                 label={item.subtitle}
                                 xalign={0}
                                 ellipsize={3}
-                                maxWidthChars={45}
+                                maxWidthChars={48}
                               />
                             </box>
 
-                            {/* Return key indicator on selected */}
+                            {/* Quick Number Shortcut (Alt+1..8) or Return key badge on selected */}
                             {isSelected ? (
                               <box class="enter-badge" valign={Gtk.Align.CENTER}>
                                 <label class="enter-label" label="↵ Return" />
                               </box>
-                            ) : null}
+                            ) : (
+                              <label class="num-shortcut-badge" label={`Alt+${idx + 1}`} />
+                            )}
                           </box>
                         </button>
                       )
@@ -191,6 +246,11 @@ export default function SpotlightModal() {
           <box class="footer-chip" spacing={4} valign={Gtk.Align.CENTER}>
             <label class="footer-key" label="↑↓" />
             <label class="footer-desc" label="Navigate" />
+          </box>
+
+          <box class="footer-chip" spacing={4} valign={Gtk.Align.CENTER}>
+            <label class="footer-key" label="Alt+1..8" />
+            <label class="footer-desc" label="Quick Launch" />
           </box>
 
           <box class="footer-chip" spacing={4} valign={Gtk.Align.CENTER}>

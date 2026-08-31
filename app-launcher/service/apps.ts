@@ -10,11 +10,24 @@ export interface LauncherItem {
   type: "app" | "calc" | "cmd" | "web"
   name: string
   subtitle: string
+  badge: string
+  badgeColor?: string
   iconName?: string
   lucideIcon?: string
   appInfo?: Gio.AppInfo
   command?: string
   calcResult?: string
+}
+
+function resolveAppCategory(name: string, exe: string, desc: string): string {
+  const text = `${name} ${exe} ${desc}`.toLowerCase()
+  if (/code|develop|studio|git|terminal|vim|editor|compiler|python|node|ide/.test(text)) return "Development"
+  if (/browser|web|internet|chrome|firefox|brave|edge|mail|chat|discord|slack|telegram/.test(text)) return "Network"
+  if (/audio|music|video|player|spotify|vlc|media|camera|record|sound/.test(text)) return "Media"
+  if (/image|photo|draw|gimp|inkscape|paint|design|canvas/.test(text)) return "Graphics"
+  if (/doc|calc|office|writer|sheet|pdf|reader|notes/.test(text)) return "Office"
+  if (/system|setting|monitor|task|file|disk|config|hardware/.test(text)) return "System"
+  return "Application"
 }
 
 class AppService {
@@ -26,6 +39,15 @@ class AppService {
   public readonly query = this._query[0]
   public readonly selectedIndex = this._selectedIndex[0]
   public readonly apps = this._apps[0]
+
+  public readonly activeMode = createComputed<"apps" | "calc" | "cmd" | "web">(() => {
+    const q = this.query().trim()
+    if (q.startsWith(">") || q.startsWith("$")) return "cmd"
+    if (q.startsWith("?") || q.startsWith("g:")) return "web"
+    const math = evaluateMath(q)
+    if (math.isMath) return "calc"
+    return "apps"
+  })
 
   constructor() {
     this.loadFrequency()
@@ -78,14 +100,16 @@ class AppService {
 
       const id = app.get_id() || app.get_executable() || app.get_name()
       const name = app.get_name()
-      const description = app.get_description() || app.get_executable() || "Application"
+      const description = app.get_description() || app.get_executable() || "Desktop Application"
       const iconName = app.get_icon()?.to_string() || "application-x-executable"
+      const category = resolveAppCategory(name, app.get_executable() || "", description)
 
       items.push({
         id,
         type: "app",
         name,
         subtitle: description,
+        badge: category,
         iconName,
         appInfo: app,
       })
@@ -119,7 +143,9 @@ class AppService {
           id: "calc-result",
           type: "calc",
           name: math.result,
-          subtitle: `${math.expression} = ${math.result} (Press Enter to copy to clipboard)`,
+          subtitle: `${math.expression} = ${math.result}`,
+          badge: "Calculator",
+          badgeColor: "#58a6ff",
           lucideIcon: Lucide["copy"],
           calcResult: math.result,
         },
@@ -133,8 +159,10 @@ class AppService {
         {
           id: "cmd-exec",
           type: "cmd",
-          name: cmd ? `Run "${cmd}" in Terminal` : "Run in Terminal",
-          subtitle: "Execute command line in default terminal",
+          name: cmd ? `Run "${cmd}"` : "Execute Command in Terminal",
+          subtitle: "Launch command line in your default terminal",
+          badge: "Terminal",
+          badgeColor: "#a6e3a1",
           lucideIcon: Lucide["terminal"],
           command: cmd,
         },
@@ -148,8 +176,10 @@ class AppService {
         {
           id: "web-search",
           type: "web",
-          name: `Search "${searchTarget}" on Google`,
-          subtitle: "Open search in default web browser",
+          name: `Search "${searchTarget}"`,
+          subtitle: "Open search query in default web browser",
+          badge: "Web Search",
+          badgeColor: "#f9e2af",
           lucideIcon: Lucide["search"],
           command: searchTarget,
         },
@@ -164,14 +194,17 @@ class AppService {
       return nameMatch || subMatch || exeMatch
     })
 
-    // Add fallback web search option if few or no results
     const list = matched.slice(0, 8)
+
+    // Add fallback web search option if no results found
     if (list.length === 0 && q.length > 1) {
       list.push({
         id: "fallback-web",
         type: "web",
         name: `Search "${q}" on Google`,
         subtitle: "No application matches found. Search the web.",
+        badge: "Web Search",
+        badgeColor: "#f9e2af",
         lucideIcon: Lucide["search"],
         command: q,
       })
@@ -237,6 +270,13 @@ class AppService {
     const idx = this.selectedIndex()
     if (res.length > 0 && idx >= 0 && idx < res.length) {
       this.launchItem(res[idx])
+    }
+  }
+
+  public launchByIndex(index: number) {
+    const res = this.results()
+    if (index >= 0 && index < res.length) {
+      this.launchItem(res[index])
     }
   }
 }
