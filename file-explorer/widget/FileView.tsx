@@ -48,6 +48,23 @@ export default function FileView() {
         orientation={Gtk.Orientation.VERTICAL}
         $={(self) => {
           let disposeRoot: (() => void) | null = null
+          let lastClickTime = 0
+          let lastClickPath = ""
+
+          const handleItemClick = (item: FileItem) => {
+            const now = Date.now()
+            if (lastClickPath === item.path && now - lastClickTime < 450) {
+              // Confirmed Double-Click: Open file / Enter directory
+              lastClickTime = 0
+              lastClickPath = ""
+              FS.openItem(item)
+            } else {
+              // Single-Click: Select item
+              lastClickTime = now
+              lastClickPath = item.path
+              FS.setSelectedPath(item.path)
+            }
+          }
 
           const render = () => {
             if (disposeRoot) {
@@ -105,18 +122,9 @@ export default function FileView() {
                   const cardBtn = (
                     <button
                       class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
-                      onClicked={() => FS.setSelectedPath(item.path)}
+                      onClicked={() => handleItemClick(item)}
                       onButtonPressEvent={(_, event) => {
                         const [, button] = event.get_button()
-                        const eventType = event.get_event_type()
-
-                        // Double-click to open
-                        if (eventType === Gdk.EventType._2BUTTON_PRESS && button === 1) {
-                          FS.openItem(item)
-                          return true
-                        }
-
-                        // Right-click context menu
                         if (button === 3) {
                           FS.setSelectedPath(item.path)
                           showContextMenu(event, item)
@@ -143,7 +151,10 @@ export default function FileView() {
                           ellipsize={3}
                           maxWidthChars={14}
                         />
-                        <label class="grid-sub" label={item.sizeStr} />
+                        {/* Only display size for files, never for folders */}
+                        {!item.isDir && Boolean(item.sizeStr) ? (
+                          <label class="grid-sub" label={item.sizeStr} />
+                        ) : null}
                       </box>
                     </button>
                   )
@@ -177,16 +188,9 @@ export default function FileView() {
                   const rowBtn = (
                     <button
                       class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
-                      onClicked={() => FS.setSelectedPath(item.path)}
+                      onClicked={() => handleItemClick(item)}
                       onButtonPressEvent={(_, event) => {
                         const [, button] = event.get_button()
-                        const eventType = event.get_event_type()
-
-                        if (eventType === Gdk.EventType._2BUTTON_PRESS && button === 1) {
-                          FS.openItem(item)
-                          return true
-                        }
-
                         if (button === 3) {
                           FS.setSelectedPath(item.path)
                           showContextMenu(event, item)
@@ -207,7 +211,8 @@ export default function FileView() {
                           hexpand={true}
                           ellipsize={3}
                         />
-                        <label class="list-size" label={item.sizeStr} xalign={1} />
+                        {/* Only display size for files */}
+                        <label class="list-size" label={item.isDir ? "" : item.sizeStr} xalign={1} />
                         <label class="list-date" label={item.dateStr} xalign={1} />
                       </box>
                     </button>

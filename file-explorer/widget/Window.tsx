@@ -65,7 +65,7 @@ export default function ExplorerWindow() {
         {/* 1. Header Navigation & Path Bar */}
         <Header />
 
-        {/* 2. Resizable Main Body using native Gtk.Paned */}
+        {/* 2. Constrained Resizable Body: Gtk.Paned with strict min/max limits */}
         <box
           class="paned-wrapper"
           orientation={Gtk.Orientation.HORIZONTAL}
@@ -74,14 +74,27 @@ export default function ExplorerWindow() {
           $={(self) => {
             const paned = new Gtk.Paned({
               orientation: Gtk.Orientation.HORIZONTAL,
-              position: 210,
+              position: 200,
               hexpand: true,
               vexpand: true,
             })
             paned.get_style_context().add_class("resizable-paned")
 
+            // Restrict sidebar resize boundary: Min 140px, Max 320px
+            paned.connect("notify::position", () => {
+              const pos = paned.get_position()
+              if (pos < 140) {
+                paned.set_position(140)
+              } else if (pos > 320) {
+                paned.set_position(320)
+              }
+            })
+
             const sidebarWidget = Sidebar()
+            sidebarWidget.set_size_request(140, -1)
+
             const fileViewWidget = FileView()
+            fileViewWidget.set_size_request(380, -1)
 
             paned.pack1(sidebarWidget, false, false)
             paned.pack2(fileViewWidget, true, false)

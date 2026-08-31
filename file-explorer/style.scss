@@ -35,6 +35,7 @@ label {
 
 .icon {
   font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
+  font-size: 16px;
 }
 
 window.ExplorerWindow {
@@ -56,8 +57,8 @@ window.ExplorerWindow {
   .nav-buttons-box {
     .nav-btn {
       background: #22242e;
-      border-radius: 10px;
-      padding: 6px 9px;
+      border-radius: 12px;
+      padding: 7px 10px;
       color: $color-dim;
       transition: all 120ms ease-in-out;
 
@@ -149,8 +150,8 @@ window.ExplorerWindow {
   .action-buttons-box {
     .action-btn {
       background: #22242e;
-      border-radius: 10px;
-      padding: 6px 9px;
+      border-radius: 12px;
+      padding: 7px 10px;
       transition: all 120ms ease-in-out;
 
       .icon {
@@ -181,7 +182,7 @@ window.ExplorerWindow {
 .resizable-paned {
   background-color: $bar-bg;
 
-  // Splitter / Handle
+  // Splitter Handle
   separator {
     background-color: $bar-border;
     min-width: 2px;
@@ -195,7 +196,7 @@ window.ExplorerWindow {
   .Sidebar {
     background-color: $bar-bg;
     border-right: 1px solid $bar-border;
-    min-width: 160px;
+    min-width: 140px;
     padding: 14px 10px;
 
     .sidebar-heading {

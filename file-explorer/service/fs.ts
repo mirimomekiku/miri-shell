@@ -34,23 +34,49 @@ function getFileIcon(name: string, isDir: boolean): string {
 
   const ext = name.includes(".") ? name.split(".").pop()!.toLowerCase() : ""
 
-  if (["png", "jpg", "jpeg", "webp", "svg", "gif", "bmp", "ico"].includes(ext)) {
+  // Images
+  if (["png", "jpg", "jpeg", "webp", "svg", "gif", "bmp", "ico", "tiff", "avif", "psd"].includes(ext)) {
     return Lucide["image"]
   }
-  if (["mp3", "wav", "flac", "ogg", "m4a", "aac", "opus"].includes(ext)) {
+
+  // Audio
+  if (["mp3", "wav", "flac", "ogg", "m4a", "aac", "opus", "wma", "aiff", "mid"].includes(ext)) {
     return Lucide["music"]
   }
-  if (["mp4", "mkv", "webm", "avi", "mov", "wmv", "flv"].includes(ext)) {
+
+  // Video
+  if (["mp4", "mkv", "webm", "avi", "mov", "wmv", "flv", "m4v", "3gp", "ts"].includes(ext)) {
     return Lucide["video"]
   }
-  if (["zip", "tar", "gz", "xz", "7z", "bz2", "rar", "iso"].includes(ext)) {
+
+  // Archives
+  if (["zip", "tar", "gz", "xz", "7z", "bz2", "rar", "iso", "tgz", "zst", "deb", "rpm", "apk"].includes(ext)) {
     return Lucide["archive"]
   }
-  if (["ts", "tsx", "js", "jsx", "py", "rs", "go", "c", "cpp", "h", "hpp", "java", "json", "html", "css", "scss", "sh", "bash", "zsh", "toml", "yaml", "yml", "xml", "lua"].includes(ext)) {
+
+  // Code & Config
+  if ([
+    "ts", "tsx", "js", "jsx", "py", "rs", "go", "c", "cpp", "h", "hpp",
+    "java", "kt", "lua", "sh", "bash", "zsh", "fish", "json", "yaml", "yml",
+    "toml", "xml", "html", "css", "scss", "sass", "vue", "svelte", "astro",
+    "graphql", "sql", "php", "rb", "swift", "dart", "env", "lock"
+  ].includes(ext)) {
     return Lucide["file-code"]
   }
-  if (["md", "txt", "pdf", "doc", "docx", "rtf", "odt", "csv", "tsv", "log"].includes(ext)) {
+
+  // Documents & Office (PDF, Word, Excel, PowerPoint, Text, Markdown)
+  if ([
+    "pdf", "doc", "docx", "odt", "rtf", "pages",
+    "xls", "xlsx", "csv", "tsv", "ods", "numbers",
+    "ppt", "pptx", "odp", "key",
+    "txt", "md", "markdown", "rst", "log", "tex", "epub"
+  ].includes(ext)) {
     return Lucide["file-text"]
+  }
+
+  // Executables & Binaries
+  if (["bin", "appimage", "so", "dll", "exe", "out"].includes(ext)) {
+    return Lucide["terminal"]
   }
 
   return Lucide["file"]
@@ -183,7 +209,7 @@ class FilesystemService {
           isSymlink,
           isHidden,
           sizeBytes,
-          sizeStr: isDir ? "--" : formatBytes(sizeBytes),
+          sizeStr: isDir ? "" : formatBytes(sizeBytes),
           modifiedSec,
           dateStr,
           icon: getFileIcon(name, isDir),
