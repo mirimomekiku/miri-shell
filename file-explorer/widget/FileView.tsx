@@ -7,26 +7,56 @@ export default function FileView() {
   const showContextMenu = (event: Gdk.Event, item: FileItem) => {
     const menu = new Gtk.Menu()
 
-    // 1. Open
+    // 1. Primary Open
     const openItem = new Gtk.MenuItem({ label: item.isDir ? "Open Folder" : "Open File" })
     openItem.connect("activate", () => FS.openItem(item))
     menu.append(openItem)
 
-    // 2. Open Terminal Here
+    menu.append(new Gtk.SeparatorMenuItem())
+
+    // 2. Developer Tools: Open with Antigravity IDE
+    const agyItem = new Gtk.MenuItem({ label: "Open with Antigravity IDE" })
+    agyItem.connect("activate", () => FS.openWithAntigravity(item.path))
+    menu.append(agyItem)
+
+    // 3. Developer Tools: Open with VS Code
+    const codeItem = new Gtk.MenuItem({ label: "Open with VS Code" })
+    codeItem.connect("activate", () => FS.openWithVSCode(item.path))
+    menu.append(codeItem)
+
+    // 4. Developer Tools: Open in Terminal
     const termItem = new Gtk.MenuItem({ label: "Open in Terminal" })
-    termItem.connect("activate", () => FS.openTerminal(item.path))
+    termItem.connect("activate", () => FS.openInTerminal(item.path))
     menu.append(termItem)
+
+    // 5. Developer Tools: Git / LazyGit (for folders or code repos)
+    if (item.isDir) {
+      const gitItem = new Gtk.MenuItem({ label: "Open in LazyGit" })
+      gitItem.connect("activate", () => FS.openLazyGit(item.path))
+      menu.append(gitItem)
+    }
 
     menu.append(new Gtk.SeparatorMenuItem())
 
-    // 3. Copy Path
+    // 6. Pin / Unpin from Sidebar (for folders)
+    if (item.isDir) {
+      const isPinned = FS.isPinned(item.path)
+      const pinItem = new Gtk.MenuItem({
+        label: isPinned ? "Unpin from Sidebar" : "Pin to Sidebar",
+      })
+      pinItem.connect("activate", () => FS.togglePin(item.path))
+      menu.append(pinItem)
+      menu.append(new Gtk.SeparatorMenuItem())
+    }
+
+    // 7. Copy Path
     const copyItem = new Gtk.MenuItem({ label: "Copy Full Path" })
     copyItem.connect("activate", () => FS.copyPath(item.path))
     menu.append(copyItem)
 
     menu.append(new Gtk.SeparatorMenuItem())
 
-    // 4. Move to Trash
+    // 8. Move to Trash
     const trashItem = new Gtk.MenuItem({ label: "Move to Trash" })
     trashItem.connect("activate", () => FS.moveToTrash(item.path))
     menu.append(trashItem)

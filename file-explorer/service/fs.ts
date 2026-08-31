@@ -18,6 +18,12 @@ export interface FileItem {
   extension: string
 }
 
+export interface PinnedFolder {
+  name: string
+  path: string
+  icon: string
+}
+
 function formatBytes(bytes: number): string {
   if (bytes <= 0) return "0 B"
   const k = 1024
@@ -102,6 +108,10 @@ class FilesystemService {
   private _selectedPath = createState<string>("")
   private _statusText = createState<string>("")
 
+  // Pinned Folders & Collapse state
+  private _pinned = createState<string[]>([])
+  private _pinnedExpanded = createState<boolean>(true)
+
   public readonly currentPath = this._currentPath[0]
   public readonly items = this._items[0]
   public readonly isLoading = this._isLoading[0]
@@ -110,6 +120,9 @@ class FilesystemService {
   public readonly viewMode = this._viewMode[0]
   public readonly selectedPath = this._selectedPath[0]
   public readonly statusText = this._statusText[0]
+
+  public readonly pinned = this._pinned[0]
+  public readonly pinnedExpanded = this._pinnedExpanded[0]
 
   public readonly canGoBack = createComputed(() => this._historyIndex[0]() > 0)
   public readonly canGoForward = createComputed(
@@ -121,6 +134,19 @@ class FilesystemService {
   })
 
   public readonly homeDir = GLib.get_home_dir()
+
+  public readonly pinnedList = createComputed<PinnedFolder[]>(() => {
+    const list = this.pinned()
+    return list.map((p) => {
+      const parts = p.split("/").filter(Boolean)
+      const name = parts.length > 0 ? parts[parts.length - 1] : "Root"
+      return {
+        name,
+        path: p,
+        icon: name === ".git" ? Lucide["folder-git"] : Lucide["folder"],
+      }
+    })
+  })
 
   public readonly breadcrumbs = createComputed(() => {
     const p = this.currentPath()
@@ -177,9 +203,89 @@ class FilesystemService {
   })
 
   constructor() {
+    this.loadPinnedFromDisk()
     this.loadDirectory(this.currentPath())
   }
 
+  // --- Pinned Persistence ---
+  private getPinnedConfigPath(): string {
+    return `${GLib.get_user_config_dir()}/miri-shell/pinned-folders.json`
+  }
+
+  private loadPinnedFromDisk() {
+    try {
+      const file = Gio.File.new_for_path(this.getPinnedConfigPath())
+      if (file.query_exists(null)) {
+        const [, contents] = file.load_contents(null)
+        const text = new TextDecoder().decode(contents)
+        const arr = JSON.parse(text)
+        if (Array.isArray(arr) && arr.length > 0) {
+          this._pinned[1](arr)
+          return
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // Default pinned projects
+    const defaults = [
+      `${this.homeDir}/Projects`,
+      `${this.homeDir}/Projects/miri-shell`,
+    ]
+    const existing = defaults.filter((p) => Gio.File.new_for_path(p).query_exists(null))
+    this._pinned[1](existing.length > 0 ? existing : [`${this.homeDir}/Projects`])
+  }
+
+  private savePinnedToDisk() {
+    try {
+      const dir = Gio.File.new_for_path(`${GLib.get_user_config_dir()}/miri-shell`)
+      if (!dir.query_exists(null)) {
+        dir.make_directory_with_parents(null)
+      }
+      const file = Gio.File.new_for_path(this.getPinnedConfigPath())
+      const data = JSON.stringify(this.pinned(), null, 2)
+      file.replace_contents(data, null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null)
+    } catch {
+      // ignore
+    }
+  }
+
+  public isPinned(path: string): boolean {
+    return this.pinned().includes(path)
+  }
+
+  public pinFolder(path: string) {
+    if (!this.isPinned(path)) {
+      const list = [...this.pinned(), path]
+      this._pinned[1](list)
+      this.savePinnedToDisk()
+      this._statusText[1](`Pinned "${path.split("/").pop()}" to sidebar`)
+      setTimeout(() => this._statusText[1](""), 2000)
+    }
+  }
+
+  public unpinFolder(path: string) {
+    const list = this.pinned().filter((p) => p !== path)
+    this._pinned[1](list)
+    this.savePinnedToDisk()
+    this._statusText[1](`Unpinned from sidebar`)
+    setTimeout(() => this._statusText[1](""), 2000)
+  }
+
+  public togglePin(path: string) {
+    if (this.isPinned(path)) {
+      this.unpinFolder(path)
+    } else {
+      this.pinFolder(path)
+    }
+  }
+
+  public togglePinnedExpanded() {
+    this._pinnedExpanded[1](!this.pinnedExpanded())
+  }
+
+  // --- Directory Navigation & Loading ---
   public loadDirectory(targetPath: string) {
     this._isLoading[1](true)
     this._selectedPath[1]("")
@@ -310,12 +416,37 @@ class FilesystemService {
     }
   }
 
-  public openTerminal(path: string) {
+  // --- Developer Shortcuts ---
+  public openWithAntigravity(path: string) {
+    const targetDir = Gio.File.new_for_path(path).query_file_type(Gio.FileQueryInfoFlags.NONE, null) === Gio.FileType.DIRECTORY
+      ? path
+      : Gio.File.new_for_path(path).get_parent()?.get_path() || this.currentPath()
+
+    execAsync(`sh -c 'if which agy >/dev/null 2>&1; then agy "${path}"; elif which antigravity >/dev/null 2>&1; then antigravity "${path}"; elif which code >/dev/null 2>&1; then code "${path}"; elif which cursor >/dev/null 2>&1; then cursor "${path}"; else xdg-open "${path}"; fi'`).catch(() => {})
+    this._statusText[1](`Opening with Antigravity IDE...`)
+    setTimeout(() => this._statusText[1](""), 2000)
+  }
+
+  public openWithVSCode(path: string) {
+    execAsync(`sh -c 'code "${path}" || codium "${path}" || vscodium "${path}" || cursor "${path}" || xdg-open "${path}"'`).catch(() => {})
+    this._statusText[1](`Opening with Code Editor...`)
+    setTimeout(() => this._statusText[1](""), 2000)
+  }
+
+  public openInTerminal(path: string) {
     const targetDir = Gio.File.new_for_path(path).query_file_type(Gio.FileQueryInfoFlags.NONE, null) === Gio.FileType.DIRECTORY
       ? path
       : Gio.File.new_for_path(path).get_parent()?.get_path() || this.currentPath()
 
     execAsync(`sh -c 'cd "${targetDir}" && (kitty || alacritty || foot || gnome-terminal || xterm)'`).catch(() => {})
+  }
+
+  public openLazyGit(path: string) {
+    const targetDir = Gio.File.new_for_path(path).query_file_type(Gio.FileQueryInfoFlags.NONE, null) === Gio.FileType.DIRECTORY
+      ? path
+      : Gio.File.new_for_path(path).get_parent()?.get_path() || this.currentPath()
+
+    execAsync(`sh -c 'cd "${targetDir}" && (kitty -e lazygit || alacritty -e lazygit || foot lazygit || xterm -e lazygit || git-cola)'`).catch(() => {})
   }
 
   public copyPath(path: string) {
