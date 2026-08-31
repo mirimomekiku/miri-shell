@@ -148,7 +148,149 @@ window.BarWindow {
 }
 
 // ==========================================
-// Control Center Dropdown Panel
+// 1. Media & Audio Controls Dropdown (Sound Icon)
+// ==========================================
+.MediaPopupCard {
+  background: $bar-bg;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 12px 16px;
+  margin-top: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  min-width: 380px;
+
+  .media-player-row {
+    .album-art {
+      min-width: 48px;
+      min-height: 48px;
+      border-radius: 8px;
+      background-color: #262833;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+
+      .fallback-icon {
+        font-size: 20px;
+        color: $color-wifi;
+      }
+    }
+
+    .media-info {
+      padding: 0 4px;
+
+      .media-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .media-artist {
+        font-size: 12px;
+        font-weight: 600;
+        color: #a6adc8;
+        margin-bottom: 2px;
+      }
+
+      .progress-row {
+        .time-label {
+          font-size: 11px;
+          font-weight: 600;
+          color: #9399b2;
+        }
+
+        .media-slider {
+          min-height: 12px;
+
+          trough {
+            min-height: 4px;
+            border-radius: 9999px;
+            background-color: #3c3f50;
+          }
+
+          highlight {
+            min-height: 4px;
+            border-radius: 9999px;
+            background-color: #ffffff;
+          }
+
+          slider {
+            min-width: 0;
+            min-height: 0;
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    .play-pause-btn {
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: 9999px;
+      background: #282a36;
+      color: #ffffff;
+      transition: all 150ms ease-in-out;
+
+      label {
+        font-size: 16px;
+      }
+
+      &:hover {
+        background: #3e4153;
+        color: #ffffff;
+      }
+    }
+  }
+
+  // Volume Slider Row in Media Card
+  .volume-row {
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    .volume-icon-btn {
+      background: transparent;
+      padding: 0 2px;
+
+      .icon {
+        color: $color-audio;
+        font-size: 15px;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .volume-slider {
+      min-height: 12px;
+
+      trough {
+        min-height: 4px;
+        border-radius: 9999px;
+        background-color: #3c3f50;
+      }
+
+      highlight {
+        min-height: 4px;
+        border-radius: 9999px;
+        background-color: $color-audio;
+      }
+
+      slider {
+        min-width: 0;
+        min-height: 0;
+        opacity: 0;
+      }
+    }
+
+    .volume-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: $color-text;
+      min-width: 32px;
+    }
+  }
+}
+
+// ==========================================
+// 2. Control Center Dropdown Panel (Time/Date)
 // ==========================================
 .ControlCenterCard {
   background: $bar-bg;
@@ -159,107 +301,7 @@ window.BarWindow {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   min-width: 380px;
 
-  // ------------------------------------------
-  // 1. Media Section
-  // ------------------------------------------
-  .media-box {
-    .media-top-row {
-      .album-art {
-        min-width: 48px;
-        min-height: 48px;
-        border-radius: 8px;
-        background-color: #262833;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-
-        .fallback-icon {
-          font-size: 20px;
-          color: $color-wifi;
-        }
-      }
-
-      .media-meta {
-        padding: 0 4px;
-
-        .media-title {
-          font-size: 14.5px;
-          font-weight: 800;
-          color: #ffffff;
-        }
-
-        .media-artist {
-          font-size: 12px;
-          font-weight: 600;
-          color: #a6adc8;
-        }
-      }
-
-      .media-controls {
-        .ctrl-btn {
-          min-width: 28px;
-          min-height: 28px;
-          border-radius: 9999px;
-          background: transparent;
-          color: #cdd6f4;
-          transition: all 150ms ease-in-out;
-
-          label {
-            font-size: 15px;
-          }
-
-          &.play {
-            background: #2a2c3a;
-            color: #ffffff;
-            min-width: 32px;
-            min-height: 32px;
-
-            &:hover {
-              background: #3e4258;
-            }
-          }
-
-          &:hover {
-            color: #ffffff;
-          }
-        }
-      }
-    }
-
-    .media-progress-row {
-      margin-top: 2px;
-
-      .time-label {
-        font-size: 11px;
-        font-weight: 600;
-        color: #9399b2;
-      }
-
-      .media-slider {
-        min-height: 12px;
-
-        trough {
-          min-height: 4px;
-          border-radius: 9999px;
-          background-color: #383a48;
-        }
-
-        highlight {
-          min-height: 4px;
-          border-radius: 9999px;
-          background-color: #ffffff;
-        }
-
-        slider {
-          min-width: 0;
-          min-height: 0;
-          opacity: 0;
-        }
-      }
-    }
-  }
-
-  // ------------------------------------------
-  // 2. Quick Toggles Row (Wi-Fi, DND, Timer, Bluetooth)
-  // ------------------------------------------
+  // Quick Toggles Row (Wi-Fi, DND, Timer, Bluetooth)
   .quick-toggles-row {
     padding: 2px 0;
 
@@ -300,11 +342,9 @@ window.BarWindow {
     }
   }
 
-  // ------------------------------------------
-  // 3. Sliders Section (Volume & Brightness)
-  // ------------------------------------------
+  // Sliders Section (Brightness)
   .sliders-section {
-    padding-top: 2px;
+    padding-top: 4px;
 
     .slider-row {
       .slider-icon-btn {
@@ -314,10 +354,6 @@ window.BarWindow {
         .icon {
           color: #ffffff;
           font-size: 15px;
-        }
-
-        &:hover {
-          opacity: 0.8;
         }
       }
 

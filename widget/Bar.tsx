@@ -6,7 +6,9 @@ import Workspaces from "./Workspaces"
 import NetworkWidget from "./Network"
 import Clock from "./Clock"
 import ControlCenterWidget from "./ControlCenter"
+import MediaCard from "./MediaPopup"
 import ControlCenter from "../service/controlcenter"
+import Media from "../service/media"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP } = Astal.WindowAnchor
@@ -25,7 +27,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           {/* 1. Time (Click to toggle Control Center) */}
           <Clock />
 
-          {/* 2. Audio (Click to toggle Control Center, scroll to change volume) */}
+          {/* 2. Audio (Click to toggle Media Controls, scroll to change volume) */}
           <AudioWidget />
 
           {/* 3. Workspaces (1 2 3 4 5) */}
@@ -38,7 +40,16 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           <BatteryWidget />
         </box>
 
-        {/* Slide-down Control Center */}
+        {/* 1. Slide-down Media & Audio Controls (Exclusive to clicking Sound icon) */}
+        <revealer
+          revealChild={Media.isOpen}
+          transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+          transitionDuration={250}
+        >
+          <MediaCard />
+        </revealer>
+
+        {/* 2. Slide-down Control Center (Exclusive to clicking Time/Date) */}
         <revealer
           revealChild={ControlCenter.isOpen}
           transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}

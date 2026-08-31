@@ -1,4 +1,5 @@
 import { createState, createComputed } from "gnim"
+import Media from "./media"
 
 class ControlCenterService {
   private _isOpen = createState<boolean>(false)
@@ -10,10 +11,17 @@ class ControlCenterService {
   public readonly timerMinutes = this._timerMinutes[0]
 
   public toggleOpen() {
-    this._isOpen[1](!this.isOpen())
+    const next = !this.isOpen()
+    if (next) {
+      Media.setOpen(false)
+    }
+    this._isOpen[1](next)
   }
 
   public setOpen(open: boolean) {
+    if (open) {
+      Media.setOpen(false)
+    }
     this._isOpen[1](open)
   }
 

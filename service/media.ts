@@ -34,7 +34,8 @@ class MediaService {
   public readonly isOpen = this._isOpen[0]
 
   public toggleOpen() {
-    this._isOpen[1](!this.isOpen())
+    const next = !this.isOpen()
+    this._isOpen[1](next)
   }
 
   public setOpen(open: boolean) {
