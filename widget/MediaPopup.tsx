@@ -16,18 +16,22 @@ export function MediaCard() {
     <box class="MediaPopupCard" orientation={Gtk.Orientation.VERTICAL} spacing={12}>
       {/* 1. Media Player Row */}
       <box class="media-player-row" spacing={12} valign={Gtk.Align.CENTER}>
-        {/* Album Art (48px max) */}
+        {/* Album Art (48px) */}
         <box
           class="album-art"
           css={coverArtCss}
           valign={Gtk.Align.CENTER}
           halign={Gtk.Align.CENTER}
+          hexpand={false}
+          vexpand={false}
         >
-          {createComputed(() =>
-            !Media.artUrl() ? (
-              <label class="fallback-icon" label="󰎆" />
-            ) : null
-          )}
+          <label
+            class="fallback-icon"
+            label="󰎆"
+            visible={createComputed(() => !Media.artUrl())}
+            valign={Gtk.Align.CENTER}
+            halign={Gtk.Align.CENTER}
+          />
         </box>
 
         {/* Center: Track Details & Scrub Bar */}
