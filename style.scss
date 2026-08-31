@@ -441,6 +441,87 @@ window.BarWindow {
     }
   }
 
+  // Password Prompt Box
+  .password-box {
+    background: #202330;
+    border: 1px solid rgba(137, 180, 250, 0.25);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin: 4px 0 6px 0;
+
+    .password-prompt-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: $color-wifi;
+    }
+
+    .password-entry {
+      background: #181a24;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: #ffffff;
+      font-size: 13px;
+
+      &:focus {
+        border-color: $color-wifi;
+      }
+
+      placeholder {
+        color: #6c7086;
+      }
+    }
+
+    .password-submit-btn {
+      background: $color-wifi;
+      color: #11111b;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 800;
+      transition: all 120ms ease-in-out;
+
+      label {
+        font-size: 12.5px;
+        font-weight: 800;
+      }
+
+      &:hover {
+        background: #b4befe;
+      }
+    }
+
+    .password-cancel-btn {
+      background: #2c2f40;
+      color: #9399b2;
+      border-radius: 8px;
+      padding: 6px 10px;
+      transition: all 120ms ease-in-out;
+
+      label {
+        font-size: 12px;
+      }
+
+      &:hover {
+        background: #3e4258;
+        color: #ffffff;
+      }
+    }
+  }
+
+  // Status Message Banner
+  .status-banner {
+    background: #232738;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+
+    .status-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: $color-wifi;
+    }
+  }
+
   // Scrollable Network List
   .network-scrollable {
     min-height: 220px;

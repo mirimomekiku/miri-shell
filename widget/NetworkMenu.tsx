@@ -5,7 +5,7 @@ import Network, { WifiAccessPoint } from "../service/network"
 export default function NetworkMenu() {
   return (
     <box class="NetworkMenuCard" orientation={Gtk.Orientation.VERTICAL} spacing={10}>
-      {/* 1. Header (Wi-Fi Badge + "Wi-Fi" + Spinner/Refresh) */}
+      {/* 1. Header */}
       <box class="network-header" spacing={12} valign={Gtk.Align.CENTER}>
         <box class="wifi-badge" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
           <label class="badge-icon" label="󰤨" />
@@ -22,7 +22,56 @@ export default function NetworkMenu() {
         </button>
       </box>
 
-      {/* 2. Networks List */}
+      {/* 2. Password Prompt (Revealed when network clicked needs auth) */}
+      <revealer
+        revealChild={createComputed(() => Boolean(Network.passwordTarget()))}
+        transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+        transitionDuration={200}
+      >
+        <box class="password-box" orientation={Gtk.Orientation.VERTICAL} spacing={6}>
+          <label
+            class="password-prompt-label"
+            label={createComputed(() => `Password for ${Network.passwordTarget()}:`)}
+            xalign={0}
+          />
+          <box spacing={6} valign={Gtk.Align.CENTER}>
+            <entry
+              class="password-entry"
+              visibility={false}
+              placeholderText="Enter password..."
+              hexpand={true}
+              text={Network.passwordInput}
+              onChanged={(self) => Network.setPasswordInput(self.get_text())}
+              onActivate={() => Network.submitPassword()}
+            />
+            <button
+              class="password-submit-btn"
+              onClicked={() => Network.submitPassword()}
+            >
+              <label label="Connect" />
+            </button>
+            <button
+              class="password-cancel-btn"
+              onClicked={() => Network.cancelPassword()}
+            >
+              <label label="✕" />
+            </button>
+          </box>
+        </box>
+      </revealer>
+
+      {/* 3. Status Feedback Banner (if connecting or message active) */}
+      <revealer
+        revealChild={createComputed(() => Boolean(Network.statusMessage()))}
+        transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+        transitionDuration={150}
+      >
+        <box class="status-banner" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+          <label class="status-text" label={Network.statusMessage} />
+        </box>
+      </revealer>
+
+      {/* 4. Networks List */}
       <scrollable
         class="network-scrollable"
         hscroll={Gtk.PolicyType.NEVER}
@@ -52,7 +101,7 @@ export default function NetworkMenu() {
                   const btn = (
                     <button
                       class={`network-item-btn ${ap.inUse ? "connected-item" : ""}`}
-                      onClicked={() => Network.connect(ap)}
+                      onClicked={() => Network.handleNetworkClick(ap)}
                     >
                       <box spacing={10} valign={Gtk.Align.CENTER}>
                         {/* Signal Icon & Lock */}
@@ -61,7 +110,7 @@ export default function NetworkMenu() {
                           {ap.isLocked ? <label class="lock-icon" label="󰌾" /> : null}
                         </box>
 
-                        {/* SSID Name */}
+                        {/* SSID Name (Never MAC address) */}
                         <label
                           class="ssid-name"
                           label={ap.ssid}
@@ -91,7 +140,7 @@ export default function NetworkMenu() {
         />
       </scrollable>
 
-      {/* 3. Footer Divider & "All Networks" Button */}
+      {/* 5. Footer Divider & "All Networks" Button */}
       <box class="network-footer" orientation={Gtk.Orientation.VERTICAL} spacing={6}>
         <box class="footer-divider" />
         <button
