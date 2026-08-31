@@ -1,12 +1,13 @@
 import { Gtk, Gdk } from "ags/gtk3"
 import Audio from "../service/audio"
+import Media from "../service/media"
 
 export default function AudioWidget() {
   return (
     <button
       class="Audio"
       valign={Gtk.Align.CENTER}
-      onClicked={() => Audio.toggleMute()}
+      onClicked={() => Media.toggleOpen()}
       onScrollEvent={(_, event) => {
         const [, dir] = event.get_scroll_direction()
         if (dir === Gdk.ScrollDirection.UP) {

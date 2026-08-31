@@ -142,3 +142,98 @@ window.BarWindow {
     color: $color-text;
   }
 }
+
+// ==========================================
+// Media & Audio Controls Popup
+// ==========================================
+window.MediaPopupWindow {
+  background: transparent;
+}
+
+.MediaPopupCard {
+  background: $bar-bg;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 12px 18px;
+  margin-top: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  min-width: 400px;
+
+  .album-art {
+    min-width: 52px;
+    min-height: 52px;
+    border-radius: 10px;
+    background-color: #262833;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    .fallback-icon {
+      font-size: 26px;
+      color: $color-wifi;
+    }
+  }
+
+  .media-info {
+    padding: 0 4px;
+
+    .media-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .media-artist {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a6adc8;
+      margin-bottom: 2px;
+    }
+
+    .progress-row {
+      .time-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #9399b2;
+      }
+
+      .media-slider {
+        min-height: 12px;
+
+        trough {
+          min-height: 4px;
+          border-radius: 9999px;
+          background-color: #3c3f50;
+        }
+
+        highlight {
+          min-height: 4px;
+          border-radius: 9999px;
+          background-color: #ffffff;
+        }
+
+        slider {
+          min-width: 0;
+          min-height: 0;
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  .play-pause-btn {
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 9999px;
+    background: #282a36;
+    color: #ffffff;
+    transition: all 150ms ease-in-out;
+
+    label {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: #3e4153;
+      transform: scale(1.05);
+    }
+  }
+}
