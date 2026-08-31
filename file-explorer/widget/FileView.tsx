@@ -151,7 +151,7 @@ export default function FileView() {
 
                   const cardBtn = (
                     <button
-                      class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} type-${item.category} ${isSelected ? "selected" : ""}`}
+                      class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} ${item.isHidden ? "is-hidden" : ""} type-${item.category} ${isSelected ? "selected" : ""}`}
                       onClicked={() => handleItemClick(item)}
                       onButtonPressEvent={(_, event) => {
                         const [, button] = event.get_button()
@@ -217,7 +217,7 @@ export default function FileView() {
 
                   const rowBtn = (
                     <button
-                      class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} type-${item.category} ${isSelected ? "selected" : ""}`}
+                      class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} ${item.isHidden ? "is-hidden" : ""} type-${item.category} ${isSelected ? "selected" : ""}`}
                       onClicked={() => handleItemClick(item)}
                       onButtonPressEvent={(_, event) => {
                         const [, button] = event.get_button()

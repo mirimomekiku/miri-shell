@@ -406,6 +406,26 @@ window.ExplorerWindow {
           color: $color-dim;
         }
 
+        &.is-hidden {
+          opacity: 0.65;
+
+          .grid-icon {
+            opacity: 0.7;
+          }
+
+          .grid-name {
+            color: #a6adc8;
+          }
+
+          &:hover {
+            opacity: 0.95;
+          }
+
+          &.selected {
+            opacity: 1;
+          }
+        }
+
         &:hover {
           background-color: $card-hover-bg;
           border-color: rgba(255, 255, 255, 0.08);
@@ -449,6 +469,26 @@ window.ExplorerWindow {
         border-radius: 10px;
         padding: 7px 12px;
         transition: all 100ms ease;
+
+        &.is-hidden {
+          opacity: 0.65;
+
+          .list-icon {
+            opacity: 0.7;
+          }
+
+          .list-name {
+            color: #a6adc8;
+          }
+
+          &:hover {
+            opacity: 0.95;
+          }
+
+          &.selected {
+            opacity: 1;
+          }
+        }
 
         .list-icon {
           font-size: 18px;
