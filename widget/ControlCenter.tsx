@@ -4,6 +4,7 @@ import Brightness from "../service/brightness"
 import Bluetooth, { BluetoothDevice } from "../service/bluetooth"
 import Network from "../service/network"
 import ControlCenter from "../service/controlcenter"
+import Notifications, { NotificationItem } from "../service/notifications"
 
 export default function ControlCenterWidget() {
   return (
@@ -207,6 +208,104 @@ export default function ControlCenterWidget() {
           />
           <label class="slider-text" label={Brightness.percentageText} />
         </box>
+      </box>
+
+      {/* 4. Notifications Section (Longer Height + Reference Design) */}
+      <box class="notifications-panel" orientation={Gtk.Orientation.VERTICAL} spacing={8}>
+        {/* Header: "Notifications (3)" + "Clear all" */}
+        <box class="notif-header" spacing={8} valign={Gtk.Align.CENTER}>
+          <label
+            class="notif-header-title"
+            label={Notifications.headerText}
+            hexpand={true}
+            xalign={0}
+          />
+          <button
+            class="notif-clear-btn"
+            valign={Gtk.Align.CENTER}
+            onClicked={() => Notifications.clearAll()}
+          >
+            <label label="Clear all" />
+          </button>
+        </box>
+
+        {/* Scrollable Notifications List */}
+        <scrollable
+          class="notif-scrollable"
+          hscroll={Gtk.PolicyType.NEVER}
+          vscroll={Gtk.PolicyType.AUTOMATIC}
+        >
+          <box
+            class="notif-list"
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={6}
+            $={(self) => {
+              const render = () => {
+                self.get_children().forEach((ch) => ch.destroy())
+                const list = Notifications.notifications()
+
+                if (list.length === 0) {
+                  self.add(
+                    <box class="empty-notif" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+                      <label class="empty-text" label="No notifications" />
+                    </box>
+                  )
+                } else {
+                  for (const n of list) {
+                    const item = (
+                      <box class="notif-card-item" spacing={10} valign={Gtk.Align.START}>
+                        {/* App Icon */}
+                        <icon
+                          class="notif-icon"
+                          icon={n.appIcon || "dialog-information"}
+                          pixelSize={24}
+                          valign={Gtk.Align.START}
+                        />
+
+                        {/* Content */}
+                        <box orientation={Gtk.Orientation.VERTICAL} spacing={3} hexpand={true}>
+                          {/* Title + Timestamp + Close */}
+                          <box spacing={6} valign={Gtk.Align.CENTER}>
+                            <label
+                              class="notif-title"
+                              label={n.summary}
+                              hexpand={true}
+                              xalign={0}
+                              ellipsize={3}
+                              maxWidthChars={20}
+                            />
+                            <label class="notif-time" label={n.time} />
+                            <button
+                              class="notif-close-btn"
+                              valign={Gtk.Align.CENTER}
+                              onClicked={() => Notifications.dismiss(n.id)}
+                            >
+                              <label label="✕" />
+                            </button>
+                          </box>
+
+                          {/* Body */}
+                          <label
+                            class="notif-body"
+                            label={n.body}
+                            xalign={0}
+                            wrap={true}
+                            maxWidthChars={30}
+                          />
+                        </box>
+                      </box>
+                    )
+                    self.add(item)
+                  }
+                }
+                self.show_all()
+              }
+
+              render()
+              Notifications.notifications.subscribe(render)
+            }}
+          />
+        </scrollable>
       </box>
     </box>
   )
