@@ -1,0 +1,215 @@
+// ==========================================
+// Miri Spotlight App Launcher Theme (Aligned with Top-Bar)
+// ==========================================
+
+$bar-bg: #18191c;
+$bar-border: rgba(255, 255, 255, 0.08);
+
+$card-bg: #22242e;
+$card-hover-bg: #2b2f3e;
+$card-selected-bg: #2e303e;
+
+$accent-blue: #437bf6;
+$accent-blue-hover: #588eff;
+
+$color-text: #ffffff;
+$color-dim: #9399b2;
+$color-muted: #9399b2;
+$color-key: #5c6077;
+
+* {
+  all: unset;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+}
+
+label {
+  color: $color-text;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+}
+
+.icon {
+  font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
+  font-size: 16px;
+}
+
+window.SpotlightWindow {
+  background-color: transparent;
+}
+
+.SpotlightCard {
+  background-color: $bar-bg;
+  border: 1px solid $bar-border;
+  border-radius: 20px;
+  min-width: 620px;
+  min-height: 420px;
+  padding: 0;
+  margin: 12px;
+}
+
+// ------------------------------------------
+// 1. Search Header Bar
+// ------------------------------------------
+.spotlight-search-header {
+  background-color: $bar-bg;
+  border-bottom: 1px solid $bar-border;
+  border-radius: 20px 20px 0 0;
+  padding: 16px 20px;
+
+  .search-lead-icon {
+    font-size: 20px;
+    color: $accent-blue;
+  }
+
+  .spotlight-entry {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+
+    placeholder {
+      color: #5c6077;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+
+  .search-clear-btn {
+    background: #22242e;
+    border-radius: 8px;
+    padding: 4px 8px;
+
+    .icon {
+      font-size: 13px;
+      color: $color-dim;
+    }
+
+    &:hover {
+      background: #313547;
+      .icon {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 2. Results List
+// ------------------------------------------
+.results-scrollable {
+  background-color: $bar-bg;
+  padding: 10px 14px;
+  min-height: 300px;
+
+  .empty-results-box {
+    padding: 60px 0;
+
+    .empty-icon {
+      font-size: 40px;
+      color: #5c6077;
+    }
+
+    .empty-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    .empty-sub {
+      font-size: 12.5px;
+      color: $color-dim;
+    }
+  }
+
+  .results-container {
+    .result-item-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 9px 12px;
+      transition: all 100ms ease-in-out;
+
+      .item-app-icon {
+        margin-right: 2px;
+      }
+
+      .item-lucide-icon {
+        font-size: 22px;
+        color: $accent-blue;
+        min-width: 28px;
+      }
+
+      .item-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .item-subtitle {
+        font-size: 12px;
+        font-weight: 600;
+        color: $color-dim;
+      }
+
+      .enter-badge {
+        background: rgba(67, 123, 246, 0.2);
+        border: 1px solid rgba(67, 123, 246, 0.4);
+        border-radius: 8px;
+        padding: 4px 8px;
+
+        .enter-label {
+          font-size: 11px;
+          font-weight: 800;
+          color: #89b4fa;
+        }
+      }
+
+      &:hover {
+        background-color: #22242e;
+      }
+
+      &.selected {
+        background-color: #2e303e;
+        border-color: rgba(67, 123, 246, 0.4);
+
+        .item-title {
+          color: #ffffff;
+        }
+
+        .item-subtitle {
+          color: #cdd6f4;
+        }
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 3. Spotlight Footer Shortcuts Bar
+// ------------------------------------------
+.spotlight-footer {
+  background-color: #14151a;
+  border-top: 1px solid $bar-border;
+  border-radius: 0 0 20px 20px;
+  padding: 8px 18px;
+
+  .footer-chip {
+    .footer-key {
+      background: #22242e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #bac2de;
+    }
+
+    .footer-desc {
+      font-size: 12px;
+      font-weight: 600;
+      color: $color-dim;
+    }
+  }
+}
