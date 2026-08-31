@@ -1,7 +1,7 @@
 import { Gtk } from "ags/gtk3"
 import { createComputed } from "gnim"
 import Brightness from "../service/brightness"
-import Bluetooth from "../service/bluetooth"
+import Bluetooth, { BluetoothDevice } from "../service/bluetooth"
 import Network from "../service/network"
 import ControlCenter from "../service/controlcenter"
 
@@ -14,6 +14,7 @@ export default function ControlCenterWidget() {
         <button
           class={createComputed(() => `toggle-btn wifi ${Network.isConnected() ? "active" : ""}`)}
           hexpand={true}
+          onClicked={() => Network.toggleOpen()}
         >
           <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
             <label class="icon" label={Network.icon} />
@@ -44,11 +45,11 @@ export default function ControlCenterWidget() {
           </box>
         </button>
 
-        {/* Toggle 4: Bluetooth */}
+        {/* Toggle 4: Bluetooth (Click to expand devices container) */}
         <button
-          class={createComputed(() => `toggle-btn bluetooth ${Bluetooth.isPowered() ? "active" : ""}`)}
+          class={createComputed(() => `toggle-btn bluetooth ${Bluetooth.isPowered() ? "active" : ""} ${Bluetooth.isExpanded() ? "expanded" : ""}`)}
           hexpand={true}
-          onClicked={() => Bluetooth.togglePower()}
+          onClicked={() => Bluetooth.toggleExpanded()}
         >
           <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
             <label class="icon" label={Bluetooth.icon} />
@@ -57,7 +58,138 @@ export default function ControlCenterWidget() {
         </button>
       </box>
 
-      {/* 2. Brightness Slider */}
+      {/* 2. Expandable Bluetooth Devices Container */}
+      <revealer
+        revealChild={Bluetooth.isExpanded}
+        transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+        transitionDuration={200}
+      >
+        <box class="bluetooth-expanded-panel" orientation={Gtk.Orientation.VERTICAL} spacing={8}>
+          {/* Bluetooth Subheader */}
+          <box class="bt-sub-header" spacing={8} valign={Gtk.Align.CENTER}>
+            <label class="bt-title" label="Bluetooth Devices" hexpand={true} xalign={0} />
+
+            <button
+              class={createComputed(() => `bt-rescan-btn ${Bluetooth.isScanning() ? "spinning" : ""}`)}
+              valign={Gtk.Align.CENTER}
+              onClicked={() => Bluetooth.rescan()}
+            >
+              <label label="󰑐" />
+            </button>
+
+            <button
+              class="bt-power-btn"
+              valign={Gtk.Align.CENTER}
+              onClicked={() => Bluetooth.togglePower()}
+            >
+              <label label="󰐥" />
+            </button>
+          </box>
+
+          {/* Status Message Banner if any */}
+          <revealer
+            revealChild={createComputed(() => Boolean(Bluetooth.statusMessage()))}
+            transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+            transitionDuration={150}
+          >
+            <box class="bt-status-banner" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+              <label class="bt-status-text" label={Bluetooth.statusMessage} />
+            </box>
+          </revealer>
+
+          {/* Bluetooth Devices Scrollable List */}
+          <scrollable
+            class="bt-scrollable"
+            hscroll={Gtk.PolicyType.NEVER}
+            vscroll={Gtk.PolicyType.AUTOMATIC}
+          >
+            <box
+              class="bt-device-list"
+              orientation={Gtk.Orientation.VERTICAL}
+              spacing={3}
+              $={(self) => {
+                const render = () => {
+                  self.get_children().forEach((ch) => ch.destroy())
+                  const list = Bluetooth.devices()
+
+                  if (!Bluetooth.isPowered()) {
+                    self.add(
+                      <box class="empty-bt" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+                        <label class="empty-text" label="Bluetooth is turned off" />
+                      </box>
+                    )
+                  } else if (list.length === 0) {
+                    self.add(
+                      <box class="empty-bt" halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+                        <label
+                          class="empty-text"
+                          label={Bluetooth.isScanning() ? "Searching for devices..." : "No devices found"}
+                        />
+                      </box>
+                    )
+                  } else {
+                    for (const dev of list.slice(0, 10)) {
+                      const btn = (
+                        <button
+                          class={`bt-item-btn ${dev.connected ? "connected-item" : ""}`}
+                          onClicked={() => Bluetooth.handleDeviceClick(dev)}
+                        >
+                          <box spacing={10} valign={Gtk.Align.CENTER}>
+                            {/* Device Icon */}
+                            <label class="bt-device-icon" label={dev.icon} />
+
+                            {/* Device Name */}
+                            <box orientation={Gtk.Orientation.VERTICAL} spacing={1} hexpand={true}>
+                              <label
+                                class="bt-device-name"
+                                label={dev.name}
+                                xalign={0}
+                                ellipsize={3}
+                                maxWidthChars={22}
+                              />
+                              <label
+                                class="bt-device-sub"
+                                label={dev.connected ? "Connected" : dev.paired ? "Paired" : "Available"}
+                                xalign={0}
+                              />
+                            </box>
+
+                            {/* Connected Indicator / Action */}
+                            {dev.connected ? <label class="check-icon" label="✓" /> : null}
+                          </box>
+                        </button>
+                      )
+                      self.add(btn)
+                    }
+                  }
+                  self.show_all()
+                }
+
+                // Initial render
+                render()
+                // Subscribe to state updates
+                Bluetooth.devices.subscribe(render)
+                Bluetooth.isPowered.subscribe(render)
+                Bluetooth.isScanning.subscribe(render)
+              }}
+            />
+          </scrollable>
+
+          {/* Footer Divider & Bluetooth Settings Button */}
+          <box class="bt-footer" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
+            <box class="footer-divider" />
+            <button
+              class="all-bt-btn"
+              xalign={0}
+              onClicked={() => Bluetooth.openSettings()}
+            >
+              <label class="all-bt-text" label="Bluetooth Settings" xalign={0} />
+            </button>
+          </box>
+        </box>
+      </revealer>
+
+      {/* 3. Brightness Slider */}
       <box class="sliders-section" orientation={Gtk.Orientation.VERTICAL} spacing={8}>
         <box class="slider-row brightness" spacing={10} valign={Gtk.Align.CENTER}>
           <box class="slider-icon-btn">

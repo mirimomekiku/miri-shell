@@ -336,9 +336,158 @@ window.BarWindow {
         color: #89b4fa;
       }
 
+      &.bluetooth.expanded {
+        background: #313548;
+        color: #ffffff;
+      }
+
       &:hover {
         background: #313547;
         color: #ffffff;
+      }
+    }
+  }
+
+  // ------------------------------------------
+  // Bluetooth Expanded Devices Container
+  // ------------------------------------------
+  .bluetooth-expanded-panel {
+    background: #202330;
+    border: 1px solid rgba(137, 180, 250, 0.2);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin: 2px 0 4px 0;
+
+    .bt-sub-header {
+      padding-bottom: 2px;
+
+      .bt-title {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .bt-rescan-btn,
+      .bt-power-btn {
+        background: transparent;
+        padding: 4px 6px;
+        color: $color-muted;
+        transition: all 120ms ease-in-out;
+
+        label {
+          font-size: 14px;
+        }
+
+        &:hover {
+          color: #ffffff;
+        }
+      }
+    }
+
+    .bt-status-banner {
+      background: #282c3f;
+      border-radius: 8px;
+      padding: 4px 8px;
+      margin: 2px 0;
+
+      .bt-status-text {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #89b4fa;
+      }
+    }
+
+    .bt-scrollable {
+      min-height: 140px;
+
+      .bt-device-list {
+        padding: 2px 0;
+
+        .empty-bt {
+          padding: 20px 0;
+          .empty-text {
+            font-size: 12px;
+            color: $color-muted;
+          }
+        }
+
+        .bt-item-btn {
+          background: transparent;
+          border-radius: 8px;
+          padding: 6px 8px;
+          margin: 1px 0;
+          border-left: 2px solid transparent;
+          transition: all 120ms ease-in-out;
+
+          .bt-device-icon {
+            font-size: 15px;
+            color: #89b4fa;
+          }
+
+          .bt-device-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #cdd6f4;
+          }
+
+          .bt-device-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: #9399b2;
+          }
+
+          .check-icon {
+            font-size: 13px;
+            font-weight: 800;
+            color: #89b4fa;
+          }
+
+          &.connected-item {
+            background: #272a3b;
+            border-left: 2px solid #89b4fa;
+
+            .bt-device-name {
+              color: #ffffff;
+            }
+          }
+
+          &:hover {
+            background: #282c3d;
+
+            .bt-device-name {
+              color: #ffffff;
+            }
+          }
+        }
+      }
+    }
+
+    .bt-footer {
+      padding-top: 2px;
+
+      .footer-divider {
+        min-height: 1px;
+        background-color: rgba(255, 255, 255, 0.06);
+        margin: 2px 0;
+      }
+
+      .all-bt-btn {
+        background: transparent;
+        border-radius: 6px;
+        padding: 4px 6px;
+
+        .all-bt-text {
+          font-size: 12px;
+          font-weight: 600;
+          color: $color-muted;
+        }
+
+        &:hover {
+          background: #282c3d;
+          .all-bt-text {
+            color: #ffffff;
+          }
+        }
       }
     }
   }
