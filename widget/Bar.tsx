@@ -5,8 +5,8 @@ import AudioWidget from "./Audio"
 import Workspaces from "./Workspaces"
 import NetworkWidget from "./Network"
 import Clock from "./Clock"
-import MediaCard from "./MediaPopup"
-import Media from "../service/media"
+import ControlCenterWidget from "./ControlCenter"
+import ControlCenter from "../service/controlcenter"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP } = Astal.WindowAnchor
@@ -22,10 +22,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       <box class="BarContainer" orientation={Gtk.Orientation.VERTICAL} spacing={4} halign={Gtk.Align.CENTER}>
         {/* Top Pill Bar Row */}
         <box class="PillBar" spacing={16} valign={Gtk.Align.CENTER}>
-          {/* 1. Time */}
+          {/* 1. Time (Click to toggle Control Center) */}
           <Clock />
 
-          {/* 2. Audio */}
+          {/* 2. Audio (Click to toggle Control Center, scroll to change volume) */}
           <AudioWidget />
 
           {/* 3. Workspaces (1 2 3 4 5) */}
@@ -38,13 +38,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           <BatteryWidget />
         </box>
 
-        {/* Slide-down Media & Volume Controls */}
+        {/* Slide-down Control Center */}
         <revealer
-          revealChild={Media.isOpen}
+          revealChild={ControlCenter.isOpen}
           transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
           transitionDuration={250}
         >
-          <MediaCard />
+          <ControlCenterWidget />
         </revealer>
       </box>
     </window>

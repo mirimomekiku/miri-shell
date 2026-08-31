@@ -148,145 +148,207 @@ window.BarWindow {
 }
 
 // ==========================================
-// Media & Audio Controls Dropdown
+// Control Center Dropdown Panel
 // ==========================================
-.MediaPopupCard {
+.ControlCenterCard {
   background: $bar-bg;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   margin-top: 6px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   min-width: 380px;
 
-  .media-player-row {
-    .album-art {
-      min-width: 48px;
-      min-height: 48px;
-      border-radius: 8px;
-      background-color: #262833;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+  // ------------------------------------------
+  // 1. Media Section
+  // ------------------------------------------
+  .media-box {
+    .media-top-row {
+      .album-art {
+        min-width: 48px;
+        min-height: 48px;
+        border-radius: 8px;
+        background-color: #262833;
+        border: 1px solid rgba(255, 255, 255, 0.05);
 
-      .fallback-icon {
-        font-size: 20px;
-        color: $color-wifi;
-      }
-    }
-
-    .media-info {
-      padding: 0 4px;
-
-      .media-title {
-        font-size: 14px;
-        font-weight: 800;
-        color: #ffffff;
+        .fallback-icon {
+          font-size: 20px;
+          color: $color-wifi;
+        }
       }
 
-      .media-artist {
-        font-size: 12px;
-        font-weight: 600;
-        color: #a6adc8;
-        margin-bottom: 2px;
-      }
+      .media-meta {
+        padding: 0 4px;
 
-      .progress-row {
-        .time-label {
-          font-size: 11px;
+        .media-title {
+          font-size: 14.5px;
+          font-weight: 800;
+          color: #ffffff;
+        }
+
+        .media-artist {
+          font-size: 12px;
           font-weight: 600;
-          color: #9399b2;
+          color: #a6adc8;
         }
+      }
 
-        .media-slider {
-          min-height: 12px;
+      .media-controls {
+        .ctrl-btn {
+          min-width: 28px;
+          min-height: 28px;
+          border-radius: 9999px;
+          background: transparent;
+          color: #cdd6f4;
+          transition: all 150ms ease-in-out;
 
-          trough {
-            min-height: 4px;
-            border-radius: 9999px;
-            background-color: #3c3f50;
+          label {
+            font-size: 15px;
           }
 
-          highlight {
-            min-height: 4px;
-            border-radius: 9999px;
-            background-color: #ffffff;
+          &.play {
+            background: #2a2c3a;
+            color: #ffffff;
+            min-width: 32px;
+            min-height: 32px;
+
+            &:hover {
+              background: #3e4258;
+            }
           }
 
-          slider {
-            min-width: 0;
-            min-height: 0;
-            opacity: 0;
+          &:hover {
+            color: #ffffff;
           }
         }
       }
     }
 
-    .play-pause-btn {
-      min-width: 36px;
+    .media-progress-row {
+      margin-top: 2px;
+
+      .time-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #9399b2;
+      }
+
+      .media-slider {
+        min-height: 12px;
+
+        trough {
+          min-height: 4px;
+          border-radius: 9999px;
+          background-color: #383a48;
+        }
+
+        highlight {
+          min-height: 4px;
+          border-radius: 9999px;
+          background-color: #ffffff;
+        }
+
+        slider {
+          min-width: 0;
+          min-height: 0;
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------
+  // 2. Quick Toggles Row (Wi-Fi, DND, Timer, Bluetooth)
+  // ------------------------------------------
+  .quick-toggles-row {
+    padding: 2px 0;
+
+    .toggle-btn {
+      background: #22242e;
+      border-radius: 12px;
+      padding: 8px 10px;
       min-height: 36px;
-      border-radius: 9999px;
-      background: #282a36;
-      color: #ffffff;
+      color: #9399b2;
       transition: all 150ms ease-in-out;
 
       label {
-        font-size: 16px;
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+
+      .icon {
+        font-size: 15px;
+      }
+
+      &.wifi .icon {
+        color: $color-wifi;
+      }
+
+      &.active {
+        background: #2b2f3e;
+        color: #ffffff;
+      }
+
+      &.bluetooth.active .icon {
+        color: #89b4fa;
       }
 
       &:hover {
-        background: #3e4153;
+        background: #313547;
         color: #ffffff;
       }
     }
   }
 
   // ------------------------------------------
-  // Volume Slider Row
+  // 3. Sliders Section (Volume & Brightness)
   // ------------------------------------------
-  .volume-row {
-    padding-top: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  .sliders-section {
+    padding-top: 2px;
 
-    .volume-icon-btn {
-      background: transparent;
-      padding: 0 2px;
+    .slider-row {
+      .slider-icon-btn {
+        background: transparent;
+        padding: 0 2px;
 
-      .icon {
-        color: $color-audio;
-        font-size: 15px;
+        .icon {
+          color: #ffffff;
+          font-size: 15px;
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
       }
 
-      &:hover {
-        opacity: 0.8;
+      .cc-slider {
+        min-height: 12px;
+
+        trough {
+          min-height: 4px;
+          border-radius: 9999px;
+          background-color: #383a48;
+        }
+
+        highlight {
+          min-height: 4px;
+          border-radius: 9999px;
+          background-color: #ffffff;
+        }
+
+        slider {
+          min-width: 0;
+          min-height: 0;
+          opacity: 0;
+        }
       }
-    }
 
-    .volume-slider {
-      min-height: 12px;
-
-      trough {
-        min-height: 4px;
-        border-radius: 9999px;
-        background-color: #3c3f50;
+      .slider-text {
+        font-size: 12px;
+        font-weight: 700;
+        color: #ffffff;
+        min-width: 32px;
       }
-
-      highlight {
-        min-height: 4px;
-        border-radius: 9999px;
-        background-color: $color-audio;
-      }
-
-      slider {
-        min-width: 0;
-        min-height: 0;
-        opacity: 0;
-      }
-    }
-
-    .volume-text {
-      font-size: 12px;
-      font-weight: 700;
-      color: $color-text;
-      min-width: 32px;
     }
   }
 }
