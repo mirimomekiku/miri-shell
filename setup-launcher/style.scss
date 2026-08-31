@@ -34,8 +34,14 @@ label {
   font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
 }
 
-.icon {
-  font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
+label.icon,
+.icon,
+.cat-icon,
+.tool-icon,
+.check-icon,
+.search-icon,
+.status-icon {
+  font-family: "lucide" !important;
   font-size: 16px;
 }
 
