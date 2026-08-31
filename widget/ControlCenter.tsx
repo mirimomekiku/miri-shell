@@ -5,6 +5,7 @@ import Bluetooth, { BluetoothDevice } from "../service/bluetooth"
 import Network from "../service/network"
 import ControlCenter from "../service/controlcenter"
 import Notifications, { NotificationItem } from "../service/notifications"
+import Capture from "../service/capture"
 
 export default function ControlCenterWidget() {
   return (
@@ -306,6 +307,51 @@ export default function ControlCenterWidget() {
             }}
           />
         </scrollable>
+      </box>
+
+      {/* 5. Quick Utilities Bar: Screenshot, Screen Record, Settings */}
+      <box class="quick-utilities-row" spacing={8} valign={Gtk.Align.CENTER}>
+        {/* Screenshot Button */}
+        <button
+          class="utility-btn screenshot"
+          hexpand={true}
+          tooltipText="Take Region Screenshot"
+          onClicked={() => Capture.takeScreenshot("region")}
+        >
+          <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+            <label class="icon" label="󰄀" />
+            <label class="text" label="Screenshot" />
+          </box>
+        </button>
+
+        {/* Screen Record Button */}
+        <button
+          class={createComputed(() => `utility-btn record ${Capture.isRecording() ? "recording" : ""}`)}
+          hexpand={true}
+          tooltipText="Toggle Screen Recording"
+          onClicked={() => Capture.toggleRecording()}
+        >
+          <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+            <label class="icon" label={Capture.recordIcon} />
+            <label
+              class="text"
+              label={createComputed(() => (Capture.isRecording() ? "Recording" : "Record"))}
+            />
+          </box>
+        </button>
+
+        {/* Settings Button */}
+        <button
+          class="utility-btn settings"
+          hexpand={true}
+          tooltipText="Open Settings"
+          onClicked={() => Capture.openSettings()}
+        >
+          <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+            <label class="icon" label="󰒓" />
+            <label class="text" label="Settings" />
+          </box>
+        </button>
       </box>
     </box>
   )

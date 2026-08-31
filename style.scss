@@ -632,6 +632,72 @@ window.BarWindow {
       }
     }
   }
+
+  // ------------------------------------------
+  // 5. Quick Utilities Row (Screenshot, Record, Settings)
+  // ------------------------------------------
+  .quick-utilities-row {
+    padding-top: 4px;
+
+    .utility-btn {
+      background: #22242e;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 8px 10px;
+      min-height: 36px;
+      color: #9399b2;
+      transition: all 150ms ease-in-out;
+
+      label {
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+
+      .icon {
+        font-size: 15px;
+        color: #89b4fa;
+      }
+
+      &.screenshot:hover {
+        background: #2b2f3e;
+        color: #ffffff;
+        border-color: rgba(137, 180, 250, 0.2);
+      }
+
+      &.record {
+        .icon {
+          color: #f38ba8;
+        }
+
+        &.recording {
+          background: #3e2229;
+          color: #ffffff;
+          border-color: rgba(243, 139, 168, 0.4);
+
+          .icon {
+            color: #f38ba8;
+          }
+        }
+
+        &:hover {
+          background: #2b2f3e;
+          color: #ffffff;
+        }
+      }
+
+      &.settings {
+        .icon {
+          color: #cba6f7;
+        }
+
+        &:hover {
+          background: #2b2f3e;
+          color: #ffffff;
+          border-color: rgba(203, 166, 247, 0.2);
+        }
+      }
+    }
+  }
 }
 
 // ==========================================
