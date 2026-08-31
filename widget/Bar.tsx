@@ -1,36 +1,38 @@
 import app from "ags/gtk3/app"
 import { Astal, Gtk, Gdk } from "ags/gtk3"
+import BatteryWidget from "./Battery"
+import AudioWidget from "./Audio"
 import Workspaces from "./Workspaces"
-import ActiveTitle from "./ActiveTitle"
+import NetworkWidget from "./Network"
 import Clock from "./Clock"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-  const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+  const { TOP } = Astal.WindowAnchor
 
   return (
     <window
-      class="Bar"
+      class="BarWindow"
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={TOP | LEFT | RIGHT}
+      anchor={TOP}
       application={app}
     >
-      <centerbox class="bar-inner">
-        {/* Left: Workspaces */}
-        <box $type="start" class="bar-section left" spacing={8} halign={Gtk.Align.START}>
-          <Workspaces />
-        </box>
+      <box class="PillBar" spacing={16} valign={Gtk.Align.CENTER}>
+        {/* 1. Battery */}
+        <BatteryWidget />
 
-        {/* Center: Focused Window Title */}
-        <box $type="center" class="bar-section center" halign={Gtk.Align.CENTER}>
-          <ActiveTitle />
-        </box>
+        {/* 2. Audio */}
+        <AudioWidget />
 
-        {/* Right: Clock & Status */}
-        <box $type="end" class="bar-section right" spacing={8} halign={Gtk.Align.END}>
-          <Clock />
-        </box>
-      </centerbox>
+        {/* 3. Workspaces (1 2 3 4 5) */}
+        <Workspaces />
+
+        {/* 4. Network / Wi-Fi */}
+        <NetworkWidget />
+
+        {/* 5. Time (18:56) */}
+        <Clock />
+      </box>
     </window>
   )
 }

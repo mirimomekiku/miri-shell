@@ -1,101 +1,137 @@
 // ==========================================
-// miri-shell Theme & Styles
+// miri-shell: Floating Pill Top Bar Theme
 // ==========================================
 
-$bg-base: rgba(20, 22, 30, 0.85);
-$bg-surface: rgba(35, 38, 52, 0.7);
-$bg-hover: rgba(55, 60, 80, 0.8);
-$bg-active: #89b4fa;
+$bar-bg: #18191c;
+$bar-border: rgba(255, 255, 255, 0.06);
 
-$fg-main: #cdd6f4;
-$fg-dim: #7f849c;
-$fg-active: #11111b;
+$color-battery: #3cd070; // Bright green
+$color-audio: #fab387;   // Warm amber / orange
+$color-wifi: #58a6ff;    // Vivid blue
+$color-text: #ffffff;
+$color-dim: #9399b2;
 
-$border-color: rgba(255, 255, 255, 0.08);
-$accent-color: #89b4fa;
-$radius: 12px;
+$ws-occupied-bg: #2e303e;
+$ws-focused-bg: #5c6077;
 
 * {
   all: unset;
-  font-family: "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
   font-size: 13px;
+  font-weight: 700;
 }
 
-window.Bar {
+window.BarWindow {
   background: transparent;
-  color: $fg-main;
+}
 
-  .bar-inner {
-    background: $bg-base;
-    border-bottom: 1px solid $border-color;
-    padding: 4px 12px;
+.PillBar {
+  background: $bar-bg;
+  border: 1px solid $bar-border;
+  border-radius: 9999px;
+  padding: 5px 18px;
+  margin-top: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+// ------------------------------------------
+// 1. Battery Module
+// ------------------------------------------
+.Battery {
+  .icon {
+    color: $color-battery;
+    font-size: 14px;
+    margin-right: 2px;
+  }
+  .text {
+    color: $color-text;
   }
 }
 
 // ------------------------------------------
-// Workspaces
+// 2. Audio Module
+// ------------------------------------------
+.Audio {
+  background: transparent;
+  padding: 0;
+
+  .icon {
+    color: $color-audio;
+    font-size: 14px;
+    margin-right: 2px;
+  }
+  .text {
+    color: $color-text;
+  }
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+// ------------------------------------------
+// 3. Workspaces (1 2 3 4 5)
 // ------------------------------------------
 .Workspaces {
-  padding: 2px 4px;
+  padding: 0 4px;
 
-  .workspace-btn {
-    min-width: 28px;
-    min-height: 28px;
-    padding: 0 8px;
-    border-radius: 8px;
-    background: transparent;
-    color: $fg-dim;
-    transition: all 180ms ease-in-out;
+  .ws-item {
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
     margin: 0 2px;
+    border-radius: 9999px;
+    background: transparent;
+    color: $color-dim;
+    transition: all 150ms ease-in-out;
 
     label {
-      font-weight: bold;
-    }
-
-    &:hover {
-      background: $bg-hover;
-      color: $fg-main;
+      font-size: 12px;
+      font-weight: 800;
     }
 
     &.occupied {
-      color: $fg-main;
-      background: $bg-surface;
+      background: $ws-occupied-bg;
+      color: #cdd6f4;
     }
 
     &.focused {
-      background: $bg-active;
-      color: $fg-active;
-      font-weight: 800;
+      background: $ws-focused-bg;
+      color: #ffffff;
+    }
+
+    &.empty {
+      background: transparent;
+      color: #7f849c;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
     }
   }
 }
 
 // ------------------------------------------
-// Active Title
+// 4. Network / Wi-Fi Module
 // ------------------------------------------
-.ActiveTitle {
-  background: $bg-surface;
-  border: 1px solid $border-color;
-  border-radius: 8px;
-  padding: 4px 16px;
-
-  .title-text {
-    font-weight: 600;
-    color: $fg-main;
+.Network {
+  .icon {
+    color: $color-wifi;
+    font-size: 14px;
+    margin-right: 2px;
+  }
+  .text {
+    color: $color-text;
   }
 }
 
 // ------------------------------------------
-// Clock
+// 5. Clock Module
 // ------------------------------------------
 .Clock {
-  background: $bg-surface;
-  border: 1px solid $border-color;
-  border-radius: 8px;
-  padding: 4px 12px;
-
   .time-label {
-    font-weight: 600;
-    color: $fg-main;
+    color: $color-text;
+    letter-spacing: 0.5px;
   }
 }
