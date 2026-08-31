@@ -1,28 +1,16 @@
 import { createPoll } from "ags/time"
-import { createComputed } from "gnim"
+import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 
 class AudioService {
-  // Poll volume using wpctl (or pactl fallback)
-  public readonly volumeData = createPoll({ volume: 54, muted: false }, 1000, async () => {
-    try {
-      const out = await execAsync("wpctl get-volume @DEFAULT_AUDIO_SINK@")
-      // Output format: "Volume: 0.54" or "Volume: 0.54 [MUTED]"
-      const match = out.match(/Volume:\s+([0-9.]+)(\s+\[MUTED\])?/)
-      if (match) {
-        const vol = Math.round(parseFloat(match[1]) * 100)
-        const isMuted = Boolean(match[2])
-        return { volume: vol, muted: isMuted }
-      }
-    } catch {
-      // fallback to pamixer or pactl
-    }
-    return { volume: 50, muted: false }
-  })
+  private _volume = createState<number>(54)
+  private _muted = createState<boolean>(false)
+  private _debounceTimer: any = null
 
-  public readonly volume = createComputed(() => this.volumeData().volume)
+  public readonly volume = this._volume[0]
+  public readonly isMuted = this._muted[0]
+
   public readonly volumeRatio = createComputed(() => this.volume() / 100)
-  public readonly isMuted = createComputed(() => this.volumeData().muted)
 
   public readonly percentageText = createComputed(() => {
     return `${this.volume()}%`
@@ -36,12 +24,46 @@ class AudioService {
     return "󰕿"
   })
 
+  // Poll in background to keep in sync with external volume changes (e.g. keyboard media keys)
+  public readonly poller = createPoll(null, 1000, async () => {
+    try {
+      const out = await execAsync("wpctl get-volume @DEFAULT_AUDIO_SINK@")
+      const match = out.match(/Volume:\s+([0-9.]+)(\s+\[MUTED\])?/)
+      if (match) {
+        const vol = Math.round(parseFloat(match[1]) * 100)
+        const isMuted = Boolean(match[2])
+        if (this._volume[0]() !== vol) {
+          this._volume[1](vol)
+        }
+        if (this._muted[0]() !== isMuted) {
+          this._muted[1](isMuted)
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return null
+  })
+
   public setVolume(percent: number) {
-    const val = (percent / 100).toFixed(2)
-    execAsync(`wpctl set-volume @DEFAULT_AUDIO_SINK@ ${val}`).catch(() => {})
+    const clamped = Math.min(100, Math.max(0, Math.round(percent)))
+    // Instant real-time UI state update (0ms delay)
+    this._volume[1](clamped)
+    if (this._muted[0]()) {
+      this._muted[1](false)
+    }
+
+    // Apply to audio hardware
+    if (this._debounceTimer) clearTimeout(this._debounceTimer)
+    this._debounceTimer = setTimeout(() => {
+      const val = (clamped / 100).toFixed(2)
+      execAsync(`wpctl set-volume @DEFAULT_AUDIO_SINK@ ${val}`).catch(() => {})
+    }, 10)
   }
 
   public toggleMute() {
+    const next = !this.isMuted()
+    this._muted[1](next)
     execAsync("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle").catch(() => {})
   }
 }
