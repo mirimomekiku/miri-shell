@@ -1,0 +1,22 @@
+{
+  "name": "miri-shell",
+  "version": "0.1.0",
+  "description": "Custom Linux desktop shell for Hyprland built with AGS (Astal)",
+  "type": "module",
+  "scripts": {
+    "dev": "ags run app.ts",
+    "bundle": "ags bundle app.ts dist/miri-shell",
+    "quit": "ags quit"
+  },
+  "dependencies": {
+    "ags": "*",
+    "gnim": "*"
+  },
+  "devDependencies": {
+    "sass": "^1.103.1"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2
+  }
+}
