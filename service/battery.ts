@@ -24,8 +24,8 @@ class BatteryService {
   })
 
   public readonly isCharging = createComputed(() => {
-    const s = this.status().toLowerCase()
-    return s.includes("charging")
+    const s = this.status().toLowerCase().trim()
+    return s === "charging"
   })
 
   public readonly percentageText = createComputed(() => {

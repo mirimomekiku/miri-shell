@@ -80,8 +80,39 @@ export default function NetworkMenu() {
         <box
           class="network-list"
           orientation={Gtk.Orientation.VERTICAL}
-          spacing={3}
+          spacing={4}
           $={(self) => {
+            const createNetworkButton = (ap: WifiAccessPoint) => (
+              <button
+                class={`network-item-btn ${ap.inUse ? "connected-item" : ""} ${ap.isSaved ? "saved-item" : "unsaved-item"}`}
+                onClicked={() => Network.handleNetworkClick(ap)}
+              >
+                <box spacing={10} valign={Gtk.Align.CENTER}>
+                  {/* Signal Icon (Blue if saved, Greyed out if unsaved) & Lock */}
+                  <box class="signal-box" spacing={2} valign={Gtk.Align.CENTER}>
+                    <label
+                      class={`signal-icon ${ap.isSaved ? "saved" : "unsaved"}`}
+                      label={ap.icon}
+                    />
+                    {ap.isLocked ? <label class="lock-icon" label="󰌾" /> : null}
+                  </box>
+
+                  {/* SSID Name */}
+                  <label
+                    class="ssid-name"
+                    label={ap.ssid}
+                    xalign={0}
+                    hexpand={true}
+                    ellipsize={3}
+                    maxWidthChars={24}
+                  />
+
+                  {/* Connected Checkmark Indicator */}
+                  {ap.inUse ? <label class="check-icon" label="✓" /> : null}
+                </box>
+              </button>
+            )
+
             const render = () => {
               self.get_children().forEach((ch) => ch.destroy())
               const list = Network.networks()
@@ -97,35 +128,37 @@ export default function NetworkMenu() {
                 )
                 self.add(emptyBox)
               } else {
-                for (const ap of list.slice(0, 14)) {
-                  const btn = (
-                    <button
-                      class={`network-item-btn ${ap.inUse ? "connected-item" : ""}`}
-                      onClicked={() => Network.handleNetworkClick(ap)}
-                    >
-                      <box spacing={10} valign={Gtk.Align.CENTER}>
-                        {/* Signal Icon & Lock */}
-                        <box class="signal-box" spacing={2} valign={Gtk.Align.CENTER}>
-                          <label class="signal-icon" label={ap.icon} />
-                          {ap.isLocked ? <label class="lock-icon" label="󰌾" /> : null}
-                        </box>
+                const savedList = list.filter((ap) => ap.isSaved)
+                const unsavedList = list.filter((ap) => !ap.isSaved)
 
-                        {/* SSID Name (Never MAC address) */}
-                        <label
-                          class="ssid-name"
-                          label={ap.ssid}
-                          xalign={0}
-                          hexpand={true}
-                          ellipsize={3}
-                          maxWidthChars={24}
-                        />
-
-                        {/* Connected Checkmark Indicator */}
-                        {ap.inUse ? <label class="check-icon" label="✓" /> : null}
-                      </box>
-                    </button>
+                // 1. Saved Networks Section
+                if (savedList.length > 0) {
+                  self.add(
+                    <label
+                      class="network-section-label"
+                      label="Saved Networks"
+                      xalign={0}
+                    />
                   )
-                  self.add(btn)
+                  for (const ap of savedList) {
+                    self.add(createNetworkButton(ap))
+                  }
+                }
+
+                // 2. Available Networks Section
+                if (unsavedList.length > 0) {
+                  if (savedList.length > 0) {
+                    self.add(
+                      <label
+                        class="network-section-label other"
+                        label="Available Networks"
+                        xalign={0}
+                      />
+                    )
+                  }
+                  for (const ap of unsavedList.slice(0, 10)) {
+                    self.add(createNetworkButton(ap))
+                  }
                 }
               }
               self.show_all()

@@ -678,6 +678,18 @@ window.BarWindow {
     .network-list {
       padding: 2px 0;
 
+      .network-section-label {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #89b4fa;
+        padding: 4px 6px 2px 6px;
+
+        &.other {
+          color: #9399b2;
+          margin-top: 6px;
+        }
+      }
+
       .empty-networks {
         padding: 30px 0;
         .empty-text {
@@ -697,7 +709,14 @@ window.BarWindow {
         .signal-box {
           .signal-icon {
             font-size: 14px;
-            color: $color-wifi;
+
+            &.saved {
+              color: $color-wifi;
+            }
+
+            &.unsaved {
+              color: #585b70;
+            }
           }
 
           .lock-icon {
@@ -711,6 +730,12 @@ window.BarWindow {
           font-size: 13.5px;
           font-weight: 600;
           color: #cdd6f4;
+        }
+
+        &.unsaved-item {
+          .ssid-name {
+            color: #a6adc8;
+          }
         }
 
         .check-icon {
