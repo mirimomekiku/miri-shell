@@ -125,12 +125,11 @@ export default function PackageList() {
 
                           {/* Tool Icon */}
                           <box
-                            class="pkg-icon-box"
+                            class={`pkg-icon-box cat-${pkg.category}`}
                             valign={Gtk.Align.CENTER}
                             halign={Gtk.Align.CENTER}
-                            style={`color: ${pkg.color};`}
                           >
-                            <label class="icon tool-icon" label={pkg.icon} />
+                            <label class={`icon tool-icon cat-${pkg.category}`} label={pkg.icon} />
                           </box>
 
                           {/* Package Info */}

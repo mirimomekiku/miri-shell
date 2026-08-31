@@ -47,12 +47,23 @@ export default function InstallProgress() {
         </box>
 
         {/* Linear Progress Bar */}
-        <box class="custom-progress-trough" hexpand={true}>
-          <box
-            class="custom-progress-fill"
-            style={createComputed(() => `min-width: ${Math.max(4, Installer.progressPercent() * 6)}px;`)}
-          />
-        </box>
+        <box
+          class="custom-progress-container"
+          hexpand={true}
+          $={(self) => {
+            const bar = new Gtk.ProgressBar({
+              hexpand: true,
+            })
+            bar.get_style_context().add_class("setup-progressbar")
+            self.add(bar)
+
+            const update = () => {
+              bar.set_fraction(Installer.progressPercent() / 100)
+            }
+            update()
+            Installer.progressPercent.subscribe(update)
+          }}
+        />
       </box>
 
       {/* 2. Live Terminal Logs Output View */}

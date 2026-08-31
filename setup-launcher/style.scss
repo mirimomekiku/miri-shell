@@ -270,6 +270,16 @@ window.SetupWindow {
 
           .tool-icon {
             font-size: 20px;
+            &.cat-runtimes { color: #a6e3a1; }
+            &.cat-browsers { color: #fab387; }
+            &.cat-api { color: #fab387; }
+            &.cat-styling { color: #89dceb; }
+            &.cat-ide { color: #58a6ff; }
+            &.cat-vcs { color: #f38ba8; }
+            &.cat-ai { color: #cba6f7; }
+            &.cat-backend { color: #89dceb; }
+            &.cat-mobile { color: #3cd070; }
+            &.cat-terminals { color: #a6e3a1; }
           }
         }
 
@@ -413,16 +423,22 @@ window.SetupWindow {
       color: $accent-blue;
     }
 
-    .custom-progress-trough {
-      background: #22242e;
-      border-radius: 9999px;
-      min-height: 8px;
+    .custom-progress-container {
       margin-top: 4px;
 
-      .custom-progress-fill {
-        background: $accent-blue;
-        border-radius: 9999px;
+      progressbar,
+      .setup-progressbar {
         min-height: 8px;
+        trough {
+          background: #22242e;
+          border-radius: 9999px;
+          min-height: 8px;
+        }
+        progress {
+          background: $accent-blue;
+          border-radius: 9999px;
+          min-height: 8px;
+        }
       }
     }
   }
