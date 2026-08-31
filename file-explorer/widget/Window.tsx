@@ -65,17 +65,31 @@ export default function ExplorerWindow() {
         {/* 1. Header Navigation & Path Bar */}
         <Header />
 
-        {/* 2. Resizable Main Body: Gtk.Paned allows user to drag & resize sidebar */}
-        <paned
-          class="resizable-paned"
+        {/* 2. Resizable Main Body using native Gtk.Paned */}
+        <box
+          class="paned-wrapper"
           orientation={Gtk.Orientation.HORIZONTAL}
-          position={200}
           hexpand={true}
           vexpand={true}
-        >
-          <Sidebar />
-          <FileView />
-        </paned>
+          $={(self) => {
+            const paned = new Gtk.Paned({
+              orientation: Gtk.Orientation.HORIZONTAL,
+              position: 210,
+              hexpand: true,
+              vexpand: true,
+            })
+            paned.get_style_context().add_class("resizable-paned")
+
+            const sidebarWidget = Sidebar()
+            const fileViewWidget = FileView()
+
+            paned.pack1(sidebarWidget, false, false)
+            paned.pack2(fileViewWidget, true, false)
+
+            self.add(paned)
+            self.show_all()
+          }}
+        />
 
         {/* 3. Footer Status Bar */}
         <box class="StatusBar" spacing={12} valign={Gtk.Align.CENTER}>
