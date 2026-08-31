@@ -1,0 +1,11 @@
+{
+  "name": "miri-setup-launcher",
+  "version": "0.1.0",
+  "description": "Interactive developer environment & toolchain setup wizard for Fedora / Hyprland",
+  "type": "module",
+  "scripts": {
+    "dev": "ags run app.ts",
+    "bundle": "ags bundle app.ts dist/miri-setup",
+    "quit": "ags quit -i setup-launcher"
+  }
+}

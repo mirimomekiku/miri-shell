@@ -1,0 +1,490 @@
+// ==========================================
+// Miri Developer Setup Wizard Theme (Impeccable Edition)
+// ==========================================
+
+$bar-bg: #18191c;
+$bar-border: rgba(255, 255, 255, 0.08);
+
+$card-bg: #22242e;
+$card-hover-bg: #282c3c;
+$card-selected-bg: #2e3448;
+
+$accent-blue: #437bf6;
+$accent-blue-hover: #588eff;
+
+$color-text: #ffffff;
+$color-dim: #9399b2;
+$color-muted: #9399b2;
+$color-subtle: #5c6077;
+
+$color-success: #a6e3a1;
+$color-warn: #f9e2af;
+$color-error: #f38ba8;
+
+* {
+  all: unset;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+}
+
+label {
+  color: $color-text;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+}
+
+.icon {
+  font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
+  font-size: 16px;
+}
+
+window.SetupWindow {
+  background-color: $bar-bg;
+}
+
+.SetupContainer {
+  background-color: $bar-bg;
+  padding: 0;
+}
+
+// ------------------------------------------
+// 1. Header Bar
+// ------------------------------------------
+.setup-header {
+  background-color: #14151a;
+  border-bottom: 1px solid $bar-border;
+  padding: 14px 20px;
+
+  .app-logo-badge {
+    background: rgba(67, 123, 246, 0.2);
+    border: 1px solid rgba(67, 123, 246, 0.4);
+    border-radius: 12px;
+    padding: 8px;
+
+    .icon {
+      font-size: 20px;
+      color: $accent-blue;
+    }
+  }
+
+  .setup-main-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .setup-sub-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: $color-dim;
+  }
+
+  .header-close-btn {
+    background: #22242e;
+    border-radius: 9999px;
+    padding: 7px;
+    min-width: 32px;
+    min-height: 32px;
+
+    .icon {
+      font-size: 13px;
+      color: $color-dim;
+    }
+
+    &:hover {
+      background: #313547;
+      .icon {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 2. Body & Toolbar
+// ------------------------------------------
+.setup-body {
+  padding: 16px 20px;
+}
+
+.PackageListView {
+  .toolbar-box {
+    margin-bottom: 6px;
+
+    .search-box {
+      background: #14151a;
+      border: 1px solid $bar-border;
+      border-radius: 14px;
+      padding: 6px 12px;
+
+      .search-icon {
+        color: $accent-blue;
+        font-size: 16px;
+      }
+
+      .search-entry {
+        font-size: 14px;
+        color: #ffffff;
+
+        placeholder {
+          color: $color-subtle;
+          font-weight: 600;
+        }
+      }
+
+      .search-clear-btn {
+        background: transparent;
+        border-radius: 6px;
+        padding: 2px 4px;
+        .icon {
+          font-size: 12px;
+          color: $color-subtle;
+        }
+        &:hover .icon {
+          color: #ffffff;
+        }
+      }
+    }
+
+    .batch-buttons {
+      .batch-btn {
+        background: #22242e;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 7px 12px;
+
+        label {
+          font-size: 12px;
+          font-weight: 700;
+          color: $color-dim;
+        }
+
+        &:hover {
+          background: #313547;
+          label {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+
+    .categories-bar {
+      padding: 4px 0;
+
+      .category-pill {
+        background: #1e202a;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 9999px;
+        padding: 6px 14px;
+        transition: all 120ms ease;
+
+        .cat-icon {
+          font-size: 13px;
+          color: $color-subtle;
+        }
+
+        .cat-label {
+          font-size: 12px;
+          font-weight: 700;
+          color: $color-dim;
+        }
+
+        &:hover {
+          background: #282c3c;
+          .cat-label { color: #ffffff; }
+        }
+
+        &.active {
+          background: #2e3448;
+          border-color: rgba(67, 123, 246, 0.5);
+
+          .cat-icon {
+            color: $accent-blue;
+          }
+
+          .cat-label {
+            color: #ffffff;
+            font-weight: 800;
+          }
+        }
+      }
+    }
+  }
+
+  // Packages Cards
+  .packages-scrollable {
+    background: transparent;
+    padding: 2px 0;
+
+    .empty-pkgs-box {
+      padding: 80px 0;
+
+      .empty-icon {
+        font-size: 40px;
+        color: $color-subtle;
+      }
+      .empty-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+      .empty-sub {
+        font-size: 12.5px;
+        color: $color-dim;
+      }
+    }
+
+    .packages-container {
+      .pkg-card {
+        background: $card-bg;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 12px 14px;
+        transition: all 120ms ease-in-out;
+
+        .pkg-checkbox {
+          min-width: 22px;
+          min-height: 22px;
+          border: 2px solid $color-subtle;
+          border-radius: 7px;
+          background: transparent;
+
+          .check-icon {
+            font-size: 14px;
+            color: #ffffff;
+          }
+
+          &.checked {
+            background: $accent-blue;
+            border-color: $accent-blue;
+          }
+        }
+
+        .pkg-icon-box {
+          background: #18191c;
+          border-radius: 12px;
+          padding: 8px;
+          min-width: 38px;
+          min-height: 38px;
+
+          .tool-icon {
+            font-size: 20px;
+          }
+        }
+
+        .pkg-title {
+          font-size: 14px;
+          font-weight: 800;
+          color: #ffffff;
+        }
+
+        .pkg-category-badge {
+          font-size: 10px;
+          font-weight: 800;
+          background: #18191c;
+          border-radius: 6px;
+          padding: 2px 6px;
+          color: $color-dim;
+        }
+
+        .installed-badge {
+          background: rgba(166, 227, 161, 0.15);
+          border: 1px solid rgba(166, 227, 161, 0.3);
+          border-radius: 6px;
+          padding: 2px 6px;
+
+          .icon {
+            font-size: 11px;
+            color: $color-success;
+          }
+          .badge-text {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: $color-success;
+          }
+        }
+
+        .pkg-desc {
+          font-size: 12px;
+          font-weight: 500;
+          color: $color-dim;
+        }
+
+        &:hover {
+          background: $card-hover-bg;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        &.selected {
+          background: $card-selected-bg;
+          border-color: rgba(67, 123, 246, 0.4);
+        }
+      }
+    }
+  }
+
+  // Bottom Action Bar
+  .bottom-action-bar {
+    background: #14151a;
+    border: 1px solid $bar-border;
+    border-radius: 16px;
+    padding: 10px 16px;
+    margin-top: 6px;
+
+    .selection-summary {
+      font-size: 13px;
+      font-weight: 700;
+      color: $color-dim;
+    }
+
+    .install-now-btn {
+      background: $accent-blue;
+      border-radius: 12px;
+      padding: 10px 20px;
+      transition: all 120ms ease;
+
+      .icon {
+        font-size: 16px;
+        color: #ffffff;
+      }
+
+      .btn-label {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      &:hover {
+        background: $accent-blue-hover;
+      }
+
+      &.disabled {
+        opacity: 0.4;
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 3. Install Progress View
+// ------------------------------------------
+.InstallProgressView {
+  .progress-status-card {
+    background: #14151a;
+    border: 1px solid $bar-border;
+    border-radius: 18px;
+    padding: 14px 18px;
+
+    .status-indicator-box {
+      background: #22242e;
+      border-radius: 9999px;
+      padding: 8px;
+
+      .status-icon {
+        font-size: 20px;
+        color: $accent-blue;
+
+        &.spinning {
+          color: $color-warn;
+        }
+
+        &.completed {
+          color: $color-success;
+        }
+      }
+    }
+
+    .status-headline {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .status-subheadline {
+      font-size: 12px;
+      font-weight: 600;
+      color: $color-dim;
+    }
+
+    .progress-percent-label {
+      font-size: 18px;
+      font-weight: 900;
+      color: $accent-blue;
+    }
+
+    .custom-progress-trough {
+      background: #22242e;
+      border-radius: 9999px;
+      min-height: 8px;
+      margin-top: 4px;
+
+      .custom-progress-fill {
+        background: $accent-blue;
+        border-radius: 9999px;
+        min-height: 8px;
+      }
+    }
+  }
+
+  // Live Terminal Logs Output View
+  .terminal-scrollable {
+    background: #101114;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 12px 16px;
+
+    .terminal-log-box {
+      .log-line {
+        font-family: "JetBrains Mono", "MesloLGS Nerd Font", monospace;
+        font-size: 12px;
+        font-weight: 500;
+        color: #cdd6f4;
+        line-height: 1.4;
+
+        &.highlight {
+          color: #89b4fa;
+          font-weight: 700;
+        }
+
+        &.success {
+          color: $color-success;
+          font-weight: 700;
+        }
+
+        &.warn {
+          color: $color-warn;
+        }
+
+        &.error {
+          color: $color-error;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .progress-footer-bar {
+    .done-btn {
+      background: #22242e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 9px 18px;
+
+      .icon {
+        font-size: 14px;
+        color: #ffffff;
+      }
+
+      .btn-label {
+        font-size: 13px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      &:hover {
+        background: #313547;
+      }
+    }
+  }
+}
