@@ -134,35 +134,24 @@ export default function ExplorerWindow() {
           <box spacing={6} valign={Gtk.Align.CENTER}>
             <label class="status-items-count" label={FS.itemCountStr} xalign={0} />
             <label class="status-separator" label="•" />
-            <label
-              class="status-total-size"
-              label={createComputed(() => FS.totalDirectorySizeStr())}
-            />
+            <label class="status-total-size" label={FS.totalDirectorySizeStr} />
           </box>
 
           <label class="status-feedback" label={FS.statusText} hexpand={true} xalign={0} />
 
-          {createComputed(() => {
-            const sel = FS.selectedItem()
-            if (sel) {
-              return (
-                <box class="status-selected-badge" spacing={8} valign={Gtk.Align.CENTER}>
-                  <label class="selected-name" label={sel.name} ellipsize={3} maxWidthChars={25} />
-                  {sel.sizeStr ? <label class="selected-size" label={sel.sizeStr} /> : null}
-                  {sel.dateStr ? <label class="selected-date" label={sel.dateStr} /> : null}
-                </box>
-              )
-            }
-            return (
-              <label
-                class="status-path"
-                label={FS.currentPath}
-                ellipsize={3}
-                maxWidthChars={40}
-                xalign={1}
-              />
-            )
-          })}
+          <label
+            class="status-path"
+            label={createComputed(() => {
+              const sel = FS.selectedItem()
+              if (sel) {
+                return `${sel.name} ${sel.sizeStr ? `(${sel.sizeStr})` : ""}`
+              }
+              return FS.currentPath()
+            })}
+            ellipsize={3}
+            maxWidthChars={45}
+            xalign={1}
+          />
         </box>
       </box>
     </window>

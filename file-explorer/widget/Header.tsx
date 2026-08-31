@@ -112,17 +112,14 @@ export default function Header() {
           text={FS.searchQuery}
           onChanged={(self) => FS.setSearchQuery(self.get_text())}
         />
-        {createComputed(() =>
-          FS.searchQuery() ? (
-            <button
-              class="search-clear-btn"
-              valign={Gtk.Align.CENTER}
-              onClicked={() => FS.setSearchQuery("")}
-            >
-              <label class="icon" label={Lucide["x"]} />
-            </button>
-          ) : null
-        )}
+        <button
+          class="search-clear-btn"
+          valign={Gtk.Align.CENTER}
+          visible={createComputed(() => Boolean(FS.searchQuery()))}
+          onClicked={() => FS.setSearchQuery("")}
+        >
+          <label class="icon" label={Lucide["x"]} />
+        </button>
       </box>
 
       {/* 4. Action Buttons (New Folder, View Mode, Hidden Files, Terminal) */}

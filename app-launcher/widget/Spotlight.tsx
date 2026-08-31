@@ -67,17 +67,14 @@ export default function SpotlightModal() {
               setTimeout(() => self.grab_focus(), 50)
             }}
           />
-          {createComputed(() =>
-            Apps.query() ? (
-              <button
-                class="search-clear-btn"
-                valign={Gtk.Align.CENTER}
-                onClicked={() => Apps.setQuery("")}
-              >
-                <label class="icon" label={Lucide["x"]} />
-              </button>
-            ) : null
-          )}
+          <button
+            class="search-clear-btn"
+            valign={Gtk.Align.CENTER}
+            visible={createComputed(() => Boolean(Apps.query()))}
+            onClicked={() => Apps.setQuery("")}
+          >
+            <label class="icon" label={Lucide["x"]} />
+          </button>
         </box>
 
         {/* 2. Results List (Scrollable) */}
