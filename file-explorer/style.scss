@@ -5,7 +5,7 @@
 $window-bg: #14151a;
 $sidebar-bg: #181a22;
 $card-bg: #1f212c;
-$card-hover-bg: #272a38;
+$card-hover-bg: #282b3a;
 $card-selected-bg: #2d334a;
 
 $accent-blue: #437bf6;
@@ -17,15 +17,20 @@ $file-music-color: #f38ba8;
 $file-archive-color: #fab387;
 
 $text-color: #ffffff;
-$text-muted: #9399b2;
+$text-muted: #a6adc8;
 $text-dim: #6c7086;
-$border-subtle: rgba(255, 255, 255, 0.05);
+$border-subtle: rgba(255, 255, 255, 0.07);
 
 * {
   all: unset;
   font-family: "lucide", "MesloLGS Nerd Font", "JetBrains Mono", "Inter", sans-serif;
   font-size: 14px;
   font-weight: 600;
+  color: $text-color;
+}
+
+label {
+  color: $text-color;
 }
 
 .icon {
@@ -58,23 +63,28 @@ window.ExplorerWindow {
 
       .icon {
         font-size: 16px;
+        color: $text-muted;
       }
 
       &:hover {
         background: rgba(255, 255, 255, 0.06);
-        color: #ffffff;
+        .icon {
+          color: #ffffff;
+        }
       }
 
       &.disabled {
-        opacity: 0.3;
-        color: $text-dim;
+        opacity: 0.35;
+        .icon {
+          color: $text-dim;
+        }
       }
     }
   }
 
   .breadcrumbs-scrollable {
     background: #14151e;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 10px;
     padding: 2px 8px;
 
@@ -89,16 +99,21 @@ window.ExplorerWindow {
         label {
           font-size: 13px;
           font-weight: 700;
+          color: $text-muted;
         }
 
         &:hover {
           background: rgba(255, 255, 255, 0.06);
-          color: #ffffff;
+          label {
+            color: #ffffff;
+          }
         }
 
         &.current {
-          color: $text-color;
-          font-weight: 800;
+          label {
+            color: #ffffff;
+            font-weight: 800;
+          }
         }
       }
 
@@ -112,7 +127,7 @@ window.ExplorerWindow {
 
   .search-box {
     background: #14151e;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 10px;
     padding: 4px 10px;
     min-width: 170px;
@@ -130,16 +145,6 @@ window.ExplorerWindow {
         color: $text-dim;
       }
     }
-
-    .search-clear-btn {
-      background: transparent;
-      padding: 0 2px;
-      color: $text-dim;
-
-      &:hover {
-        color: #ffffff;
-      }
-    }
   }
 
   .action-buttons-box {
@@ -147,21 +152,25 @@ window.ExplorerWindow {
       background: transparent;
       border-radius: 8px;
       padding: 6px 8px;
-      color: $text-muted;
       transition: all 120ms ease-in-out;
 
       .icon {
         font-size: 16px;
+        color: $text-muted;
       }
 
       &:hover {
         background: rgba(255, 255, 255, 0.06);
-        color: #ffffff;
+        .icon {
+          color: #ffffff;
+        }
       }
 
       &.active {
         background: rgba(67, 123, 246, 0.2);
-        color: $accent-blue;
+        .icon {
+          color: $accent-blue;
+        }
       }
     }
   }
@@ -186,34 +195,42 @@ window.ExplorerWindow {
       letter-spacing: 0.5px;
     }
 
-    .sidebar-item-btn {
-      background: transparent;
-      border-radius: 8px;
-      padding: 7px 10px;
-      color: $text-muted;
-      transition: all 120ms ease-in-out;
-
-      .icon {
-        font-size: 16px;
-        color: $folder-color;
-      }
-
-      .name {
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.04);
-        color: #ffffff;
-      }
-
-      &.active {
-        background: rgba(67, 123, 246, 0.2);
-        color: #ffffff;
+    .places-list {
+      .sidebar-item-btn {
+        background: transparent;
+        border-radius: 8px;
+        padding: 7px 10px;
+        transition: all 120ms ease-in-out;
 
         .icon {
-          color: $accent-blue;
+          font-size: 16px;
+          color: $folder-color;
+        }
+
+        .name {
+          font-size: 13px;
+          font-weight: 700;
+          color: $text-muted;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.04);
+          .name {
+            color: #ffffff;
+          }
+        }
+
+        &.active {
+          background: rgba(67, 123, 246, 0.2);
+
+          .icon {
+            color: $accent-blue;
+          }
+
+          .name {
+            color: #ffffff;
+            font-weight: 800;
+          }
         }
       }
     }
@@ -226,10 +243,10 @@ window.ExplorerWindow {
 
   .FileViewScrollable {
     background-color: $window-bg;
-    padding: 12px 14px;
+    padding: 14px 16px;
 
     .empty-state-box {
-      padding: 60px 0;
+      padding: 80px 0;
 
       .empty-icon {
         font-size: 48px;
@@ -253,17 +270,23 @@ window.ExplorerWindow {
       background: transparent;
       padding: 4px;
 
+      flowboxchild {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+      }
+
       .grid-file-card {
         background-color: $card-bg;
-        border: 1px solid rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 14px;
         padding: 14px 10px;
-        min-width: 110px;
-        min-height: 100px;
+        min-width: 115px;
+        min-height: 105px;
         transition: all 120ms ease-in-out;
 
         .grid-icon {
-          font-size: 34px;
+          font-size: 36px;
 
           &.folder-icon {
             color: $folder-color;
@@ -289,12 +312,12 @@ window.ExplorerWindow {
 
         &:hover {
           background-color: $card-hover-bg;
-          border-color: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.1);
         }
 
         &.selected {
           background-color: $card-selected-bg;
-          border-color: rgba(67, 123, 246, 0.5);
+          border-color: rgba(67, 123, 246, 0.6);
         }
       }
     }

@@ -91,13 +91,6 @@ export default function Header() {
           text={FS.searchQuery}
           onChanged={(self) => FS.setSearchQuery(self.get_text())}
         />
-        {createComputed(() =>
-          FS.searchQuery() ? (
-            <button class="search-clear-btn" onClicked={() => FS.setSearchQuery("")}>
-              <label class="icon" label={Lucide["x"]} />
-            </button>
-          ) : null
-        )}
       </box>
 
       {/* 4. Action Buttons (View Mode, Hidden Files, Terminal) */}

@@ -132,60 +132,48 @@ class FilesystemService {
     this.loadDirectory(this.currentPath())
   }
 
-  public async loadDirectory(targetPath: string) {
+  public loadDirectory(targetPath: string) {
     this._isLoading[1](true)
     this._selectedPath[1]("")
 
     try {
       const dir = Gio.File.new_for_path(targetPath)
-      const enumerator = await new Promise<Gio.FileEnumerator>((resolve, reject) => {
-        dir.enumerate_children_async(
-          "standard::*,time::*",
-          Gio.FileQueryInfoFlags.NONE,
-          GLib.PRIORITY_DEFAULT,
-          null,
-          (file, res) => {
-            try {
-              resolve(dir.enumerate_children_finish(res))
-            } catch (err) {
-              reject(err)
-            }
-          }
-        )
-      })
+      const enumerator = dir.enumerate_children(
+        "standard::*,time::*",
+        Gio.FileQueryInfoFlags.NONE,
+        null
+      )
 
       const fileItems: FileItem[] = []
-      let nextBatch: Gio.FileInfo[]
+      let info: Gio.FileInfo | null
 
-      while ((nextBatch = enumerator.next_files(50, null)).length > 0) {
-        for (const info of nextBatch) {
-          const name = info.get_name()
-          const isDir = info.get_file_type() === Gio.FileType.DIRECTORY
-          const isSymlink = info.get_is_symlink()
-          const isHidden = info.get_is_hidden() || name.startsWith(".")
-          const sizeBytes = info.get_size()
-          const modifiedSec = info.get_modification_date_time()?.to_unix() || 0
+      while ((info = enumerator.next_file(null)) !== null) {
+        const name = info.get_name()
+        const isDir = info.get_file_type() === Gio.FileType.DIRECTORY
+        const isSymlink = info.get_is_symlink()
+        const isHidden = info.get_is_hidden() || name.startsWith(".")
+        const sizeBytes = info.get_size()
+        const modifiedSec = info.get_modification_date_time()?.to_unix() || 0
 
-          let dateStr = ""
-          if (modifiedSec > 0) {
-            const d = new Date(modifiedSec * 1000)
-            dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-          }
-
-          fileItems.push({
-            name,
-            path: `${targetPath.replace(/\/$/, "")}/${name}`,
-            isDir,
-            isSymlink,
-            isHidden,
-            sizeBytes,
-            sizeStr: isDir ? "--" : formatBytes(sizeBytes),
-            modifiedSec,
-            dateStr,
-            icon: getFileIcon(name, isDir),
-            extension: name.includes(".") ? name.split(".").pop() || "" : "",
-          })
+        let dateStr = ""
+        if (modifiedSec > 0) {
+          const d = new Date(modifiedSec * 1000)
+          dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
         }
+
+        fileItems.push({
+          name,
+          path: `${targetPath.replace(/\/$/, "")}/${name}`,
+          isDir,
+          isSymlink,
+          isHidden,
+          sizeBytes,
+          sizeStr: isDir ? "--" : formatBytes(sizeBytes),
+          modifiedSec,
+          dateStr,
+          icon: getFileIcon(name, isDir),
+          extension: name.includes(".") ? name.split(".").pop() || "" : "",
+        })
       }
 
       this._items[1](fileItems)
