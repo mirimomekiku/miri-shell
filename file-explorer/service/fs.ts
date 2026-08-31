@@ -466,7 +466,7 @@ class FilesystemService {
       const file = Gio.File.new_for_path(path)
       Gio.AppInfo.launch_default_for_uri_async(file.get_uri(), null, null, null)
     } catch {
-      execAsync(`xdg-open "${path}"`).catch(() => {})
+      execAsync(`gio open "${path}" || xdg-open "${path}"`).catch(() => {})
     }
   }
 
@@ -476,13 +476,13 @@ class FilesystemService {
       ? path
       : Gio.File.new_for_path(path).get_parent()?.get_path() || this.currentPath()
 
-    execAsync(`sh -c 'if which agy >/dev/null 2>&1; then agy "${path}"; elif which antigravity >/dev/null 2>&1; then antigravity "${path}"; elif which code >/dev/null 2>&1; then code "${path}"; elif which cursor >/dev/null 2>&1; then cursor "${path}"; else xdg-open "${path}"; fi'`).catch(() => {})
+    execAsync(`sh -c 'if which agy >/dev/null 2>&1; then agy "${path}"; elif which antigravity >/dev/null 2>&1; then antigravity "${path}"; elif which code >/dev/null 2>&1; then code "${path}"; elif which cursor >/dev/null 2>&1; then cursor "${path}"; else gio open "${path}" || xdg-open "${path}"; fi'`).catch(() => {})
     this._statusText[1](`Opening with Antigravity IDE...`)
     setTimeout(() => this._statusText[1](""), 2000)
   }
 
   public openWithVSCode(path: string) {
-    execAsync(`sh -c 'code "${path}" || codium "${path}" || vscodium "${path}" || cursor "${path}" || xdg-open "${path}"'`).catch(() => {})
+    execAsync(`sh -c 'code "${path}" || codium "${path}" || vscodium "${path}" || cursor "${path}" || gio open "${path}" || xdg-open "${path}"'`).catch(() => {})
     this._statusText[1](`Opening with Code Editor...`)
     setTimeout(() => this._statusText[1](""), 2000)
   }
@@ -492,7 +492,7 @@ class FilesystemService {
       ? path
       : Gio.File.new_for_path(path).get_parent()?.get_path() || this.currentPath()
 
-    execAsync(`sh -c 'cd "${targetDir}" && (kitty || alacritty || foot || gnome-terminal || xterm)'`).catch(() => {})
+    execAsync(`sh -c 'cd "${targetDir}" && (ptyxis --working-directory="${targetDir}" || foot -D "${targetDir}" || alacritty --working-directory "${targetDir}" || kitty --directory "${targetDir}" || gnome-terminal --working-directory="${targetDir}" || konsole --workdir "${targetDir}" || xfce4-terminal --working-directory="${targetDir}" || xterm)'`).catch(() => {})
   }
 
   public openLazyGit(path: string) {
@@ -500,11 +500,11 @@ class FilesystemService {
       ? path
       : Gio.File.new_for_path(path).get_parent()?.get_path() || this.currentPath()
 
-    execAsync(`sh -c 'cd "${targetDir}" && (kitty -e lazygit || alacritty -e lazygit || foot lazygit || xterm -e lazygit || git-cola)'`).catch(() => {})
+    execAsync(`sh -c 'cd "${targetDir}" && (ptyxis -e lazygit || foot lazygit || alacritty -e lazygit || kitty -e lazygit || gnome-terminal -- lazygit || konsole -e lazygit || git-cola || xterm -e lazygit)'`).catch(() => {})
   }
 
   public copyPath(path: string) {
-    execAsync(`wl-copy "${path}"`).catch(() => {})
+    execAsync(`sh -c 'wl-copy "${path}" 2>/dev/null || xclip -selection clipboard "${path}" 2>/dev/null || xsel --clipboard --input "${path}" 2>/dev/null'`).catch(() => {})
     this._statusText[1](`Copied path to clipboard`)
     setTimeout(() => this._statusText[1](""), 2000)
   }

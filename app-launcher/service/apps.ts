@@ -220,12 +220,12 @@ class AppService {
         if (exe) execAsync(exe).catch(() => {})
       }
     } else if (item.type === "calc" && item.calcResult) {
-      execAsync(`wl-copy "${item.calcResult}"`).catch(() => {})
+      execAsync(`sh -c 'wl-copy "${item.calcResult}" 2>/dev/null || xclip -selection clipboard "${item.calcResult}" 2>/dev/null || xsel --clipboard --input "${item.calcResult}" 2>/dev/null'`).catch(() => {})
     } else if (item.type === "cmd" && item.command) {
-      execAsync(`sh -c 'cd "$HOME" && (kitty -e sh -c "${item.command}; exec \$SHELL" || alacritty -e sh -c "${item.command}; exec \$SHELL" || foot sh -c "${item.command}; exec \$SHELL" || gnome-terminal -- sh -c "${item.command}; exec \$SHELL")'`).catch(() => {})
+      execAsync(`sh -c 'cd "$HOME" && (ptyxis -- sh -c "${item.command}; exec \$SHELL" || foot sh -c "${item.command}; exec \$SHELL" || alacritty -e sh -c "${item.command}; exec \$SHELL" || kitty -e sh -c "${item.command}; exec \$SHELL" || gnome-terminal -- sh -c "${item.command}; exec \$SHELL" || konsole -e sh -c "${item.command}; exec \$SHELL" || xterm -e sh -c "${item.command}; exec \$SHELL")'`).catch(() => {})
     } else if (item.type === "web" && item.command) {
       const url = `https://www.google.com/search?q=${encodeURIComponent(item.command)}`
-      execAsync(`xdg-open "${url}"`).catch(() => {})
+      execAsync(`gio open "${url}" || xdg-open "${url}"`).catch(() => {})
     }
 
     // Exit launcher after launching
