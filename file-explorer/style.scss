@@ -1,0 +1,429 @@
+// ==========================================
+// Miri File Explorer: SCSS Theme
+// ==========================================
+
+$window-bg: #14151a;
+$sidebar-bg: #181a22;
+$card-bg: #1f212c;
+$card-hover-bg: #272a38;
+$card-selected-bg: #2d334a;
+
+$accent-blue: #437bf6;
+$accent-blue-hover: #558bf8;
+$folder-color: #89b4fa;
+$file-code-color: #a6e3a1;
+$file-image-color: #f9e2af;
+$file-music-color: #f38ba8;
+$file-archive-color: #fab387;
+
+$text-color: #ffffff;
+$text-muted: #9399b2;
+$text-dim: #6c7086;
+$border-subtle: rgba(255, 255, 255, 0.05);
+
+* {
+  all: unset;
+  font-family: "lucide", "MesloLGS Nerd Font", "JetBrains Mono", "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.icon {
+  font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
+}
+
+window.ExplorerWindow {
+  background-color: $window-bg;
+}
+
+.window-content-box {
+  background-color: $window-bg;
+}
+
+// ------------------------------------------
+// 1. Header Bar
+// ------------------------------------------
+.HeaderBar {
+  background-color: #1a1c26;
+  border-bottom: 1px solid $border-subtle;
+  padding: 10px 14px;
+
+  .nav-buttons-box {
+    .nav-btn {
+      background: transparent;
+      border-radius: 8px;
+      padding: 6px 8px;
+      color: $text-muted;
+      transition: all 120ms ease-in-out;
+
+      .icon {
+        font-size: 16px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #ffffff;
+      }
+
+      &.disabled {
+        opacity: 0.3;
+        color: $text-dim;
+      }
+    }
+  }
+
+  .breadcrumbs-scrollable {
+    background: #14151e;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    padding: 2px 8px;
+
+    .breadcrumbs-box {
+      .crumb-btn {
+        background: transparent;
+        border-radius: 6px;
+        padding: 4px 8px;
+        color: $text-muted;
+        transition: all 120ms ease;
+
+        label {
+          font-size: 13px;
+          font-weight: 700;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.06);
+          color: #ffffff;
+        }
+
+        &.current {
+          color: $text-color;
+          font-weight: 800;
+        }
+      }
+
+      .crumb-separator {
+        font-size: 12px;
+        color: $text-dim;
+        padding: 0 1px;
+      }
+    }
+  }
+
+  .search-box {
+    background: #14151e;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    padding: 4px 10px;
+    min-width: 170px;
+
+    .search-icon {
+      font-size: 14px;
+      color: $text-dim;
+    }
+
+    .search-entry {
+      color: #ffffff;
+      font-size: 13px;
+
+      placeholder {
+        color: $text-dim;
+      }
+    }
+
+    .search-clear-btn {
+      background: transparent;
+      padding: 0 2px;
+      color: $text-dim;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+
+  .action-buttons-box {
+    .action-btn {
+      background: transparent;
+      border-radius: 8px;
+      padding: 6px 8px;
+      color: $text-muted;
+      transition: all 120ms ease-in-out;
+
+      .icon {
+        font-size: 16px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #ffffff;
+      }
+
+      &.active {
+        background: rgba(67, 123, 246, 0.2);
+        color: $accent-blue;
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 2. Main Split: Sidebar & FileView
+// ------------------------------------------
+.body-split-box {
+  background-color: $window-bg;
+
+  .Sidebar {
+    background-color: $sidebar-bg;
+    min-width: 170px;
+    padding: 14px 10px;
+
+    .sidebar-heading {
+      font-size: 11px;
+      font-weight: 800;
+      color: $text-dim;
+      padding: 4px 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-item-btn {
+      background: transparent;
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: $text-muted;
+      transition: all 120ms ease-in-out;
+
+      .icon {
+        font-size: 16px;
+        color: $folder-color;
+      }
+
+      .name {
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #ffffff;
+      }
+
+      &.active {
+        background: rgba(67, 123, 246, 0.2);
+        color: #ffffff;
+
+        .icon {
+          color: $accent-blue;
+        }
+      }
+    }
+  }
+
+  .sidebar-divider {
+    min-width: 1px;
+    background-color: $border-subtle;
+  }
+
+  .FileViewScrollable {
+    background-color: $window-bg;
+    padding: 12px 14px;
+
+    .empty-state-box {
+      padding: 60px 0;
+
+      .empty-icon {
+        font-size: 48px;
+        color: $text-dim;
+      }
+
+      .empty-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .empty-sub {
+        font-size: 13px;
+        color: $text-muted;
+      }
+    }
+
+    // --- Grid View Styles ---
+    .file-grid-flowbox {
+      background: transparent;
+      padding: 4px;
+
+      .grid-file-card {
+        background-color: $card-bg;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        padding: 14px 10px;
+        min-width: 110px;
+        min-height: 100px;
+        transition: all 120ms ease-in-out;
+
+        .grid-icon {
+          font-size: 34px;
+
+          &.folder-icon {
+            color: $folder-color;
+          }
+
+          &.file-icon {
+            color: #cdd6f4;
+          }
+        }
+
+        .grid-name {
+          font-size: 12.5px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-top: 2px;
+        }
+
+        .grid-sub {
+          font-size: 11px;
+          font-weight: 500;
+          color: $text-dim;
+        }
+
+        &:hover {
+          background-color: $card-hover-bg;
+          border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        &.selected {
+          background-color: $card-selected-bg;
+          border-color: rgba(67, 123, 246, 0.5);
+        }
+      }
+    }
+
+    // --- List View Styles ---
+    .file-list-container {
+      padding: 4px;
+
+      .list-header-row {
+        padding: 6px 12px;
+        border-bottom: 1px solid $border-subtle;
+        margin-bottom: 4px;
+
+        .header-col-name,
+        .header-col-size,
+        .header-col-date {
+          font-size: 11.5px;
+          font-weight: 800;
+          color: $text-dim;
+        }
+
+        .header-col-size {
+          min-width: 70px;
+        }
+
+        .header-col-date {
+          min-width: 100px;
+        }
+      }
+
+      .list-file-row {
+        background: transparent;
+        border-radius: 8px;
+        padding: 7px 12px;
+        transition: all 100ms ease;
+
+        .list-icon {
+          font-size: 18px;
+
+          &.folder-icon {
+            color: $folder-color;
+          }
+
+          &.file-icon {
+            color: #cdd6f4;
+          }
+        }
+
+        .list-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: #ffffff;
+        }
+
+        .list-size {
+          font-size: 12px;
+          color: $text-muted;
+          min-width: 70px;
+        }
+
+        .list-date {
+          font-size: 12px;
+          color: $text-dim;
+          min-width: 100px;
+        }
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        &.selected {
+          background-color: rgba(67, 123, 246, 0.2);
+        }
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 3. Status Bar
+// ------------------------------------------
+.StatusBar {
+  background-color: #161822;
+  border-top: 1px solid $border-subtle;
+  padding: 6px 14px;
+
+  .status-items-count {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: $text-muted;
+    min-width: 60px;
+  }
+
+  .status-feedback {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $accent-blue;
+  }
+
+  .status-path {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $text-dim;
+  }
+}
+
+// ------------------------------------------
+// Context Menu
+// ------------------------------------------
+menu {
+  background-color: #1e202c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 4px;
+
+  menuitem {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #ffffff;
+
+    &:hover {
+      background-color: $accent-blue;
+      color: #ffffff;
+    }
+  }
+
+  separator {
+    min-height: 1px;
+    background-color: rgba(255, 255, 255, 0.06);
+    margin: 3px 0;
+  }
+}

@@ -4,8 +4,11 @@
   "description": "Custom Linux desktop shell for Hyprland built with AGS (Astal)",
   "type": "module",
   "scripts": {
-    "dev": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags run app.ts",
-    "bundle": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags bundle app.ts dist/miri-shell",
+    "dev": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags run top-bar/app.ts",
+    "dev:bar": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags run top-bar/app.ts",
+    "dev:files": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags run file-explorer/app.ts",
+    "bundle:bar": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags bundle top-bar/app.ts dist/miri-topbar",
+    "bundle:files": "GI_TYPELIB_PATH=\"/usr/local/lib64/girepository-1.0:/usr/local/lib/girepository-1.0:${GI_TYPELIB_PATH:-}\" LD_LIBRARY_PATH=\"/usr/local/lib64:/usr/local/lib:${LD_LIBRARY_PATH:-}\" ags bundle file-explorer/app.ts dist/miri-files",
     "quit": "ags quit"
   },
   "dependencies": {
