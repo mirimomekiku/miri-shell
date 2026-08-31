@@ -5,6 +5,8 @@ import AudioWidget from "./Audio"
 import Workspaces from "./Workspaces"
 import NetworkWidget from "./Network"
 import Clock from "./Clock"
+import MediaCard from "./MediaPopup"
+import Media from "../service/media"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP } = Astal.WindowAnchor
@@ -17,21 +19,33 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       anchor={TOP}
       application={app}
     >
-      <box class="PillBar" spacing={16} valign={Gtk.Align.CENTER}>
-        {/* 1. Time */}
-        <Clock />
+      <box class="BarContainer" orientation={Gtk.Orientation.VERTICAL} spacing={4} halign={Gtk.Align.CENTER}>
+        {/* Top Pill Bar Row */}
+        <box class="PillBar" spacing={16} valign={Gtk.Align.CENTER}>
+          {/* 1. Time */}
+          <Clock />
 
-        {/* 2. Audio */}
-        <AudioWidget />
+          {/* 2. Audio */}
+          <AudioWidget />
 
-        {/* 3. Workspaces (1 2 3 4 5) */}
-        <Workspaces />
+          {/* 3. Workspaces (1 2 3 4 5) */}
+          <Workspaces />
 
-        {/* 4. Network / Wi-Fi */}
-        <NetworkWidget />
+          {/* 4. Network / Wi-Fi */}
+          <NetworkWidget />
 
-        {/* 5. Battery */}
-        <BatteryWidget />
+          {/* 5. Battery */}
+          <BatteryWidget />
+        </box>
+
+        {/* Slide-down Media & Volume Controls */}
+        <revealer
+          revealChild={Media.isOpen}
+          transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+          transitionDuration={250}
+        >
+          <MediaCard />
+        </revealer>
       </box>
     </window>
   )

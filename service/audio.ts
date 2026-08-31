@@ -21,6 +21,7 @@ class AudioService {
   })
 
   public readonly volume = createComputed(() => this.volumeData().volume)
+  public readonly volumeRatio = createComputed(() => this.volume() / 100)
   public readonly isMuted = createComputed(() => this.volumeData().muted)
 
   public readonly percentageText = createComputed(() => {

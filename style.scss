@@ -25,12 +25,16 @@ window.BarWindow {
   background: transparent;
 }
 
+.BarContainer {
+  background: transparent;
+  margin-top: 8px;
+}
+
 .PillBar {
   background: $bar-bg;
   border: 1px solid $bar-border;
   border-radius: 9999px;
   padding: 6px 20px;
-  margin-top: 8px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 }
 
@@ -144,96 +148,147 @@ window.BarWindow {
 }
 
 // ==========================================
-// Media & Audio Controls Popup
+// Media & Audio Controls Dropdown
 // ==========================================
-window.MediaPopupWindow {
-  background: transparent;
-}
-
 .MediaPopupCard {
   background: $bar-bg;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  padding: 12px 18px;
-  margin-top: 50px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  min-width: 400px;
+  padding: 12px 16px;
+  margin-top: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  min-width: 380px;
 
-  .album-art {
-    min-width: 52px;
-    min-height: 52px;
-    border-radius: 10px;
-    background-color: #262833;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  .media-player-row {
+    .album-art {
+      min-width: 48px;
+      min-height: 48px;
+      max-width: 48px;
+      max-height: 48px;
+      border-radius: 8px;
+      background-color: #262833;
+      border: 1px solid rgba(255, 255, 255, 0.05);
 
-    .fallback-icon {
-      font-size: 26px;
-      color: $color-wifi;
-    }
-  }
-
-  .media-info {
-    padding: 0 4px;
-
-    .media-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #ffffff;
+      .fallback-icon {
+        font-size: 20px;
+        color: $color-wifi;
+      }
     }
 
-    .media-artist {
-      font-size: 12px;
-      font-weight: 600;
-      color: #a6adc8;
-      margin-bottom: 2px;
-    }
+    .media-info {
+      padding: 0 4px;
 
-    .progress-row {
-      .time-label {
-        font-size: 11px;
+      .media-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .media-artist {
+        font-size: 12px;
         font-weight: 600;
-        color: #9399b2;
+        color: #a6adc8;
+        margin-bottom: 2px;
       }
 
-      .media-slider {
-        min-height: 12px;
-
-        trough {
-          min-height: 4px;
-          border-radius: 9999px;
-          background-color: #3c3f50;
+      .progress-row {
+        .time-label {
+          font-size: 11px;
+          font-weight: 600;
+          color: #9399b2;
         }
 
-        highlight {
-          min-height: 4px;
-          border-radius: 9999px;
-          background-color: #ffffff;
-        }
+        .media-slider {
+          min-height: 12px;
 
-        slider {
-          min-width: 0;
-          min-height: 0;
-          opacity: 0;
+          trough {
+            min-height: 4px;
+            border-radius: 9999px;
+            background-color: #3c3f50;
+          }
+
+          highlight {
+            min-height: 4px;
+            border-radius: 9999px;
+            background-color: #ffffff;
+          }
+
+          slider {
+            min-width: 0;
+            min-height: 0;
+            opacity: 0;
+          }
         }
+      }
+    }
+
+    .play-pause-btn {
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: 9999px;
+      background: #282a36;
+      color: #ffffff;
+      transition: all 150ms ease-in-out;
+
+      label {
+        font-size: 16px;
+      }
+
+      &:hover {
+        background: #3e4153;
+        color: #ffffff;
       }
     }
   }
 
-  .play-pause-btn {
-    min-width: 36px;
-    min-height: 36px;
-    border-radius: 9999px;
-    background: #282a36;
-    color: #ffffff;
-    transition: all 150ms ease-in-out;
+  // ------------------------------------------
+  // Volume Slider Row
+  // ------------------------------------------
+  .volume-row {
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 
-    label {
-      font-size: 16px;
+    .volume-icon-btn {
+      background: transparent;
+      padding: 0 2px;
+
+      .icon {
+        color: $color-audio;
+        font-size: 15px;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
 
-    &:hover {
-      background: #3e4153;
-      color: #ffffff;
+    .volume-slider {
+      min-height: 12px;
+
+      trough {
+        min-height: 4px;
+        border-radius: 9999px;
+        background-color: #3c3f50;
+      }
+
+      highlight {
+        min-height: 4px;
+        border-radius: 9999px;
+        background-color: $color-audio;
+      }
+
+      slider {
+        min-width: 0;
+        min-height: 0;
+        opacity: 0;
+      }
+    }
+
+    .volume-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: $color-text;
+      min-width: 32px;
     }
   }
 }

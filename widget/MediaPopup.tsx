@@ -1,11 +1,9 @@
-import app from "ags/gtk3/app"
-import { Astal, Gtk, Gdk } from "ags/gtk3"
+import { Gtk } from "ags/gtk3"
 import { createComputed } from "gnim"
 import Media from "../service/media"
+import Audio from "../service/audio"
 
-export default function MediaPopup(gdkmonitor: Gdk.Monitor) {
-  const { TOP } = Astal.WindowAnchor
-
+export function MediaCard() {
   const coverArtCss = createComputed(() => {
     const url = Media.artUrl()
     if (url) {
@@ -15,15 +13,10 @@ export default function MediaPopup(gdkmonitor: Gdk.Monitor) {
   })
 
   return (
-    <window
-      class="MediaPopupWindow"
-      gdkmonitor={gdkmonitor}
-      anchor={TOP}
-      visible={Media.isOpen}
-      application={app}
-    >
-      <box class="MediaPopupCard" spacing={14} valign={Gtk.Align.CENTER}>
-        {/* Left: Album Cover */}
+    <box class="MediaPopupCard" orientation={Gtk.Orientation.VERTICAL} spacing={12}>
+      {/* 1. Media Player Row */}
+      <box class="media-player-row" spacing={12} valign={Gtk.Align.CENTER}>
+        {/* Album Art (48px max) */}
         <box
           class="album-art"
           css={coverArtCss}
@@ -37,28 +30,25 @@ export default function MediaPopup(gdkmonitor: Gdk.Monitor) {
           )}
         </box>
 
-        {/* Center: Track Details & Progress Slider */}
-        <box class="media-info" orientation={Gtk.Orientation.VERTICAL} spacing={3} hexpand={true}>
-          {/* Track Title */}
+        {/* Center: Track Details & Scrub Bar */}
+        <box class="media-info" orientation={Gtk.Orientation.VERTICAL} spacing={2} hexpand={true}>
           <label
             class="media-title"
             label={Media.title}
             xalign={0}
             ellipsize={3}
-            maxWidthChars={26}
+            maxWidthChars={24}
           />
 
-          {/* Artist Name */}
           <label
             class="media-artist"
             label={Media.artist}
             xalign={0}
             ellipsize={3}
-            maxWidthChars={30}
+            maxWidthChars={28}
           />
 
-          {/* Progress Row (Elapsed -- Slider -- Total) */}
-          <box class="progress-row" spacing={8} valign={Gtk.Align.CENTER}>
+          <box class="progress-row" spacing={6} valign={Gtk.Align.CENTER}>
             <label class="time-label" label={Media.positionStr} />
 
             <slider
@@ -72,7 +62,7 @@ export default function MediaPopup(gdkmonitor: Gdk.Monitor) {
           </box>
         </box>
 
-        {/* Right: Circular Play/Pause Action Button */}
+        {/* Play/Pause Button */}
         <button
           class="play-pause-btn"
           valign={Gtk.Align.CENTER}
@@ -82,6 +72,28 @@ export default function MediaPopup(gdkmonitor: Gdk.Monitor) {
           <label label={Media.playPauseIcon} />
         </button>
       </box>
-    </window>
+
+      {/* 2. Volume Slider Row */}
+      <box class="volume-row" spacing={10} valign={Gtk.Align.CENTER}>
+        <button
+          class="volume-icon-btn"
+          valign={Gtk.Align.CENTER}
+          onClicked={() => Audio.toggleMute()}
+        >
+          <label class="icon" label={Audio.icon} />
+        </button>
+
+        <slider
+          class="volume-slider"
+          hexpand={true}
+          value={Audio.volumeRatio}
+          onDragged={({ value }) => Audio.setVolume(Math.round(value * 100))}
+        />
+
+        <label class="volume-text" label={Audio.percentageText} />
+      </box>
+    </box>
   )
 }
+
+export default MediaCard
