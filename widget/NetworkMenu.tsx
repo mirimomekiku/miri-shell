@@ -118,7 +118,7 @@ export default function NetworkMenu() {
                           />
                           <label
                             class={`wifi-sub-text ${isConn ? "conn-sub" : ""}`}
-                            label={isConn ? "Connected" : `${ap.signal}%`}
+                            label={isConn ? "Connected" : ap.signalBarText}
                             xalign={0}
                           />
                         </box>

@@ -13,6 +13,7 @@ export interface WifiAccessPoint {
   isLocked: boolean
   isSaved: boolean
   icon: string
+  signalBarText: string
 }
 
 function parseWifiList(raw: string, savedSet: Set<string>): WifiAccessPoint[] {
@@ -45,10 +46,20 @@ function parseWifiList(raw: string, savedSet: Set<string>): WifiAccessPoint[] {
     const isSaved = savedSet.has(ssid)
 
     let icon = "󰤨"
-    if (signal >= 75) icon = "󰤨"
-    else if (signal >= 50) icon = "󰤥"
-    else if (signal >= 25) icon = "󰤢"
-    else icon = "󰤟"
+    let signalBarText = "󰤨  Excellent"
+    if (signal >= 75) {
+      icon = "󰤨"
+      signalBarText = "󰤨  Excellent"
+    } else if (signal >= 50) {
+      icon = "󰤥"
+      signalBarText = "󰤥  Good"
+    } else if (signal >= 25) {
+      icon = "󰤢"
+      signalBarText = "󰤢  Fair"
+    } else {
+      icon = "󰤟"
+      signalBarText = "󰤟  Weak"
+    }
 
     const existing = map.get(ssid)
     if (!existing || inUse || signal > existing.signal) {
@@ -61,6 +72,7 @@ function parseWifiList(raw: string, savedSet: Set<string>): WifiAccessPoint[] {
         isLocked,
         isSaved,
         icon,
+        signalBarText,
       })
     }
   }
