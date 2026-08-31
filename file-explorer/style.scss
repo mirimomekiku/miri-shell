@@ -2,14 +2,14 @@
 // Miri File Explorer: SCSS Theme
 // ==========================================
 
-$window-bg: #14151a;
-$sidebar-bg: #181a22;
-$card-bg: #1f212c;
-$card-hover-bg: #282b3a;
-$card-selected-bg: #2d334a;
+$window-bg: #13141c;
+$sidebar-bg: #171923;
+$card-bg: #1d1f2b;
+$card-hover-bg: #262939;
+$card-selected-bg: #2b3046;
 
 $accent-blue: #437bf6;
-$accent-blue-hover: #558bf8;
+$accent-blue-hover: #5a8ef8;
 $folder-color: #89b4fa;
 $file-code-color: #a6e3a1;
 $file-image-color: #f9e2af;
@@ -19,11 +19,11 @@ $file-archive-color: #fab387;
 $text-color: #ffffff;
 $text-muted: #a6adc8;
 $text-dim: #6c7086;
-$border-subtle: rgba(255, 255, 255, 0.07);
+$border-subtle: rgba(255, 255, 255, 0.06);
 
 * {
   all: unset;
-  font-family: "lucide", "MesloLGS Nerd Font", "JetBrains Mono", "Inter", sans-serif;
+  font-family: "Inter", "Cantarell", "JetBrains Mono", "MesloLGS Nerd Font", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: $text-color;
@@ -31,10 +31,12 @@ $border-subtle: rgba(255, 255, 255, 0.07);
 
 label {
   color: $text-color;
+  font-family: "Inter", "Cantarell", "JetBrains Mono", "MesloLGS Nerd Font", sans-serif;
 }
 
 .icon {
   font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
+  font-size: 16px;
 }
 
 window.ExplorerWindow {
@@ -49,16 +51,15 @@ window.ExplorerWindow {
 // 1. Header Bar
 // ------------------------------------------
 .HeaderBar {
-  background-color: #1a1c26;
+  background-color: #181a24;
   border-bottom: 1px solid $border-subtle;
-  padding: 10px 14px;
+  padding: 8px 14px;
 
   .nav-buttons-box {
     .nav-btn {
       background: transparent;
       border-radius: 8px;
       padding: 6px 8px;
-      color: $text-muted;
       transition: all 120ms ease-in-out;
 
       .icon {
@@ -74,7 +75,7 @@ window.ExplorerWindow {
       }
 
       &.disabled {
-        opacity: 0.35;
+        opacity: 0.3;
         .icon {
           color: $text-dim;
         }
@@ -84,7 +85,7 @@ window.ExplorerWindow {
 
   .breadcrumbs-scrollable {
     background: #14151e;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     padding: 2px 8px;
 
@@ -93,7 +94,6 @@ window.ExplorerWindow {
         background: transparent;
         border-radius: 6px;
         padding: 4px 8px;
-        color: $text-muted;
         transition: all 120ms ease;
 
         label {
@@ -120,17 +120,17 @@ window.ExplorerWindow {
       .crumb-separator {
         font-size: 12px;
         color: $text-dim;
-        padding: 0 1px;
+        padding: 0 2px;
       }
     }
   }
 
   .search-box {
     background: #14151e;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     padding: 4px 10px;
-    min-width: 170px;
+    min-width: 180px;
 
     .search-icon {
       font-size: 14px;
@@ -184,22 +184,22 @@ window.ExplorerWindow {
 
   .Sidebar {
     background-color: $sidebar-bg;
-    min-width: 170px;
+    min-width: 180px;
     padding: 14px 10px;
 
     .sidebar-heading {
       font-size: 11px;
       font-weight: 800;
       color: $text-dim;
-      padding: 4px 8px;
-      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      letter-spacing: 0.8px;
     }
 
     .places-list {
       .sidebar-item-btn {
         background: transparent;
-        border-radius: 8px;
-        padding: 7px 10px;
+        border-radius: 9px;
+        padding: 8px 12px;
         transition: all 120ms ease-in-out;
 
         .icon {
@@ -221,7 +221,7 @@ window.ExplorerWindow {
         }
 
         &.active {
-          background: rgba(67, 123, 246, 0.2);
+          background: #232636;
 
           .icon {
             color: $accent-blue;
@@ -249,7 +249,7 @@ window.ExplorerWindow {
       padding: 80px 0;
 
       .empty-icon {
-        font-size: 48px;
+        font-size: 52px;
         color: $text-dim;
       }
 
@@ -278,7 +278,7 @@ window.ExplorerWindow {
 
       .grid-file-card {
         background-color: $card-bg;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.04);
         border-radius: 14px;
         padding: 14px 10px;
         min-width: 115px;
@@ -286,22 +286,22 @@ window.ExplorerWindow {
         transition: all 120ms ease-in-out;
 
         .grid-icon {
-          font-size: 36px;
+          font-size: 38px;
 
           &.folder-icon {
             color: $folder-color;
           }
 
           &.file-icon {
-            color: #cdd6f4;
+            color: #bac2de;
           }
         }
 
         .grid-name {
           font-size: 12.5px;
-          font-weight: 700;
+          font-weight: 600;
           color: #ffffff;
-          margin-top: 2px;
+          margin-top: 4px;
         }
 
         .grid-sub {
@@ -312,7 +312,7 @@ window.ExplorerWindow {
 
         &:hover {
           background-color: $card-hover-bg;
-          border-color: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.08);
         }
 
         &.selected {
@@ -340,11 +340,11 @@ window.ExplorerWindow {
         }
 
         .header-col-size {
-          min-width: 70px;
+          min-width: 80px;
         }
 
         .header-col-date {
-          min-width: 100px;
+          min-width: 110px;
         }
       }
 
@@ -362,7 +362,7 @@ window.ExplorerWindow {
           }
 
           &.file-icon {
-            color: #cdd6f4;
+            color: #bac2de;
           }
         }
 
@@ -375,13 +375,13 @@ window.ExplorerWindow {
         .list-size {
           font-size: 12px;
           color: $text-muted;
-          min-width: 70px;
+          min-width: 80px;
         }
 
         .list-date {
           font-size: 12px;
           color: $text-dim;
-          min-width: 100px;
+          min-width: 110px;
         }
 
         &:hover {
@@ -400,7 +400,7 @@ window.ExplorerWindow {
 // 3. Status Bar
 // ------------------------------------------
 .StatusBar {
-  background-color: #161822;
+  background-color: #151720;
   border-top: 1px solid $border-subtle;
   padding: 6px 14px;
 

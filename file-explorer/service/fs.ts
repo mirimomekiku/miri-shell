@@ -91,13 +91,28 @@ class FilesystemService {
 
   public readonly breadcrumbs = createComputed(() => {
     const p = this.currentPath()
-    const parts = p.split("/").filter(Boolean)
-    const crumbs: { name: string; path: string }[] = [{ name: "Root", path: "/" }]
+    const home = this.homeDir
+    const crumbs: { name: string; path: string }[] = []
 
-    let current = ""
-    for (const part of parts) {
-      current += "/" + part
-      crumbs.push({ name: part, path: current })
+    if (p === home) {
+      crumbs.push({ name: "~", path: home })
+    } else if (p.startsWith(home + "/")) {
+      crumbs.push({ name: "~", path: home })
+      const rel = p.slice(home.length + 1)
+      const parts = rel.split("/").filter(Boolean)
+      let current = home
+      for (const part of parts) {
+        current += "/" + part
+        crumbs.push({ name: part, path: current })
+      }
+    } else {
+      crumbs.push({ name: "/", path: "/" })
+      const parts = p.split("/").filter(Boolean)
+      let current = ""
+      for (const part of parts) {
+        current += "/" + part
+        crumbs.push({ name: part, path: current })
+      }
     }
     return crumbs
   })
