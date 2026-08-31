@@ -3,23 +3,31 @@
 // ==========================================
 
 $bar-bg: #18191c;
-$bar-border: rgba(255, 255, 255, 0.06);
+$bar-border: rgba(255, 255, 255, 0.07);
 
 $color-battery: #3cd070; // Bright green
 $color-audio: #fab387;   // Warm amber / orange
 $color-wifi: #58a6ff;    // Vivid blue
+$color-accent: #437bf6;  // Vibrant blue
 $color-text: #ffffff;
 $color-dim: #9399b2;
 $color-muted: #9399b2;
+$color-subtle: #5c6077;
 
-$ws-occupied-bg: #2e303e;
-$ws-focused-bg: #5c6077;
+$ws-occupied-bg: #282a36;
+$ws-focused-bg: #437bf6;
 
 * {
   all: unset;
-  font-family: "lucide", "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
-  font-size: 15px;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  font-size: 14.5px;
   font-weight: 700;
+  color: $color-text;
+}
+
+label {
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  color: $color-text;
 }
 
 .icon,
@@ -42,16 +50,27 @@ window.BarWindow {
   background: $bar-bg;
   border: 1px solid $bar-border;
   border-radius: 9999px;
-  padding: 6px 20px;
+  padding: 5px 16px;
 }
 
 // ------------------------------------------
 // 1. Time / Clock Module (Position 1)
 // ------------------------------------------
 .Clock {
+  background: transparent;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  transition: all 120ms ease;
+
   .time-label {
     color: $color-text;
     letter-spacing: 0.5px;
+    font-size: 14.5px;
+    font-weight: 800;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -60,7 +79,9 @@ window.BarWindow {
 // ------------------------------------------
 .Audio {
   background: transparent;
-  padding: 0;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  transition: all 120ms ease;
 
   .icon {
     color: $color-audio;
@@ -69,10 +90,12 @@ window.BarWindow {
   }
   .text {
     color: $color-text;
+    font-size: 14px;
+    font-weight: 700;
   }
 
   &:hover {
-    opacity: 0.85;
+    background: rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -83,13 +106,13 @@ window.BarWindow {
   padding: 0 4px;
 
   .ws-item {
-    min-width: 26px;
-    min-height: 26px;
+    min-width: 28px;
+    min-height: 28px;
     padding: 0;
     margin: 0 2px;
     border-radius: 9999px;
     background: transparent;
-    color: $color-dim;
+    color: $color-subtle;
     transition: all 150ms ease-in-out;
 
     label {
@@ -105,15 +128,11 @@ window.BarWindow {
     &.focused {
       background: $ws-focused-bg;
       color: #ffffff;
-    }
-
-    &.empty {
-      background: transparent;
-      color: #7f849c;
+      font-weight: 900;
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: #313547;
       color: #ffffff;
     }
   }
@@ -123,6 +142,11 @@ window.BarWindow {
 // 4. Network / Wi-Fi Module (Position 4)
 // ------------------------------------------
 .Network {
+  background: transparent;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  transition: all 120ms ease;
+
   .icon {
     color: $color-wifi;
     font-size: 16px;
@@ -130,13 +154,12 @@ window.BarWindow {
   }
   .text {
     color: $color-text;
+    font-size: 14px;
+    font-weight: 700;
   }
 
-  &.disconnected {
-    .icon {
-      color: #6c7086;
-      opacity: 0.7;
-    }
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -144,6 +167,11 @@ window.BarWindow {
 // 5. Battery Module (Position 5)
 // ------------------------------------------
 .Battery {
+  background: transparent;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  transition: all 120ms ease;
+
   .icon {
     color: $color-battery;
     font-size: 16px;
@@ -151,158 +179,23 @@ window.BarWindow {
   }
   .text {
     color: $color-text;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
   }
 }
 
 // ==========================================
-// 1. Media & Audio Controls Dropdown (Sound Icon)
-// ==========================================
-.MediaPopupCard {
-  background: $bar-bg;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 12px 16px;
-  margin-top: 6px;
-  min-width: 380px;
-
-  .media-player-row {
-    .album-art {
-      min-width: 48px;
-      min-height: 48px;
-      border-radius: 8px;
-      background-color: #262833;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-
-      .fallback-icon {
-        font-size: 20px;
-        color: $color-wifi;
-      }
-    }
-
-    .media-info {
-      padding: 0 4px;
-
-      .media-title {
-        font-size: 14px;
-        font-weight: 800;
-        color: #ffffff;
-      }
-
-      .media-artist {
-        font-size: 12px;
-        font-weight: 600;
-        color: #a6adc8;
-        margin-bottom: 2px;
-      }
-
-      .progress-row {
-        .time-label {
-          font-size: 11px;
-          font-weight: 600;
-          color: #9399b2;
-        }
-
-        .media-slider {
-          min-height: 12px;
-
-          trough {
-            min-height: 4px;
-            border-radius: 9999px;
-            background-color: #3c3f50;
-          }
-
-          highlight {
-            min-height: 4px;
-            border-radius: 9999px;
-            background-color: #ffffff;
-          }
-
-          slider {
-            min-width: 0;
-            min-height: 0;
-            opacity: 0;
-          }
-        }
-      }
-    }
-
-    .play-pause-btn {
-      min-width: 36px;
-      min-height: 36px;
-      border-radius: 9999px;
-      background: #282a36;
-      color: #ffffff;
-      transition: all 150ms ease-in-out;
-
-      label {
-        font-size: 16px;
-      }
-
-      &:hover {
-        background: #3e4153;
-        color: #ffffff;
-      }
-    }
-  }
-
-  // Volume Slider Row in Media Card
-  .volume-row {
-    padding-top: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-
-    .volume-icon-btn {
-      background: transparent;
-      padding: 0 2px;
-
-      .icon {
-        color: $color-audio;
-        font-size: 15px;
-      }
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    .volume-slider {
-      min-height: 12px;
-
-      trough {
-        min-height: 4px;
-        border-radius: 9999px;
-        background-color: #3c3f50;
-      }
-
-      highlight {
-        min-height: 4px;
-        border-radius: 9999px;
-        background-color: $color-audio;
-      }
-
-      slider {
-        min-width: 0;
-        min-height: 0;
-        opacity: 0;
-      }
-    }
-
-    .volume-text {
-      font-size: 12px;
-      font-weight: 700;
-      color: $color-text;
-      min-width: 32px;
-    }
-  }
-}
-
-// ==========================================
-// 2. Control Center Dropdown Panel (Time/Date)
+// Control Center Dropdown Card
 // ==========================================
 .ControlCenterCard {
   background: $bar-bg;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 14px 16px;
+  border-radius: 22px;
+  padding: 16px 18px;
   margin-top: 6px;
   min-width: 380px;
 
@@ -312,10 +205,10 @@ window.BarWindow {
 
     .toggle-btn {
       background: #22242e;
-      border-radius: 12px;
-      padding: 8px 10px;
-      min-height: 36px;
-      color: #9399b2;
+      border-radius: 14px;
+      padding: 9px 12px;
+      min-height: 38px;
+      color: $color-dim;
       transition: all 150ms ease-in-out;
 
       label {
@@ -332,7 +225,8 @@ window.BarWindow {
       }
 
       &.active {
-        background: #2b2f3e;
+        background: #2b3046;
+        border: 1px solid rgba(67, 123, 246, 0.4);
         color: #ffffff;
       }
 
@@ -352,9 +246,7 @@ window.BarWindow {
     }
   }
 
-  // ------------------------------------------
-  // Bluetooth Expanded Devices Container (Image 2 Style)
-  // ------------------------------------------
+  // Bluetooth Expanded Devices Container
   .bluetooth-expanded-panel {
     background: #1e202a;
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -371,341 +263,295 @@ window.BarWindow {
         color: #ffffff;
       }
 
-      .bt-visible-text {
-        font-size: 12px;
-        font-weight: 600;
-        color: #9399b2;
-      }
-
       .bt-rescan-btn,
       .bt-power-btn {
-        background: transparent;
-        padding: 4px 6px;
-        color: $color-muted;
-        transition: all 120ms ease-in-out;
+        background: #2b2f3e;
+        border-radius: 8px;
+        padding: 5px 7px;
 
-        label {
-          font-size: 14px;
+        .icon {
+          font-size: 13px;
+          color: $color-dim;
         }
 
         &:hover {
-          color: #ffffff;
+          background: #3c4257;
+          .icon {
+            color: #ffffff;
+          }
         }
+
+        &.spinning {
+          opacity: 0.6;
+        }
+      }
+
+      .bt-visible-text {
+        font-size: 12px;
+        color: $color-subtle;
+        font-style: italic;
       }
     }
 
     .bt-status-banner {
-      background: #282c3f;
+      background: #2a2c3a;
       border-radius: 8px;
       padding: 4px 8px;
-      margin: 2px 0;
 
-      .bt-status-text {
-        font-size: 11.5px;
-        font-weight: 600;
+      .bt-status-banner-text {
+        font-size: 12px;
         color: #89b4fa;
       }
     }
 
-    .bt-scrollable {
-      min-height: 140px;
+    .bt-devices-scrollable {
+      max-height: 180px;
 
-      .bt-device-list {
-        padding: 2px 0;
-
-        .empty-bt {
-          padding: 20px 0;
-          .empty-text {
-            font-size: 12px;
-            color: $color-muted;
-          }
-        }
-
-        .bt-pill-item {
-          border-radius: 14px;
-          padding: 10px 14px;
-          margin: 2px 0;
-          transition: all 120ms ease-in-out;
-
-          &.connected-pill {
-            background-color: #437bf6;
-
-            .conn-icon {
-              color: #ffffff;
-              font-size: 16px;
-            }
-
-            .conn-text {
-              color: #ffffff;
-              font-size: 13.5px;
-              font-weight: 800;
-            }
-
-            .conn-sub {
-              color: #dce7fe;
-              font-size: 11px;
-              font-weight: 600;
-            }
-
-            &:hover {
-              background-color: #558bf8;
-            }
-          }
-
-          &.available-pill {
-            background-color: #232530;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-
-            .bt-pill-icon {
-              color: #ffffff;
-              font-size: 16px;
-            }
-
-            .bt-device-name {
-              color: #ffffff;
-              font-size: 13px;
-              font-weight: 700;
-            }
-
-            .bt-device-sub {
-              color: #9399b2;
-              font-size: 11px;
-              font-weight: 500;
-            }
-
-            &:hover {
-              background-color: #2b2e3c;
-              border-color: rgba(255, 255, 255, 0.08);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Sliders Section (Brightness)
-  .sliders-section {
-    padding-top: 4px;
-
-    .slider-row {
-      .slider-icon-btn {
+      .bt-device-row {
         background: transparent;
-        padding: 0 2px;
+        border-radius: 12px;
+        padding: 6px 8px;
+        transition: all 120ms ease;
 
-        .icon {
+        .device-type-icon {
+          font-size: 16px;
+          color: #89b4fa;
+        }
+
+        .device-name {
+          font-size: 13px;
+          font-weight: 700;
           color: #ffffff;
-          font-size: 15px;
+        }
+
+        .device-status {
+          font-size: 11.5px;
+          color: $color-subtle;
+
+          &.connected {
+            color: $color-battery;
+            font-weight: 700;
+          }
+        }
+
+        .device-connect-btn,
+        .device-disconnect-btn {
+          background: #2b2f3e;
+          border-radius: 8px;
+          padding: 4px 8px;
+
+          label {
+            font-size: 11px;
+            font-weight: 700;
+          }
+
+          &:hover {
+            background: #3c4257;
+          }
+        }
+
+        .device-disconnect-btn {
+          background: #3b2832;
+          label {
+            color: #f38ba8;
+          }
+          &:hover {
+            background: #4d3340;
+          }
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.04);
         }
       }
 
-      .cc-slider {
-        min-height: 12px;
-
-        trough {
-          min-height: 4px;
-          border-radius: 9999px;
-          background-color: #383a48;
-        }
-
-        highlight {
-          min-height: 4px;
-          border-radius: 9999px;
-          background-color: #ffffff;
-        }
-
-        slider {
-          min-width: 0;
-          min-height: 0;
-          opacity: 0;
-        }
-      }
-
-      .slider-text {
-        font-size: 12px;
-        font-weight: 700;
-        color: #ffffff;
-        min-width: 32px;
+      .bt-empty-label {
+        font-size: 12.5px;
+        color: $color-subtle;
+        padding: 12px 0;
       }
     }
   }
 
-  // ------------------------------------------
-  // 4. Notifications Section (Longer Height)
-  // ------------------------------------------
+  // Sliders Rows (Brightness & Volume)
+  .slider-row {
+    background: #1e202a;
+    border-radius: 14px;
+    padding: 8px 14px;
+
+    .slider-icon {
+      font-size: 16px;
+      color: $color-dim;
+      min-width: 24px;
+    }
+
+    scale {
+      padding: 0;
+      margin: 0 4px;
+
+      trough {
+        background: #14151a;
+        border-radius: 9999px;
+        min-height: 8px;
+      }
+
+      highlight {
+        background: $color-accent;
+        border-radius: 9999px;
+        min-height: 8px;
+      }
+
+      slider {
+        background: #ffffff;
+        border-radius: 9999px;
+        min-width: 14px;
+        min-height: 14px;
+        margin: -3px 0;
+      }
+    }
+
+    .slider-pct-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: $color-dim;
+      min-width: 38px;
+    }
+  }
+
+  // Notifications Hub Panel
   .notifications-panel {
-    background: #191b24;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: #1e202a;
     border-radius: 16px;
     padding: 12px 14px;
-    margin-top: 2px;
 
     .notif-header {
       padding: 0 2px 4px 2px;
 
-      .notif-header-title {
-        font-size: 13.5px;
+      .notif-title {
+        font-size: 14px;
         font-weight: 800;
         color: #ffffff;
       }
 
-      .notif-clear-btn {
-        background: #242634;
+      .notif-badge {
+        font-size: 11px;
+        font-weight: 800;
+        background: #2b2f3e;
         border-radius: 9999px;
-        padding: 3px 10px;
-        color: #9399b2;
-        transition: all 120ms ease-in-out;
+        padding: 1px 6px;
+        color: $color-dim;
+      }
 
-        label {
-          font-size: 11px;
-          font-weight: 700;
+      .notif-clear-btn {
+        background: transparent;
+        padding: 2px 4px;
+        border-radius: 6px;
+
+        .icon {
+          font-size: 13px;
+          color: $color-subtle;
         }
 
         &:hover {
-          background: #313548;
-          color: #ffffff;
+          background: rgba(255, 255, 255, 0.06);
+          .icon {
+            color: #ff5555;
+          }
         }
       }
     }
 
-    .notif-scrollable {
-      min-height: 180px;
+    .notifs-scrollable {
+      max-height: 200px;
 
-      .notif-list {
-        padding: 2px 0;
+      .notif-card {
+        background: #22242e;
+        border-radius: 12px;
+        padding: 8px 10px;
+        margin: 2px 0;
 
-        .empty-notif {
-          padding: 40px 0;
-          .empty-text {
-            font-size: 12.5px;
-            color: $color-muted;
-          }
+        .notif-app-icon {
+          font-size: 16px;
+          color: $color-accent;
+          min-width: 24px;
         }
 
-        .notif-card-item {
-          background: #21232e;
-          border: 1px solid rgba(255, 255, 255, 0.03);
-          border-radius: 12px;
-          padding: 10px 12px;
-          margin: 2px 0;
-          transition: all 120ms ease-in-out;
+        .notif-summary {
+          font-size: 13px;
+          font-weight: 700;
+          color: #ffffff;
+        }
 
-          .notif-icon {
-            min-width: 24px;
-            min-height: 24px;
-            margin-top: 2px;
+        .notif-body {
+          font-size: 12px;
+          color: $color-dim;
+        }
+
+        .notif-time {
+          font-size: 10.5px;
+          color: $color-subtle;
+        }
+
+        .notif-close-btn {
+          background: transparent;
+          border-radius: 6px;
+          padding: 2px 4px;
+
+          .icon {
+            font-size: 11px;
+            color: $color-subtle;
           }
 
-          .notif-title {
-            font-size: 13px;
-            font-weight: 700;
+          &:hover .icon {
             color: #ffffff;
           }
+        }
+      }
 
-          .notif-time {
-            font-size: 11px;
-            font-weight: 600;
-            color: #9399b2;
-          }
+      .empty-notifs {
+        padding: 24px 0;
 
-          .notif-close-btn {
-            background: transparent;
-            color: #6c7086;
-            padding: 0 2px;
-            transition: all 120ms ease-in-out;
+        .empty-notif-icon {
+          font-size: 28px;
+          color: $color-subtle;
+        }
 
-            label {
-              font-size: 11px;
-            }
-
-            &:hover {
-              color: #ffffff;
-            }
-          }
-
-          .notif-body {
-            font-size: 11.5px;
-            font-weight: 500;
-            color: #a6adc8;
-          }
-
-          &:hover {
-            background: #272a38;
-            border-color: rgba(255, 255, 255, 0.06);
-          }
+        .empty-notif-text {
+          font-size: 12.5px;
+          color: $color-subtle;
         }
       }
     }
   }
 
-  // ------------------------------------------
-  // 5. Quick Utilities Row (Screenshot, Record, Settings - Circular)
-  // ------------------------------------------
-  .quick-utilities-row {
+  // Utilities Bottom Bar (Capture, Settings, Power buttons)
+  .utilities-row {
     padding-top: 4px;
 
-    .circular-utility-btn {
+    .util-btn {
       background: #22242e;
-      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 9999px;
+      padding: 8px 12px;
       min-width: 36px;
       min-height: 36px;
-      padding: 0;
-      color: #9399b2;
-      transition: all 150ms ease-in-out;
+      transition: all 120ms ease;
 
       .icon {
-        font-size: 16px;
-        color: #89b4fa;
+        font-size: 15px;
+        color: $color-dim;
       }
 
-      &.screenshot {
+      &:hover {
+        background: #313547;
         .icon {
-          color: #89b4fa;
-        }
-
-        &:hover {
-          background: #2b2f3e;
-          border-color: rgba(137, 180, 250, 0.25);
-          .icon {
-            color: #ffffff;
-          }
+          color: #ffffff;
         }
       }
 
-      &.record {
+      &.power:hover {
+        background: #4a2228;
         .icon {
-          color: #f38ba8;
-        }
-
-        &.recording {
-          background: #3e2229;
-          border-color: rgba(243, 139, 168, 0.5);
-
-          .icon {
-            color: #f38ba8;
-          }
-        }
-
-        &:hover {
-          background: #2b2f3e;
-          border-color: rgba(243, 139, 168, 0.25);
-          .icon {
-            color: #ffffff;
-          }
-        }
-      }
-
-      &.settings {
-        .icon {
-          color: #cba6f7;
-        }
-
-        &:hover {
-          background: #2b2f3e;
-          border-color: rgba(203, 166, 247, 0.25);
-          .icon {
-            color: #ffffff;
-          }
+          color: #ff5555;
         }
       }
     }
@@ -713,194 +559,260 @@ window.BarWindow {
 }
 
 // ==========================================
-// 3. Wi-Fi Dropdown Panel (Image 1 Style)
+// Media Player Dropdown Card
+// ==========================================
+.MediaPopupCard {
+  background: $bar-bg;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  padding: 16px 18px;
+  margin-top: 6px;
+  min-width: 360px;
+
+  .media-art-box {
+    min-width: 72px;
+    min-height: 72px;
+    background: #22242e;
+    border-radius: 14px;
+    margin-right: 8px;
+
+    .media-fallback-icon {
+      font-size: 32px;
+      color: $color-subtle;
+    }
+  }
+
+  .media-title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .media-artist {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: $color-dim;
+  }
+
+  .media-controls-row {
+    padding: 6px 0;
+
+    .media-ctrl-btn {
+      background: #22242e;
+      border-radius: 9999px;
+      padding: 8px;
+      min-width: 34px;
+      min-height: 34px;
+
+      .icon {
+        font-size: 15px;
+        color: #ffffff;
+      }
+
+      &:hover {
+        background: #313547;
+      }
+
+      &.play-pause {
+        background: $color-accent;
+        min-width: 38px;
+        min-height: 38px;
+
+        &:hover {
+          background: #588eff;
+        }
+      }
+    }
+  }
+
+  .media-scrubber-row {
+    scale {
+      trough {
+        background: #14151a;
+        border-radius: 9999px;
+        min-height: 6px;
+      }
+      highlight {
+        background: $color-audio;
+        border-radius: 9999px;
+        min-height: 6px;
+      }
+      slider {
+        background: #ffffff;
+        border-radius: 9999px;
+        min-width: 12px;
+        min-height: 12px;
+        margin: -3px 0;
+      }
+    }
+
+    .time-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: $color-subtle;
+    }
+  }
+}
+
+// ==========================================
+// Wi-Fi Dropdown Card
 // ==========================================
 .NetworkMenuCard {
   background: $bar-bg;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 16px 16px;
+  border-radius: 22px;
+  padding: 16px 18px;
   margin-top: 6px;
-  min-width: 300px;
+  min-width: 360px;
 
-  // Header
-  .network-header {
-    padding: 0 2px 6px 2px;
+  .wifi-header-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+  }
 
-    .header-title {
-      font-size: 17px;
+  .wifi-rescan-btn {
+    background: #22242e;
+    border-radius: 8px;
+    padding: 5px 8px;
+
+    .icon {
+      font-size: 13px;
+      color: $color-dim;
+    }
+
+    &:hover {
+      background: #313547;
+      .icon {
+        color: #ffffff;
+      }
+    }
+
+    &.spinning {
+      opacity: 0.6;
+    }
+  }
+
+  .wifi-connected-panel {
+    background: #1e202a;
+    border: 1px solid rgba(67, 123, 246, 0.3);
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 4px 0 8px 0;
+
+    .connected-icon {
+      font-size: 18px;
+      color: $color-wifi;
+    }
+
+    .connected-ssid {
+      font-size: 13.5px;
       font-weight: 800;
       color: #ffffff;
     }
 
-    .rescan-btn {
-      background: transparent;
-      padding: 4px 6px;
-      color: $color-muted;
-      transition: all 150ms ease-in-out;
+    .connected-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: $color-battery;
+    }
+
+    .disconnect-btn {
+      background: #3b2832;
+      border-radius: 8px;
+      padding: 4px 8px;
 
       label {
-        font-size: 15px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #f38ba8;
       }
 
       &:hover {
-        color: #ffffff;
+        background: #4d3340;
       }
     }
   }
 
-  // Password Prompt Box
-  .password-box {
-    background: #202330;
-    border: 1px solid rgba(67, 123, 246, 0.4);
-    border-radius: 14px;
-    padding: 10px 12px;
-    margin: 4px 0 6px 0;
+  .wifi-networks-scrollable {
+    max-height: 220px;
 
-    .password-prompt-label {
-      font-size: 12px;
+    .wifi-network-row {
+      background: transparent;
+      border-radius: 12px;
+      padding: 7px 10px;
+      transition: all 120ms ease;
+
+      .wifi-signal-icon {
+        font-size: 16px;
+        color: $color-wifi;
+      }
+
+      .wifi-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .wifi-lock-icon {
+        font-size: 13px;
+        color: $color-subtle;
+      }
+
+      &:hover {
+        background: #22242e;
+      }
+    }
+
+    .empty-wifi-label {
+      font-size: 12.5px;
+      color: $color-subtle;
+      padding: 16px 0;
+    }
+  }
+
+  .wifi-password-modal {
+    background: #1e202a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-top: 8px;
+
+    .password-title {
+      font-size: 13px;
       font-weight: 700;
-      color: #89b4fa;
+      color: #ffffff;
     }
 
     .password-entry {
-      background: #181a24;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #14151a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 8px;
       padding: 6px 10px;
-      color: #ffffff;
       font-size: 13px;
-
-      &:focus {
-        border-color: #437bf6;
-      }
-
-      placeholder {
-        color: #6c7086;
-      }
+      color: #ffffff;
     }
 
-    .password-submit-btn {
-      background: #437bf6;
-      color: #ffffff;
+    .dialog-btn {
       border-radius: 8px;
       padding: 6px 12px;
-      font-weight: 800;
-      transition: all 120ms ease-in-out;
-
-      label {
-        font-size: 12.5px;
-        font-weight: 800;
-      }
-
-      &:hover {
-        background: #558bf8;
-      }
-    }
-
-    .password-cancel-btn {
-      background: #2c2f40;
-      color: #9399b2;
-      border-radius: 8px;
-      padding: 6px 10px;
-      transition: all 120ms ease-in-out;
 
       label {
         font-size: 12px;
+        font-weight: 700;
       }
 
-      &:hover {
-        background: #3e4258;
-        color: #ffffff;
-      }
-    }
-  }
-
-  // Status Message Banner
-  .status-banner {
-    background: #232738;
-    border-radius: 8px;
-    padding: 6px 10px;
-    margin-bottom: 4px;
-
-    .status-text {
-      font-size: 12px;
-      font-weight: 600;
-      color: #89b4fa;
-    }
-  }
-
-  // Scrollable Network List (Image 1 Pill Items)
-  .network-scrollable {
-    min-height: 220px;
-
-    .network-list {
-      padding: 2px 0;
-
-      .empty-networks {
-        padding: 30px 0;
-        .empty-text {
-          font-size: 13px;
-          color: $color-muted;
+      &.cancel {
+        background: #22242e;
+        &:hover {
+          background: #313547;
         }
       }
 
-      .wifi-pill-item {
-        border-radius: 14px;
-        padding: 10px 14px;
-        margin: 2px 0;
-        transition: all 120ms ease-in-out;
-
-        &.connected-pill {
-          background-color: #437bf6;
-
-          .conn-icon {
-            color: #ffffff;
-            font-size: 15px;
-          }
-
-          .conn-text {
-            color: #ffffff;
-            font-size: 13.5px;
-            font-weight: 800;
-          }
-
-          .conn-sub {
-            color: #dce7fe;
-            font-size: 11px;
-            font-weight: 600;
-          }
-
-          &:hover {
-            background-color: #558bf8;
-          }
-        }
-
-        &.available-pill {
-          background-color: #232530;
-          border: 1px solid rgba(255, 255, 255, 0.04);
-
-          .wifi-lock-icon {
-            color: #ffffff;
-            font-size: 15px;
-          }
-
-          .wifi-ssid-name {
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 700;
-          }
-
-          .wifi-sub-text {
-            color: #9399b2;
-            font-size: 11px;
-            font-weight: 500;
-          }
-
-          &:hover {
-            background-color: #2b2e3c;
-            border-color: rgba(255, 255, 255, 0.08);
-          }
+      &.connect {
+        background: $color-accent;
+        &:hover {
+          background: #588eff;
         }
       }
     }

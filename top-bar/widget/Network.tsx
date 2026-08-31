@@ -1,4 +1,5 @@
 import { Gtk } from "ags/gtk3"
+import { createComputed } from "gnim"
 import Network from "../service/network"
 
 export default function NetworkWidget() {
@@ -6,6 +7,11 @@ export default function NetworkWidget() {
     <button
       class={Network.className}
       valign={Gtk.Align.CENTER}
+      tooltipText={createComputed(() =>
+        Network.isConnected()
+          ? `Wi-Fi: ${Network.ssid()} (${Network.signalStrength()}%)`
+          : "Wi-Fi: Disconnected"
+      )}
       onClicked={() => Network.toggleOpen()}
     >
       <box spacing={6} valign={Gtk.Align.CENTER}>

@@ -1,4 +1,5 @@
 import { Gtk, Gdk } from "ags/gtk3"
+import { createComputed } from "gnim"
 import Audio from "../service/audio"
 import Media from "../service/media"
 import ControlCenter from "../service/controlcenter"
@@ -8,6 +9,7 @@ export default function AudioWidget() {
     <button
       class="Audio"
       valign={Gtk.Align.CENTER}
+      tooltipText={createComputed(() => `Volume: ${Audio.percentageText()} (Scroll to adjust)`)}
       onClicked={() => {
         ControlCenter.setOpen(false)
         Media.toggleOpen()

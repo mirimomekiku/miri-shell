@@ -44,6 +44,12 @@ class BatteryService {
     if (cap >= 15) return Lucide["battery-low"]
     return Lucide["battery-warning"]
   })
+
+  public readonly tooltipText = createComputed(() => {
+    const stat = this.status()
+    const cap = this.capacity()
+    return `Battery: ${cap}% (${stat})`
+  })
 }
 
 export const Battery = new BatteryService()
