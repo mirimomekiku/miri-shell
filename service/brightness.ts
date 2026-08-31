@@ -2,6 +2,8 @@ import { createPoll } from "ags/time"
 import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 
+import { Lucide } from "./icons"
+
 class BrightnessService {
   private _brightness = createState<number>(50)
   private _debounceTimer: any = null
@@ -18,10 +20,10 @@ class BrightnessService {
 
   public readonly icon = createComputed(() => {
     const b = this.brightness()
-    if (b >= 75) return "󰃠"
-    if (b >= 40) return "󰃟"
-    if (b >= 10) return "󰃞"
-    return "󰃝"
+    if (b >= 75) return Lucide["sun"]
+    if (b >= 40) return Lucide["sun-medium"]
+    if (b >= 10) return Lucide["sun-dim"]
+    return Lucide["moon"]
   })
 
   // Poll in background to keep in sync with keyboard brightness keys

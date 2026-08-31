@@ -2,6 +2,8 @@ import { createPoll } from "ags/time"
 import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 
+import { Lucide } from "./icons"
+
 class AudioService {
   private _volume = createState<number>(54)
   private _muted = createState<boolean>(false)
@@ -17,11 +19,11 @@ class AudioService {
   })
 
   public readonly icon = createComputed(() => {
-    if (this.isMuted()) return "󰝟"
+    if (this.isMuted()) return Lucide["volume-x"]
     const vol = this.volume()
-    if (vol >= 60) return "󰕾"
-    if (vol >= 25) return "󰖀"
-    return "󰕿"
+    if (vol >= 60) return Lucide["volume-2"]
+    if (vol >= 25) return Lucide["volume-1"]
+    return Lucide["volume"]
   })
 
   // Poll in background to keep in sync with external volume changes (e.g. keyboard media keys)

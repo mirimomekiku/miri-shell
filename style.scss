@@ -17,9 +17,16 @@ $ws-focused-bg: #5c6077;
 
 * {
   all: unset;
-  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  font-family: "lucide", "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
   font-size: 15px;
   font-weight: 700;
+}
+
+.icon,
+.wifi-lock-icon,
+.bt-pill-icon,
+.fallback-icon {
+  font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
 }
 
 window.BarWindow {

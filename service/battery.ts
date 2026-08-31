@@ -2,6 +2,8 @@ import { createPoll } from "ags/time"
 import { createComputed } from "gnim"
 import { execAsync } from "ags/process"
 
+import { Lucide } from "./icons"
+
 class BatteryService {
   // Poll capacity every 2 seconds
   public readonly capacity = createPoll(100, 2000, async () => {
@@ -36,13 +38,11 @@ class BatteryService {
     const cap = this.capacity()
     const charging = this.isCharging()
 
-    if (charging) return "󰂄"
-    if (cap >= 90) return "󰁹"
-    if (cap >= 70) return "󰂀"
-    if (cap >= 50) return "󰁾"
-    if (cap >= 30) return "󰁼"
-    if (cap >= 15) return "󰁺"
-    return "󰂃"
+    if (charging) return Lucide["battery-charging"]
+    if (cap >= 80) return Lucide["battery-full"]
+    if (cap >= 40) return Lucide["battery-medium"]
+    if (cap >= 15) return Lucide["battery-low"]
+    return Lucide["battery-warning"]
   })
 }
 

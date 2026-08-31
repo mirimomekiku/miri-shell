@@ -1,14 +1,18 @@
 import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 import ControlCenter from "./controlcenter"
+import { Lucide } from "./icons"
 
 class CaptureService {
   private _isRecording = createState<boolean>(false)
   public readonly isRecording = this._isRecording[0]
 
   public readonly recordIcon = createComputed(() => {
-    return this.isRecording() ? "󰑋" : "󰕧"
+    return this.isRecording() ? Lucide["radio"] : Lucide["video"]
   })
+
+  public readonly cameraIcon = Lucide["camera"]
+  public readonly settingsIcon = Lucide["settings"]
 
   public async takeScreenshot(mode: "region" | "screen" = "region") {
     // Temporarily hide dropdown so it's not captured in screenshot

@@ -4,6 +4,8 @@ import { execAsync } from "ags/process"
 import Media from "./media"
 import ControlCenter from "./controlcenter"
 
+import { Lucide } from "./icons"
+
 export interface WifiAccessPoint {
   ssid: string
   bssid: string
@@ -45,20 +47,20 @@ function parseWifiList(raw: string, savedSet: Set<string>): WifiAccessPoint[] {
     const isLocked = security.length > 0 && security !== "--"
     const isSaved = savedSet.has(ssid)
 
-    let icon = "󰤨"
-    let signalBarText = "󰤨  Excellent"
+    let icon = Lucide["wifi"]
+    let signalBarText = "Excellent"
     if (signal >= 75) {
-      icon = "󰤨"
-      signalBarText = "󰤨  Excellent"
+      icon = Lucide["wifi"]
+      signalBarText = "Excellent"
     } else if (signal >= 50) {
-      icon = "󰤥"
-      signalBarText = "󰤥  Good"
+      icon = Lucide["wifi-low"]
+      signalBarText = "Good"
     } else if (signal >= 25) {
-      icon = "󰤢"
-      signalBarText = "󰤢  Fair"
+      icon = Lucide["wifi-low"]
+      signalBarText = "Fair"
     } else {
-      icon = "󰤟"
-      signalBarText = "󰤟  Weak"
+      icon = Lucide["wifi-zero"]
+      signalBarText = "Weak"
     }
 
     const existing = map.get(ssid)
@@ -128,7 +130,7 @@ class NetworkService {
   })
 
   public readonly icon = createComputed(() => {
-    return this.isConnected() ? "󰤨" : "󰤮"
+    return this.isConnected() ? Lucide["wifi"] : Lucide["wifi-off"]
   })
 
   public readonly className = createComputed(() => {

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "ags": "*",
-    "gnim": "*"
+    "gnim": "*",
+    "lucide-static": "^1.37.0"
   },
   "devDependencies": {
     "sass": "^1.103.1"

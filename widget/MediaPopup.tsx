@@ -2,6 +2,7 @@ import { Gtk } from "ags/gtk3"
 import { createComputed } from "gnim"
 import Media from "../service/media"
 import Audio from "../service/audio"
+import { Lucide } from "../service/icons"
 
 export function MediaCard() {
   const coverArtCss = createComputed(() => {
@@ -26,8 +27,8 @@ export function MediaCard() {
           vexpand={false}
         >
           <label
-            class="fallback-icon"
-            label="󰎆"
+            class="fallback-icon icon"
+            label={Lucide["music"]}
             visible={createComputed(() => !Media.artUrl())}
             valign={Gtk.Align.CENTER}
             halign={Gtk.Align.CENTER}
@@ -73,7 +74,7 @@ export function MediaCard() {
           halign={Gtk.Align.CENTER}
           onClicked={() => Media.playPause()}
         >
-          <label label={Media.playPauseIcon} />
+          <label class="icon" label={Media.playPauseIcon} />
         </button>
       </box>
 

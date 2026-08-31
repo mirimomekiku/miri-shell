@@ -1,6 +1,7 @@
 import { Gtk } from "ags/gtk3"
 import { createComputed } from "gnim"
 import Network, { WifiAccessPoint } from "../service/network"
+import { Lucide } from "../service/icons"
 
 export default function NetworkMenu() {
   return (
@@ -14,7 +15,7 @@ export default function NetworkMenu() {
           valign={Gtk.Align.CENTER}
           onClicked={() => Network.rescan()}
         >
-          <label label="󰑐" />
+          <label class="icon" label={Lucide["rotate-cw"]} />
         </button>
       </box>
 
@@ -50,7 +51,7 @@ export default function NetworkMenu() {
               class="password-cancel-btn"
               onClicked={() => Network.cancelPassword()}
             >
-              <label label="✕" />
+              <label class="icon" label={Lucide["x"]} />
             </button>
           </box>
         </box>
@@ -104,7 +105,7 @@ export default function NetworkMenu() {
                         {/* Lock / Security Icon */}
                         <label
                           class={`wifi-lock-icon ${isConn ? "conn-icon" : ""}`}
-                          label={ap.isLocked ? "󰌾" : "󰤨"}
+                          label={ap.isLocked ? Lucide["lock"] : Lucide["wifi"]}
                         />
 
                         {/* SSID Name & Status/Percentage */}

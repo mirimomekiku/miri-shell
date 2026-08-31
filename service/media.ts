@@ -1,6 +1,7 @@
 import { createPoll } from "ags/time"
 import { createComputed, createState } from "gnim"
 import { execAsync } from "ags/process"
+import { Lucide } from "./icons"
 
 export interface MediaState {
   player: string
@@ -95,7 +96,7 @@ class MediaService {
   })
 
   public readonly playPauseIcon = createComputed(() => {
-    return this.isPlaying() ? "󰏤" : "󰐊"
+    return this.isPlaying() ? Lucide["pause"] : Lucide["play"]
   })
 
   public playPause() {

@@ -1,5 +1,6 @@
 import { createState, createComputed } from "gnim"
 import Media from "./media"
+import { Lucide } from "./icons"
 
 class ControlCenterService {
   private _isOpen = createState<boolean>(false)
@@ -40,6 +41,12 @@ class ControlCenterService {
   public readonly timerText = createComputed(() => {
     return `${this.timerMinutes()}m`
   })
+
+  public readonly dndIcon = createComputed(() => {
+    return this.dnd() ? Lucide["bell-off"] : Lucide["bell"]
+  })
+
+  public readonly timerIcon = Lucide["timer"]
 }
 
 export const ControlCenter = new ControlCenterService()

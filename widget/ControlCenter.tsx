@@ -6,6 +6,7 @@ import Network from "../service/network"
 import ControlCenter from "../service/controlcenter"
 import Notifications, { NotificationItem } from "../service/notifications"
 import Capture from "../service/capture"
+import { Lucide } from "../service/icons"
 
 export default function ControlCenterWidget() {
   return (
@@ -31,7 +32,7 @@ export default function ControlCenterWidget() {
           onClicked={() => ControlCenter.toggleDnd()}
         >
           <box halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-            <label class="icon" label={createComputed(() => (ControlCenter.dnd() ? "󰂛" : "󰂚"))} />
+            <label class="icon" label={ControlCenter.dndIcon} />
           </box>
         </button>
 
@@ -42,7 +43,7 @@ export default function ControlCenterWidget() {
           onClicked={() => ControlCenter.cycleTimer()}
         >
           <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-            <label class="icon" label="󱎫" />
+            <label class="icon" label={ControlCenter.timerIcon} />
             <label class="text" label={ControlCenter.timerText} />
           </box>
         </button>
@@ -77,7 +78,7 @@ export default function ControlCenterWidget() {
                 valign={Gtk.Align.CENTER}
                 onClicked={() => Bluetooth.rescan()}
               >
-                <label label="󰑐" />
+                <label class="icon" label={Lucide["rotate-cw"]} />
               </button>
 
               <button
@@ -85,7 +86,7 @@ export default function ControlCenterWidget() {
                 valign={Gtk.Align.CENTER}
                 onClicked={() => Bluetooth.togglePower()}
               >
-                <label label="󰐥" />
+                <label class="icon" label={Lucide["power"]} />
               </button>
             </box>
 
@@ -153,10 +154,10 @@ export default function ControlCenterWidget() {
                           }}
                         >
                           <box spacing={12} valign={Gtk.Align.CENTER}>
-                            {/* Icon (Linked chain for paired, Bluetooth for connected/available) */}
+                            {/* Lucide Device Icon */}
                             <label
                               class={`bt-pill-icon ${isConn ? "conn-icon" : ""}`}
-                              label={isConn ? "󰂯" : isPaired ? "󰌷" : "󰂯"}
+                              label={dev.icon}
                             />
 
                             {/* Device Name & Subtitle */}
@@ -281,7 +282,7 @@ export default function ControlCenterWidget() {
                               valign={Gtk.Align.CENTER}
                               onClicked={() => Notifications.dismiss(n.id)}
                             >
-                              <label label="✕" />
+                              <label class="icon" label={Lucide["x"]} />
                             </button>
                           </box>
 
@@ -318,7 +319,7 @@ export default function ControlCenterWidget() {
           valign={Gtk.Align.CENTER}
           onClicked={() => Capture.takeScreenshot("region")}
         >
-          <label class="icon" label="󰄀" />
+          <label class="icon" label={Capture.cameraIcon} />
         </button>
 
         {/* Screen Record Button */}
@@ -338,7 +339,7 @@ export default function ControlCenterWidget() {
           valign={Gtk.Align.CENTER}
           onClicked={() => Capture.openSettings()}
         >
-          <label class="icon" label="󰒓" />
+          <label class="icon" label={Capture.settingsIcon} />
         </button>
       </box>
     </box>

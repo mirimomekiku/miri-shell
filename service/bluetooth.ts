@@ -2,6 +2,8 @@ import { createPoll } from "ags/time"
 import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 
+import { Lucide } from "./icons"
+
 export interface BluetoothDevice {
   mac: string
   name: string
@@ -68,7 +70,7 @@ class BluetoothService {
   })
 
   public readonly icon = createComputed(() => {
-    return this.isPowered() ? "󰂯" : "󰂲"
+    return this.isPowered() ? Lucide["bluetooth"] : Lucide["bluetooth-off"]
   })
 
   constructor() {
@@ -143,7 +145,7 @@ class BluetoothService {
               name,
               paired: isPaired,
               connected: isConn,
-              icon: isConn ? "󰂯" : isPaired ? "󰌷" : "󰂯",
+              icon: isConn ? Lucide["bluetooth-connected"] : isPaired ? Lucide["link-2"] : Lucide["bluetooth"],
             })
           }
         }
