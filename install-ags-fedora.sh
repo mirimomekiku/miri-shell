@@ -100,10 +100,15 @@ $SUDO_CMD dnf install -y \
     valadoc \
     gobject-introspection-devel \
     wayland-protocols-devel \
+    wayland-devel \
     gtk3-devel \
     gtk-layer-shell-devel \
     gtk4-devel \
     gtk4-layer-shell-devel \
+    json-glib-devel \
+    libsoup3-devel \
+    gdk-pixbuf2-devel \
+    NetworkManager-libnm-devel \
     socat
 
 log_success "Base dependencies installed successfully."
@@ -129,6 +134,7 @@ log_info "Step 3: Compiling and installing Astal libraries..."
 build_and_install_astal_module() {
     local mod_path="$1"
     local mod_name="$2"
+    local required="${3:-false}"
 
     if [ ! -d "$mod_path" ]; then
         log_warn "Astal module '$mod_path' not found in repository, skipping."
@@ -138,25 +144,33 @@ build_and_install_astal_module() {
     log_info "Building Astal module: $mod_name ($mod_path)..."
     pushd "$mod_path" > /dev/null
     rm -rf build
-    meson setup build --prefix=/usr/local
-    $SUDO_CMD meson install -C build
+    if meson setup build --prefix=/usr/local; then
+        if $SUDO_CMD meson install -C build; then
+            log_success "Installed $mod_name."
+        else
+            log_error "Failed to install $mod_name."
+            if [ "$required" = "true" ]; then popd > /dev/null; return 1; fi
+        fi
+    else
+        log_error "Failed to configure $mod_name with Meson."
+        if [ "$required" = "true" ]; then popd > /dev/null; return 1; fi
+    fi
     popd > /dev/null
-    log_success "Installed $mod_name."
 }
 
-# Core Astal libraries
-build_and_install_astal_module "lib/astal/io" "astal-io"
-build_and_install_astal_module "lib/astal/gtk3" "astal-gtk3"
-build_and_install_astal_module "lib/astal/gtk4" "astal-gtk4"
+# Core Astal libraries (Required)
+build_and_install_astal_module "lib/astal/io" "astal-io" true
+build_and_install_astal_module "lib/astal/gtk3" "astal-gtk3" true
+build_and_install_astal_module "lib/astal/gtk4" "astal-gtk4" true
 
-# Astal Service libraries (Hyprland, Audio, Media, Tray, Battery, Apps)
-build_and_install_astal_module "lib/hyprland" "astal-hyprland"
-build_and_install_astal_module "lib/wireplumber" "astal-wireplumber"
-build_and_install_astal_module "lib/mpris" "astal-mpris"
-build_and_install_astal_module "lib/tray" "astal-tray"
-build_and_install_astal_module "lib/battery" "astal-battery"
-build_and_install_astal_module "lib/apps" "astal-apps"
-build_and_install_astal_module "lib/network" "astal-network"
+# Astal Service libraries (Optional / plugins)
+build_and_install_astal_module "lib/hyprland" "astal-hyprland" false
+build_and_install_astal_module "lib/wireplumber" "astal-wireplumber" false
+build_and_install_astal_module "lib/mpris" "astal-mpris" false
+build_and_install_astal_module "lib/tray" "astal-tray" false
+build_and_install_astal_module "lib/battery" "astal-battery" false
+build_and_install_astal_module "lib/apps" "astal-apps" false
+build_and_install_astal_module "lib/network" "astal-network" false
 
 # Refresh dynamic linker cache and typelib paths
 $SUDO_CMD ldconfig 2>/dev/null || true
