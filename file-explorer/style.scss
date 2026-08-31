@@ -1,109 +1,108 @@
 // ==========================================
-// Miri File Explorer: SCSS Theme
+// Miri File Explorer Theme (Aligned with Top-Bar)
 // ==========================================
 
-$window-bg: #13141c;
-$sidebar-bg: #171923;
-$card-bg: #1d1f2b;
-$card-hover-bg: #262939;
-$card-selected-bg: #2b3046;
+$bar-bg: #18191c;
+$bar-border: rgba(255, 255, 255, 0.06);
+
+$card-bg: #22242e;
+$card-hover-bg: #313547;
+$card-selected-bg: #2e303e;
 
 $accent-blue: #437bf6;
-$accent-blue-hover: #5a8ef8;
-$folder-color: #89b4fa;
+$accent-blue-hover: #588eff;
+$folder-color: #58a6ff;
 $file-code-color: #a6e3a1;
-$file-image-color: #f9e2af;
+$file-image-color: #fab387;
 $file-music-color: #f38ba8;
-$file-archive-color: #fab387;
 
-$text-color: #ffffff;
-$text-muted: #a6adc8;
-$text-dim: #6c7086;
-$border-subtle: rgba(255, 255, 255, 0.06);
+$color-text: #ffffff;
+$color-dim: #9399b2;
+$color-muted: #9399b2;
 
 * {
   all: unset;
-  font-family: "Inter", "Cantarell", "JetBrains Mono", "MesloLGS Nerd Font", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
   font-size: 14px;
-  font-weight: 600;
-  color: $text-color;
+  font-weight: 700;
+  color: $color-text;
 }
 
 label {
-  color: $text-color;
-  font-family: "Inter", "Cantarell", "JetBrains Mono", "MesloLGS Nerd Font", sans-serif;
+  color: $color-text;
+  font-family: "MesloLGS Nerd Font", "JetBrains Mono", "Inter", "Cantarell", sans-serif;
 }
 
 .icon {
   font-family: "lucide", "MesloLGS Nerd Font", sans-serif;
-  font-size: 16px;
 }
 
 window.ExplorerWindow {
-  background-color: $window-bg;
+  background-color: $bar-bg;
 }
 
 .window-content-box {
-  background-color: $window-bg;
+  background-color: $bar-bg;
 }
 
 // ------------------------------------------
 // 1. Header Bar
 // ------------------------------------------
 .HeaderBar {
-  background-color: #181a24;
-  border-bottom: 1px solid $border-subtle;
-  padding: 8px 14px;
+  background-color: $bar-bg;
+  border-bottom: 1px solid $bar-border;
+  padding: 10px 16px;
 
   .nav-buttons-box {
     .nav-btn {
-      background: transparent;
-      border-radius: 8px;
-      padding: 6px 8px;
+      background: #22242e;
+      border-radius: 10px;
+      padding: 6px 9px;
+      color: $color-dim;
       transition: all 120ms ease-in-out;
 
       .icon {
-        font-size: 16px;
-        color: $text-muted;
+        font-size: 15px;
+        color: $color-dim;
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.06);
+        background: #313547;
         .icon {
           color: #ffffff;
         }
       }
 
       &.disabled {
-        opacity: 0.3;
+        opacity: 0.35;
         .icon {
-          color: $text-dim;
+          color: #5c6077;
         }
       }
     }
   }
 
   .breadcrumbs-scrollable {
-    background: #14151e;
+    background: #14151a;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 2px 8px;
+    border-radius: 9999px;
+    padding: 2px 10px;
 
     .breadcrumbs-box {
       .crumb-btn {
         background: transparent;
-        border-radius: 6px;
-        padding: 4px 8px;
+        border-radius: 9999px;
+        padding: 4px 10px;
         transition: all 120ms ease;
 
         label {
           font-size: 13px;
           font-weight: 700;
-          color: $text-muted;
+          color: $color-dim;
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.08);
           label {
             color: #ffffff;
           }
@@ -119,22 +118,22 @@ window.ExplorerWindow {
 
       .crumb-separator {
         font-size: 12px;
-        color: $text-dim;
-        padding: 0 2px;
+        color: #5c6077;
+        padding: 0 1px;
       }
     }
   }
 
   .search-box {
-    background: #14151e;
+    background: #14151a;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 4px 10px;
+    border-radius: 9999px;
+    padding: 4px 12px;
     min-width: 180px;
 
     .search-icon {
       font-size: 14px;
-      color: $text-dim;
+      color: $color-dim;
     }
 
     .search-entry {
@@ -142,34 +141,34 @@ window.ExplorerWindow {
       font-size: 13px;
 
       placeholder {
-        color: $text-dim;
+        color: $color-dim;
       }
     }
   }
 
   .action-buttons-box {
     .action-btn {
-      background: transparent;
-      border-radius: 8px;
-      padding: 6px 8px;
+      background: #22242e;
+      border-radius: 10px;
+      padding: 6px 9px;
       transition: all 120ms ease-in-out;
 
       .icon {
-        font-size: 16px;
-        color: $text-muted;
+        font-size: 15px;
+        color: $color-dim;
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.06);
+        background: #313547;
         .icon {
           color: #ffffff;
         }
       }
 
       &.active {
-        background: rgba(67, 123, 246, 0.2);
+        background: $accent-blue;
         .icon {
-          color: $accent-blue;
+          color: #ffffff;
         }
       }
     }
@@ -177,20 +176,32 @@ window.ExplorerWindow {
 }
 
 // ------------------------------------------
-// 2. Main Split: Sidebar & FileView
+// 2. Resizable Gtk.Paned & Split Body
 // ------------------------------------------
-.body-split-box {
-  background-color: $window-bg;
+.resizable-paned {
+  background-color: $bar-bg;
+
+  // Splitter / Handle
+  separator {
+    background-color: $bar-border;
+    min-width: 2px;
+    margin: 0;
+
+    &:hover {
+      background-color: $accent-blue;
+    }
+  }
 
   .Sidebar {
-    background-color: $sidebar-bg;
-    min-width: 180px;
+    background-color: $bar-bg;
+    border-right: 1px solid $bar-border;
+    min-width: 160px;
     padding: 14px 10px;
 
     .sidebar-heading {
       font-size: 11px;
       font-weight: 800;
-      color: $text-dim;
+      color: #5c6077;
       padding: 4px 10px;
       letter-spacing: 0.8px;
     }
@@ -198,7 +209,7 @@ window.ExplorerWindow {
     .places-list {
       .sidebar-item-btn {
         background: transparent;
-        border-radius: 9px;
+        border-radius: 12px;
         padding: 8px 12px;
         transition: all 120ms ease-in-out;
 
@@ -210,18 +221,18 @@ window.ExplorerWindow {
         .name {
           font-size: 13px;
           font-weight: 700;
-          color: $text-muted;
+          color: $color-dim;
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.04);
+          background: #22242e;
           .name {
             color: #ffffff;
           }
         }
 
         &.active {
-          background: #232636;
+          background: #2b2f3e;
 
           .icon {
             color: $accent-blue;
@@ -236,21 +247,16 @@ window.ExplorerWindow {
     }
   }
 
-  .sidebar-divider {
-    min-width: 1px;
-    background-color: $border-subtle;
-  }
-
   .FileViewScrollable {
-    background-color: $window-bg;
+    background-color: $bar-bg;
     padding: 14px 16px;
 
     .empty-state-box {
       padding: 80px 0;
 
       .empty-icon {
-        font-size: 52px;
-        color: $text-dim;
+        font-size: 48px;
+        color: #5c6077;
       }
 
       .empty-title {
@@ -261,14 +267,14 @@ window.ExplorerWindow {
 
       .empty-sub {
         font-size: 13px;
-        color: $text-muted;
+        color: $color-dim;
       }
     }
 
     // --- Grid View Styles ---
     .file-grid-flowbox {
       background: transparent;
-      padding: 4px;
+      padding: 2px;
 
       flowboxchild {
         background: transparent;
@@ -279,7 +285,7 @@ window.ExplorerWindow {
       .grid-file-card {
         background-color: $card-bg;
         border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: 14px;
+        border-radius: 16px;
         padding: 14px 10px;
         min-width: 115px;
         min-height: 105px;
@@ -299,15 +305,15 @@ window.ExplorerWindow {
 
         .grid-name {
           font-size: 12.5px;
-          font-weight: 600;
+          font-weight: 700;
           color: #ffffff;
           margin-top: 4px;
         }
 
         .grid-sub {
           font-size: 11px;
-          font-weight: 500;
-          color: $text-dim;
+          font-weight: 600;
+          color: $color-dim;
         }
 
         &:hover {
@@ -316,7 +322,7 @@ window.ExplorerWindow {
         }
 
         &.selected {
-          background-color: $card-selected-bg;
+          background-color: #2e303e;
           border-color: rgba(67, 123, 246, 0.6);
         }
       }
@@ -324,11 +330,11 @@ window.ExplorerWindow {
 
     // --- List View Styles ---
     .file-list-container {
-      padding: 4px;
+      padding: 2px;
 
       .list-header-row {
         padding: 6px 12px;
-        border-bottom: 1px solid $border-subtle;
+        border-bottom: 1px solid $bar-border;
         margin-bottom: 4px;
 
         .header-col-name,
@@ -336,7 +342,7 @@ window.ExplorerWindow {
         .header-col-date {
           font-size: 11.5px;
           font-weight: 800;
-          color: $text-dim;
+          color: #5c6077;
         }
 
         .header-col-size {
@@ -350,7 +356,7 @@ window.ExplorerWindow {
 
       .list-file-row {
         background: transparent;
-        border-radius: 8px;
+        border-radius: 10px;
         padding: 7px 12px;
         transition: all 100ms ease;
 
@@ -368,28 +374,28 @@ window.ExplorerWindow {
 
         .list-name {
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 700;
           color: #ffffff;
         }
 
         .list-size {
           font-size: 12px;
-          color: $text-muted;
+          color: $color-dim;
           min-width: 80px;
         }
 
         .list-date {
           font-size: 12px;
-          color: $text-dim;
+          color: #5c6077;
           min-width: 110px;
         }
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.04);
+          background-color: #22242e;
         }
 
         &.selected {
-          background-color: rgba(67, 123, 246, 0.2);
+          background-color: #2e303e;
         }
       }
     }
@@ -400,27 +406,27 @@ window.ExplorerWindow {
 // 3. Status Bar
 // ------------------------------------------
 .StatusBar {
-  background-color: #151720;
-  border-top: 1px solid $border-subtle;
-  padding: 6px 14px;
+  background-color: $bar-bg;
+  border-top: 1px solid $bar-border;
+  padding: 6px 16px;
 
   .status-items-count {
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 700;
-    color: $text-muted;
+    color: $color-dim;
     min-width: 60px;
   }
 
   .status-feedback {
-    font-size: 11.5px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     color: $accent-blue;
   }
 
   .status-path {
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 600;
-    color: $text-dim;
+    color: #5c6077;
   }
 }
 
@@ -428,14 +434,14 @@ window.ExplorerWindow {
 // Context Menu
 // ------------------------------------------
 menu {
-  background-color: #1e202c;
+  background-color: #22242e;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 4px;
 
   menuitem {
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     color: #ffffff;
 
     &:hover {

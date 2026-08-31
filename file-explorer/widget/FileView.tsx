@@ -1,4 +1,5 @@
 import { Gtk, Gdk } from "ags/gtk3"
+import { createRoot } from "gnim"
 import FS, { FileItem } from "../service/fs"
 import { Lucide } from "../service/icons"
 
@@ -46,135 +47,177 @@ export default function FileView() {
         class="file-view-container"
         orientation={Gtk.Orientation.VERTICAL}
         $={(self) => {
+          let disposeRoot: (() => void) | null = null
+
           const render = () => {
+            if (disposeRoot) {
+              disposeRoot()
+              disposeRoot = null
+            }
             self.get_children().forEach((ch) => ch.destroy())
             const items = FS.filteredItems()
             const isGrid = FS.viewMode() === "grid"
 
-            if (items.length === 0) {
-              const empty = (
-                <box class="empty-state-box" orientation={Gtk.Orientation.VERTICAL} spacing={8} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-                  <label class="empty-icon icon" label={Lucide["folder-open"]} />
-                  <label class="empty-title" label={FS.searchQuery() ? "No matching files found" : "This folder is empty"} />
-                  <label class="empty-sub" label={FS.searchQuery() ? `No files matching "${FS.searchQuery()}"` : "Folder contains no files"} />
-                </box>
-              )
-              self.add(empty)
-            } else if (isGrid) {
-              // --- GRID VIEW ---
-              const flowBox = new Gtk.FlowBox({
-                valign: Gtk.Align.START,
-                maxChildrenPerLine: 30,
-                minChildrenPerLine: 2,
-                selectionMode: Gtk.SelectionMode.NONE,
-                homogeneous: true,
-                columnSpacing: 10,
-                rowSpacing: 10,
-              })
-              flowBox.get_style_context().add_class("file-grid-flowbox")
+            createRoot((dispose) => {
+              disposeRoot = dispose
 
-              for (const item of items) {
-                const isSelected = FS.selectedPath() === item.path
-
-                const cardBtn = (
-                  <button
-                    class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
-                    onClicked={() => FS.setSelectedPath(item.path)}
-                    onButtonPressEvent={(_, event) => {
-                      const [, button] = event.get_button()
-                      const eventType = event.get_event_type()
-
-                      // Double-click to open
-                      if (eventType === Gdk.EventType._2BUTTON_PRESS && button === 1) {
-                        FS.openItem(item)
-                        return true
-                      }
-
-                      // Right-click context menu
-                      if (button === 3) {
-                        FS.setSelectedPath(item.path)
-                        showContextMenu(event, item)
-                        return true
-                      }
-                      return false
-                    }}
+              if (items.length === 0) {
+                const empty = (
+                  <box
+                    class="empty-state-box"
+                    orientation={Gtk.Orientation.VERTICAL}
+                    spacing={8}
+                    halign={Gtk.Align.CENTER}
+                    valign={Gtk.Align.CENTER}
                   >
-                    <box orientation={Gtk.Orientation.VERTICAL} spacing={4} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-                      <label class={`grid-icon icon ${item.isDir ? "folder-icon" : "file-icon"}`} label={item.icon} />
-                      <label
-                        class="grid-name"
-                        label={item.name}
-                        wrap={true}
-                        justify={Gtk.Justification.CENTER}
-                        ellipsize={3}
-                        maxWidthChars={14}
-                      />
-                      <label class="grid-sub" label={item.sizeStr} />
-                    </box>
-                  </button>
-                )
-
-                flowBox.add(cardBtn)
-              }
-
-              self.add(flowBox)
-            } else {
-              // --- LIST VIEW ---
-              const listBox = new Gtk.Box({
-                orientation: Gtk.Orientation.VERTICAL,
-                spacing: 2,
-              })
-              listBox.get_style_context().add_class("file-list-container")
-
-              // Header row
-              const headerRow = (
-                <box class="list-header-row" spacing={12} valign={Gtk.Align.CENTER}>
-                  <label class="header-col-name" label="Name" hexpand={true} xalign={0} />
-                  <label class="header-col-size" label="Size" xalign={1} />
-                  <label class="header-col-date" label="Date Modified" xalign={1} />
-                </box>
-              )
-              listBox.add(headerRow)
-
-              // Items
-              for (const item of items) {
-                const isSelected = FS.selectedPath() === item.path
-
-                const rowBtn = (
-                  <button
-                    class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
-                    onClicked={() => FS.setSelectedPath(item.path)}
-                    onButtonPressEvent={(_, event) => {
-                      const [, button] = event.get_button()
-                      const eventType = event.get_event_type()
-
-                      if (eventType === Gdk.EventType._2BUTTON_PRESS && button === 1) {
-                        FS.openItem(item)
-                        return true
+                    <label class="empty-icon icon" label={Lucide["folder-open"]} />
+                    <label
+                      class="empty-title"
+                      label={FS.searchQuery() ? "No matching files found" : "This folder is empty"}
+                    />
+                    <label
+                      class="empty-sub"
+                      label={
+                        FS.searchQuery()
+                          ? `No files matching "${FS.searchQuery()}"`
+                          : "Folder contains no files"
                       }
-
-                      if (button === 3) {
-                        FS.setSelectedPath(item.path)
-                        showContextMenu(event, item)
-                        return true
-                      }
-                      return false
-                    }}
-                  >
-                    <box spacing={12} valign={Gtk.Align.CENTER}>
-                      <label class={`list-icon icon ${item.isDir ? "folder-icon" : "file-icon"}`} label={item.icon} />
-                      <label class="list-name" label={item.name} xalign={0} hexpand={true} ellipsize={3} />
-                      <label class="list-size" label={item.sizeStr} xalign={1} />
-                      <label class="list-date" label={item.dateStr} xalign={1} />
-                    </box>
-                  </button>
+                    />
+                  </box>
                 )
-                listBox.add(rowBtn)
+                self.add(empty)
+              } else if (isGrid) {
+                // --- GRID VIEW ---
+                const flowBox = new Gtk.FlowBox({
+                  valign: Gtk.Align.START,
+                  maxChildrenPerLine: 30,
+                  minChildrenPerLine: 2,
+                  selectionMode: Gtk.SelectionMode.NONE,
+                  homogeneous: true,
+                  columnSpacing: 10,
+                  rowSpacing: 10,
+                })
+                flowBox.get_style_context().add_class("file-grid-flowbox")
+
+                for (const item of items) {
+                  const isSelected = FS.selectedPath() === item.path
+
+                  const cardBtn = (
+                    <button
+                      class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
+                      onClicked={() => FS.setSelectedPath(item.path)}
+                      onButtonPressEvent={(_, event) => {
+                        const [, button] = event.get_button()
+                        const eventType = event.get_event_type()
+
+                        // Double-click to open
+                        if (eventType === Gdk.EventType._2BUTTON_PRESS && button === 1) {
+                          FS.openItem(item)
+                          return true
+                        }
+
+                        // Right-click context menu
+                        if (button === 3) {
+                          FS.setSelectedPath(item.path)
+                          showContextMenu(event, item)
+                          return true
+                        }
+                        return false
+                      }}
+                    >
+                      <box
+                        orientation={Gtk.Orientation.VERTICAL}
+                        spacing={4}
+                        halign={Gtk.Align.CENTER}
+                        valign={Gtk.Align.CENTER}
+                      >
+                        <label
+                          class={`grid-icon icon ${item.isDir ? "folder-icon" : "file-icon"}`}
+                          label={item.icon}
+                        />
+                        <label
+                          class="grid-name"
+                          label={item.name}
+                          wrap={true}
+                          justify={Gtk.Justification.CENTER}
+                          ellipsize={3}
+                          maxWidthChars={14}
+                        />
+                        <label class="grid-sub" label={item.sizeStr} />
+                      </box>
+                    </button>
+                  )
+
+                  flowBox.add(cardBtn)
+                }
+
+                self.add(flowBox)
+              } else {
+                // --- LIST VIEW ---
+                const listBox = new Gtk.Box({
+                  orientation: Gtk.Orientation.VERTICAL,
+                  spacing: 2,
+                })
+                listBox.get_style_context().add_class("file-list-container")
+
+                // Header row
+                const headerRow = (
+                  <box class="list-header-row" spacing={12} valign={Gtk.Align.CENTER}>
+                    <label class="header-col-name" label="Name" hexpand={true} xalign={0} />
+                    <label class="header-col-size" label="Size" xalign={1} />
+                    <label class="header-col-date" label="Date Modified" xalign={1} />
+                  </box>
+                )
+                listBox.add(headerRow)
+
+                // Items
+                for (const item of items) {
+                  const isSelected = FS.selectedPath() === item.path
+
+                  const rowBtn = (
+                    <button
+                      class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
+                      onClicked={() => FS.setSelectedPath(item.path)}
+                      onButtonPressEvent={(_, event) => {
+                        const [, button] = event.get_button()
+                        const eventType = event.get_event_type()
+
+                        if (eventType === Gdk.EventType._2BUTTON_PRESS && button === 1) {
+                          FS.openItem(item)
+                          return true
+                        }
+
+                        if (button === 3) {
+                          FS.setSelectedPath(item.path)
+                          showContextMenu(event, item)
+                          return true
+                        }
+                        return false
+                      }}
+                    >
+                      <box spacing={12} valign={Gtk.Align.CENTER}>
+                        <label
+                          class={`list-icon icon ${item.isDir ? "folder-icon" : "file-icon"}`}
+                          label={item.icon}
+                        />
+                        <label
+                          class="list-name"
+                          label={item.name}
+                          xalign={0}
+                          hexpand={true}
+                          ellipsize={3}
+                        />
+                        <label class="list-size" label={item.sizeStr} xalign={1} />
+                        <label class="list-date" label={item.dateStr} xalign={1} />
+                      </box>
+                    </button>
+                  )
+                  listBox.add(rowBtn)
+                }
+
+                self.add(listBox)
               }
-
-              self.add(listBox)
-            }
-
+            })
             self.show_all()
           }
 

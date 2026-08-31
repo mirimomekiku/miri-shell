@@ -1,5 +1,5 @@
 import { Gtk } from "ags/gtk3"
-import { createComputed } from "gnim"
+import { createComputed, createRoot } from "gnim"
 import FS from "../service/fs"
 import { Lucide } from "../service/icons"
 
@@ -53,25 +53,35 @@ export default function Header() {
           spacing={4}
           valign={Gtk.Align.CENTER}
           $={(self) => {
+            let disposeRoot: (() => void) | null = null
+
             const render = () => {
+              if (disposeRoot) {
+                disposeRoot()
+                disposeRoot = null
+              }
               self.get_children().forEach((ch) => ch.destroy())
               const crumbs = FS.breadcrumbs()
 
-              crumbs.forEach((crumb, index) => {
-                const isLast = index === crumbs.length - 1
-                const btn = (
-                  <button
-                    class={`crumb-btn ${isLast ? "current" : ""}`}
-                    onClicked={() => FS.navigateTo(crumb.path)}
-                  >
-                    <label label={crumb.name} />
-                  </button>
-                )
-                self.add(btn)
+              createRoot((dispose) => {
+                disposeRoot = dispose
 
-                if (!isLast) {
-                  self.add(<label class="crumb-separator icon" label={Lucide["chevron-right"]} />)
-                }
+                crumbs.forEach((crumb, index) => {
+                  const isLast = index === crumbs.length - 1
+                  const btn = (
+                    <button
+                      class={`crumb-btn ${isLast ? "current" : ""}`}
+                      onClicked={() => FS.navigateTo(crumb.path)}
+                    >
+                      <label label={crumb.name} />
+                    </button>
+                  )
+                  self.add(btn)
+
+                  if (!isLast) {
+                    self.add(<label class="crumb-separator icon" label={Lucide["chevron-right"]} />)
+                  }
+                })
               })
               self.show_all()
             }

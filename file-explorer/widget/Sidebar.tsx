@@ -1,4 +1,5 @@
 import { Gtk } from "ags/gtk3"
+import { createRoot } from "gnim"
 import GLib from "gi://GLib?version=2.0"
 import FS from "../service/fs"
 import { Lucide } from "../service/icons"
@@ -30,28 +31,40 @@ export default function Sidebar() {
       <box
         class="places-list"
         orientation={Gtk.Orientation.VERTICAL}
-        spacing={2}
+        spacing={3}
         $={(self) => {
+          let disposeRoot: (() => void) | null = null
+
           const render = () => {
+            if (disposeRoot) {
+              disposeRoot()
+              disposeRoot = null
+            }
             self.get_children().forEach((ch) => ch.destroy())
             const current = FS.currentPath()
 
-            for (const place of places) {
-              const isActive = current === place.path || (place.path !== "/" && place.path !== home && current.startsWith(place.path))
+            createRoot((dispose) => {
+              disposeRoot = dispose
 
-              const btn = (
-                <button
-                  class={`sidebar-item-btn ${isActive ? "active" : ""}`}
-                  onClicked={() => FS.navigateTo(place.path)}
-                >
-                  <box spacing={10} valign={Gtk.Align.CENTER}>
-                    <label class="icon" label={place.icon} />
-                    <label class="name" label={place.name} xalign={0} hexpand={true} />
-                  </box>
-                </button>
-              )
-              self.add(btn)
-            }
+              for (const place of places) {
+                const isActive =
+                  current === place.path ||
+                  (place.path !== "/" && place.path !== home && current.startsWith(place.path))
+
+                const btn = (
+                  <button
+                    class={`sidebar-item-btn ${isActive ? "active" : ""}`}
+                    onClicked={() => FS.navigateTo(place.path)}
+                  >
+                    <box spacing={10} valign={Gtk.Align.CENTER}>
+                      <label class="icon" label={place.icon} />
+                      <label class="name" label={place.name} xalign={0} hexpand={true} />
+                    </box>
+                  </button>
+                )
+                self.add(btn)
+              }
+            })
             self.show_all()
           }
 
