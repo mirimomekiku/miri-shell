@@ -18,8 +18,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       application={app}
     >
       <box class="PillBar" spacing={16} valign={Gtk.Align.CENTER}>
-        {/* 1. Battery */}
-        <BatteryWidget />
+        {/* 1. Time */}
+        <Clock />
 
         {/* 2. Audio */}
         <AudioWidget />
@@ -30,8 +30,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         {/* 4. Network / Wi-Fi */}
         <NetworkWidget />
 
-        {/* 5. Time (18:56) */}
-        <Clock />
+        {/* 5. Battery */}
+        <BatteryWidget />
       </box>
     </window>
   )

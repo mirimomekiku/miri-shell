@@ -19,11 +19,20 @@ class NetworkService {
   })
 
   public readonly isConnected = createComputed(() => {
-    return this.ssid() !== "Disconnected" && this.ssid() !== ""
+    const s = this.ssid()
+    return s !== "Disconnected" && s !== ""
+  })
+
+  public readonly displayText = createComputed(() => {
+    return this.isConnected() ? this.ssid() : ""
   })
 
   public readonly icon = createComputed(() => {
     return this.isConnected() ? "󰤨" : "󰤮"
+  })
+
+  public readonly className = createComputed(() => {
+    return `Network ${this.isConnected() ? "connected" : "disconnected"}`
   })
 }
 
