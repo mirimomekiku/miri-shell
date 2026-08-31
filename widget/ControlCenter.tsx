@@ -309,48 +309,36 @@ export default function ControlCenterWidget() {
         </scrollable>
       </box>
 
-      {/* 5. Quick Utilities Bar: Screenshot, Screen Record, Settings */}
-      <box class="quick-utilities-row" spacing={8} valign={Gtk.Align.CENTER}>
+      {/* 5. Quick Utilities Bar: Screenshot, Screen Record, Settings (Circular Icons, Right-Aligned) */}
+      <box class="quick-utilities-row" spacing={8} halign={Gtk.Align.END} valign={Gtk.Align.CENTER}>
         {/* Screenshot Button */}
         <button
-          class="utility-btn screenshot"
-          hexpand={true}
-          tooltipText="Take Region Screenshot"
+          class="circular-utility-btn screenshot"
+          tooltipText="Take Screenshot"
+          valign={Gtk.Align.CENTER}
           onClicked={() => Capture.takeScreenshot("region")}
         >
-          <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-            <label class="icon" label="󰄀" />
-            <label class="text" label="Screenshot" />
-          </box>
+          <label class="icon" label="󰄀" />
         </button>
 
         {/* Screen Record Button */}
         <button
-          class={createComputed(() => `utility-btn record ${Capture.isRecording() ? "recording" : ""}`)}
-          hexpand={true}
+          class={createComputed(() => `circular-utility-btn record ${Capture.isRecording() ? "recording" : ""}`)}
           tooltipText="Toggle Screen Recording"
+          valign={Gtk.Align.CENTER}
           onClicked={() => Capture.toggleRecording()}
         >
-          <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-            <label class="icon" label={Capture.recordIcon} />
-            <label
-              class="text"
-              label={createComputed(() => (Capture.isRecording() ? "Recording" : "Record"))}
-            />
-          </box>
+          <label class="icon" label={Capture.recordIcon} />
         </button>
 
         {/* Settings Button */}
         <button
-          class="utility-btn settings"
-          hexpand={true}
-          tooltipText="Open Settings"
+          class="circular-utility-btn settings"
+          tooltipText="Settings"
+          valign={Gtk.Align.CENTER}
           onClicked={() => Capture.openSettings()}
         >
-          <box spacing={6} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-            <label class="icon" label="󰒓" />
-            <label class="text" label="Settings" />
-          </box>
+          <label class="icon" label="󰒓" />
         </button>
       </box>
     </box>
