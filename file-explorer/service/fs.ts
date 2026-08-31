@@ -4,6 +4,18 @@ import { createState, createComputed } from "gnim"
 import { execAsync } from "ags/process"
 import { Lucide } from "./icons"
 
+export type FileCategory =
+  | "folder"
+  | "code"
+  | "doc"
+  | "sheet"
+  | "image"
+  | "audio"
+  | "video"
+  | "archive"
+  | "bin"
+  | "generic"
+
 export interface FileItem {
   name: string
   path: string
@@ -15,6 +27,7 @@ export interface FileItem {
   modifiedSec: number
   dateStr: string
   icon: string
+  category: FileCategory
   extension: string
 }
 
@@ -32,20 +45,24 @@ function formatBytes(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
 }
 
-function getFileIcon(name: string, isDir: boolean): string {
+function getFileCategory(name: string, isDir: boolean): { icon: string; category: FileCategory } {
   if (isDir) {
     const lower = name.toLowerCase()
-    if (lower === ".git") return Lucide["folder-git"]
-    if (["src", "service", "widget", "lib", "components"].includes(lower)) return Lucide["folder-code"] || Lucide["folder"]
-    if (["dist", "build", "out", "target"].includes(lower)) return Lucide["folder-archive"] || Lucide["folder"]
-    return Lucide["folder"]
+    if (lower === ".git") return { icon: Lucide["folder-git"], category: "folder" }
+    if (["src", "service", "widget", "lib", "components"].includes(lower)) {
+      return { icon: Lucide["folder-code"] || Lucide["folder"], category: "folder" }
+    }
+    if (["dist", "build", "out", "target"].includes(lower)) {
+      return { icon: Lucide["folder-archive"] || Lucide["folder"], category: "folder" }
+    }
+    return { icon: Lucide["folder"], category: "folder" }
   }
 
   const ext = name.includes(".") ? name.split(".").pop()!.toLowerCase() : ""
 
   // Spreadsheets & Tables
   if (["xls", "xlsx", "csv", "tsv", "ods", "numbers"].includes(ext)) {
-    return Lucide["file-spreadsheet"] || Lucide["file-text"]
+    return { icon: Lucide["file-spreadsheet"] || Lucide["file-text"], category: "sheet" }
   }
 
   // Documents & Office (PDF, Word, Markdown, Text)
@@ -54,7 +71,7 @@ function getFileIcon(name: string, isDir: boolean): string {
     "ppt", "pptx", "odp", "key",
     "txt", "md", "markdown", "rst", "log", "tex", "epub"
   ].includes(ext)) {
-    return Lucide["file-text"]
+    return { icon: Lucide["file-text"], category: "doc" }
   }
 
   // Code & Config
@@ -64,35 +81,35 @@ function getFileIcon(name: string, isDir: boolean): string {
     "toml", "xml", "html", "css", "scss", "sass", "vue", "svelte", "astro",
     "graphql", "sql", "php", "rb", "swift", "dart", "env", "lock"
   ].includes(ext)) {
-    return Lucide["file-code"]
+    return { icon: Lucide["file-code"], category: "code" }
   }
 
   // Images
   if (["png", "jpg", "jpeg", "webp", "svg", "gif", "bmp", "ico", "tiff", "avif", "psd"].includes(ext)) {
-    return Lucide["image"]
+    return { icon: Lucide["image"], category: "image" }
   }
 
   // Audio
   if (["mp3", "wav", "flac", "ogg", "m4a", "aac", "opus", "wma", "aiff", "mid"].includes(ext)) {
-    return Lucide["music"]
+    return { icon: Lucide["music"], category: "audio" }
   }
 
   // Video
   if (["mp4", "mkv", "webm", "avi", "mov", "wmv", "flv", "m4v", "3gp", "ts"].includes(ext)) {
-    return Lucide["video"]
+    return { icon: Lucide["video"], category: "video" }
   }
 
   // Archives
   if (["zip", "tar", "gz", "xz", "7z", "bz2", "rar", "iso", "tgz", "zst", "deb", "rpm", "apk"].includes(ext)) {
-    return Lucide["archive"]
+    return { icon: Lucide["archive"], category: "archive" }
   }
 
   // Executables & Binaries
   if (["bin", "appimage", "so", "dll", "exe", "out"].includes(ext)) {
-    return Lucide["terminal"]
+    return { icon: Lucide["terminal"], category: "bin" }
   }
 
-  return Lucide["file"]
+  return { icon: Lucide["file"], category: "generic" }
 }
 
 class FilesystemService {
@@ -200,6 +217,17 @@ class FilesystemService {
   public readonly itemCountStr = createComputed(() => {
     const count = this.filteredItems().length
     return `${count} ${count === 1 ? "item" : "items"}`
+  })
+
+  public readonly selectedItem = createComputed(() => {
+    const sel = this.selectedPath()
+    if (!sel) return null
+    return this.filteredItems().find((it) => it.path === sel) || null
+  })
+
+  public readonly totalDirectorySizeStr = createComputed(() => {
+    const totalBytes = this.filteredItems().reduce((acc, it) => acc + it.sizeBytes, 0)
+    return formatBytes(totalBytes)
   })
 
   constructor() {
@@ -315,6 +343,8 @@ class FilesystemService {
           dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
         }
 
+        const { icon, category } = getFileCategory(name, isDir)
+
         fileItems.push({
           name,
           path: `${targetPath.replace(/\/$/, "")}/${name}`,
@@ -325,7 +355,8 @@ class FilesystemService {
           sizeStr: isDir ? "" : formatBytes(sizeBytes),
           modifiedSec,
           dateStr,
-          icon: getFileIcon(name, isDir),
+          icon,
+          category,
           extension: name.includes(".") ? name.split(".").pop() || "" : "",
         })
       }
@@ -397,6 +428,29 @@ class FilesystemService {
 
   public setSelectedPath(path: string) {
     this._selectedPath[1](path)
+  }
+
+  public selectNext() {
+    const list = this.filteredItems()
+    if (list.length === 0) return
+    const currentIdx = list.findIndex((it) => it.path === this.selectedPath())
+    const nextIdx = currentIdx < 0 || currentIdx >= list.length - 1 ? 0 : currentIdx + 1
+    this.setSelectedPath(list[nextIdx].path)
+  }
+
+  public selectPrev() {
+    const list = this.filteredItems()
+    if (list.length === 0) return
+    const currentIdx = list.findIndex((it) => it.path === this.selectedPath())
+    const prevIdx = currentIdx <= 0 ? list.length - 1 : currentIdx - 1
+    this.setSelectedPath(list[prevIdx].path)
+  }
+
+  public openSelected() {
+    const sel = this.selectedItem()
+    if (sel) {
+      this.openItem(sel)
+    }
   }
 
   public openItem(item: FileItem) {
@@ -483,6 +537,8 @@ class FilesystemService {
       const dir = Gio.File.new_for_path(newPath)
       dir.make_directory(null)
       this.refresh()
+      this._statusText[1](`Created folder "${name.trim()}"`)
+      setTimeout(() => this._statusText[1](""), 2000)
     } catch (e: any) {
       this._statusText[1](`Failed to create folder: ${e.message}`)
     }

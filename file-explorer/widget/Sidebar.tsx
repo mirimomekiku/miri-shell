@@ -15,6 +15,7 @@ export default function Sidebar() {
 
   const places: Place[] = [
     { name: "Home", path: home, icon: Lucide["home"] },
+    { name: "Projects", path: `${home}/Projects`, icon: Lucide["folder-git"] },
     { name: "Downloads", path: `${home}/Downloads`, icon: Lucide["download"] },
     { name: "Documents", path: `${home}/Documents`, icon: Lucide["file-text"] },
     { name: "Pictures", path: `${home}/Pictures`, icon: Lucide["image"] },
@@ -45,7 +46,7 @@ export default function Sidebar() {
       hexpand={false}
       vexpand={true}
     >
-      <box class="Sidebar" orientation={Gtk.Orientation.VERTICAL} spacing={10}>
+      <box class="Sidebar" orientation={Gtk.Orientation.VERTICAL} spacing={12}>
         {/* 1. PINNED / QUICK ACCESS SECTION */}
         <box class="sidebar-section pinned-section" orientation={Gtk.Orientation.VERTICAL} spacing={4}>
           {/* Section Header with Expand/Collapse Toggle */}
@@ -61,6 +62,10 @@ export default function Sidebar() {
                 )}
               />
               <label class="sidebar-heading" label="PINNED" xalign={0} hexpand={true} />
+              <label
+                class="pinned-count-badge"
+                label={createComputed(() => `${FS.pinned().length}`)}
+              />
             </box>
           </button>
 
@@ -68,7 +73,7 @@ export default function Sidebar() {
           <revealer
             revealChild={FS.pinnedExpanded}
             transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
-            transitionDuration={180}
+            transitionDuration={160}
           >
             <box
               class="pinned-list"
@@ -91,8 +96,8 @@ export default function Sidebar() {
 
                     if (pinned.length === 0) {
                       const emptyLabel = (
-                        <box class="empty-pinned" padding={4}>
-                          <label class="empty-pinned-text" label="No pinned folders" xalign={0} />
+                        <box class="empty-pinned">
+                          <label class="empty-pinned-text" label="No pinned folders yet" xalign={0} />
                         </box>
                       )
                       self.add(emptyLabel)
@@ -115,11 +120,11 @@ export default function Sidebar() {
                             }}
                           >
                             <box spacing={10} valign={Gtk.Align.CENTER}>
-                              <label class="icon" label={p.icon} />
+                              <label class="icon item-icon" label={p.icon} />
                               <label class="name" label={p.name} xalign={0} hexpand={true} ellipsize={3} />
                               <button
                                 class="unpin-quick-btn"
-                                tooltipText="Unpin"
+                                tooltipText="Unpin from Sidebar"
                                 onClicked={() => FS.unpinFolder(p.path)}
                               >
                                 <label class="icon" label={Lucide["x"]} />
@@ -175,7 +180,7 @@ export default function Sidebar() {
                         onClicked={() => FS.navigateTo(place.path)}
                       >
                         <box spacing={10} valign={Gtk.Align.CENTER}>
-                          <label class="icon" label={place.icon} />
+                          <label class="icon item-icon" label={place.icon} />
                           <label class="name" label={place.name} xalign={0} hexpand={true} />
                         </box>
                       </button>

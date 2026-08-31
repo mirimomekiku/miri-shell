@@ -1,5 +1,6 @@
 import app from "ags/gtk3/app"
 import { Gtk, Gdk } from "ags/gtk3"
+import { createComputed } from "gnim"
 import Header from "./Header"
 import Sidebar from "./Sidebar"
 import FileView from "./FileView"
@@ -11,8 +12,8 @@ export default function ExplorerWindow() {
       class="ExplorerWindow"
       name="file-explorer"
       title="Files"
-      defaultWidth={920}
-      defaultHeight={600}
+      defaultWidth={960}
+      defaultHeight={620}
       application={app}
       onKeyPressEvent={(_, event) => {
         const [, keyval] = event.get_keyval()
@@ -20,12 +21,36 @@ export default function ExplorerWindow() {
         const isCtrl = Boolean(state & Gdk.ModifierType.CONTROL_MASK)
         const isAlt = Boolean(state & Gdk.ModifierType.MOD1_MASK)
 
-        // Escape: clear search
+        // Escape: clear search or deselect
         if (keyval === Gdk.KEY_Escape) {
           if (FS.searchQuery()) {
             FS.setSearchQuery("")
             return true
           }
+          if (FS.selectedPath()) {
+            FS.setSelectedPath("")
+            return true
+          }
+        }
+
+        // Enter: Open selected item
+        if (keyval === Gdk.KEY_Return || keyval === Gdk.KEY_KP_Enter) {
+          if (FS.selectedPath()) {
+            FS.openSelected()
+            return true
+          }
+        }
+
+        // Arrow Down / Arrow Right: Select next
+        if (keyval === Gdk.KEY_Down || keyval === Gdk.KEY_Right) {
+          FS.selectNext()
+          return true
+        }
+
+        // Arrow Up / Arrow Left: Select prev
+        if (keyval === Gdk.KEY_Up || keyval === Gdk.KEY_Left) {
+          FS.selectPrev()
+          return true
         }
 
         // Ctrl+H: toggle hidden files
@@ -104,11 +129,40 @@ export default function ExplorerWindow() {
           }}
         />
 
-        {/* 3. Footer Status Bar */}
-        <box class="StatusBar" spacing={12} valign={Gtk.Align.CENTER}>
-          <label class="status-items-count" label={FS.itemCountStr} xalign={0} />
+        {/* 3. Refined Footer Status Bar */}
+        <box class="StatusBar" spacing={14} valign={Gtk.Align.CENTER}>
+          <box spacing={6} valign={Gtk.Align.CENTER}>
+            <label class="status-items-count" label={FS.itemCountStr} xalign={0} />
+            <label class="status-separator" label="•" />
+            <label
+              class="status-total-size"
+              label={createComputed(() => FS.totalDirectorySizeStr())}
+            />
+          </box>
+
           <label class="status-feedback" label={FS.statusText} hexpand={true} xalign={0} />
-          <label class="status-path" label={FS.currentPath} ellipsize={3} maxWidthChars={45} xalign={1} />
+
+          {createComputed(() => {
+            const sel = FS.selectedItem()
+            if (sel) {
+              return (
+                <box class="status-selected-badge" spacing={8} valign={Gtk.Align.CENTER}>
+                  <label class="selected-name" label={sel.name} ellipsize={3} maxWidthChars={25} />
+                  {sel.sizeStr ? <label class="selected-size" label={sel.sizeStr} /> : null}
+                  {sel.dateStr ? <label class="selected-date" label={sel.dateStr} /> : null}
+                </box>
+              )
+            }
+            return (
+              <label
+                class="status-path"
+                label={FS.currentPath}
+                ellipsize={3}
+                maxWidthChars={40}
+                xalign={1}
+              />
+            )
+          })}
         </box>
       </box>
     </window>

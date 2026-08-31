@@ -4,13 +4,19 @@ import FS from "../service/fs"
 import { Lucide } from "../service/icons"
 
 export default function Header() {
+  const promptNewFolder = () => {
+    // Quick inline prompt via Gtk.Dialog or default new folder
+    const timestamp = Math.floor(Date.now() / 1000).toString().slice(-4)
+    FS.createFolder(`New Folder ${timestamp}`)
+  }
+
   return (
     <box class="HeaderBar" spacing={10} valign={Gtk.Align.CENTER}>
       {/* 1. History & Navigation Buttons */}
       <box class="nav-buttons-box" spacing={4} valign={Gtk.Align.CENTER}>
         <button
           class={createComputed(() => `nav-btn ${!FS.canGoBack() ? "disabled" : ""}`)}
-          tooltipText="Go Back (Alt+Left)"
+          tooltipText="Back (Alt+Left)"
           onClicked={() => FS.goBack()}
         >
           <label class="icon" label={Lucide["arrow-left"]} />
@@ -18,7 +24,7 @@ export default function Header() {
 
         <button
           class={createComputed(() => `nav-btn ${!FS.canGoForward() ? "disabled" : ""}`)}
-          tooltipText="Go Forward (Alt+Right)"
+          tooltipText="Forward (Alt+Right)"
           onClicked={() => FS.goForward()}
         >
           <label class="icon" label={Lucide["arrow-right"]} />
@@ -26,7 +32,7 @@ export default function Header() {
 
         <button
           class={createComputed(() => `nav-btn ${!FS.canGoUp() ? "disabled" : ""}`)}
-          tooltipText="Go Up (Alt+Up)"
+          tooltipText="Parent Directory (Alt+Up)"
           onClicked={() => FS.goUp()}
         >
           <label class="icon" label={Lucide["arrow-up"]} />
@@ -50,7 +56,7 @@ export default function Header() {
       >
         <box
           class="breadcrumbs-box"
-          spacing={4}
+          spacing={3}
           valign={Gtk.Align.CENTER}
           $={(self) => {
             let disposeRoot: (() => void) | null = null
@@ -68,12 +74,17 @@ export default function Header() {
 
                 crumbs.forEach((crumb, index) => {
                   const isLast = index === crumbs.length - 1
+                  const isHome = crumb.name === "~"
+
                   const btn = (
                     <button
-                      class={`crumb-btn ${isLast ? "current" : ""}`}
+                      class={`crumb-btn ${isLast ? "current" : ""} ${isHome ? "is-home" : ""}`}
                       onClicked={() => FS.navigateTo(crumb.path)}
                     >
-                      <label label={crumb.name} />
+                      <box spacing={4} valign={Gtk.Align.CENTER}>
+                        {isHome ? <label class="icon home-crumb-icon" label={Lucide["home"]} /> : null}
+                        <label class="crumb-text" label={crumb.name} />
+                      </box>
                     </button>
                   )
                   self.add(btn)
@@ -101,10 +112,30 @@ export default function Header() {
           text={FS.searchQuery}
           onChanged={(self) => FS.setSearchQuery(self.get_text())}
         />
+        {createComputed(() =>
+          FS.searchQuery() ? (
+            <button
+              class="search-clear-btn"
+              valign={Gtk.Align.CENTER}
+              onClicked={() => FS.setSearchQuery("")}
+            >
+              <label class="icon" label={Lucide["x"]} />
+            </button>
+          ) : null
+        )}
       </box>
 
-      {/* 4. Action Buttons (View Mode, Hidden Files, Terminal) */}
+      {/* 4. Action Buttons (New Folder, View Mode, Hidden Files, Terminal) */}
       <box class="action-buttons-box" spacing={4} valign={Gtk.Align.CENTER}>
+        {/* Create Folder */}
+        <button
+          class="action-btn"
+          tooltipText="New Folder (Ctrl+Shift+N)"
+          onClicked={promptNewFolder}
+        >
+          <label class="icon" label={Lucide["folder-plus"]} />
+        </button>
+
         {/* Toggle Grid/List */}
         <button
           class="action-btn"
@@ -114,7 +145,7 @@ export default function Header() {
           <label
             class="icon"
             label={createComputed(() =>
-              FS.viewMode() === "grid" ? Lucide["list"] : Lucide["grid"]
+              FS.viewMode() === "grid" ? Lucide["list"] : Lucide["layout-grid"]
             )}
           />
         </button>
@@ -136,7 +167,7 @@ export default function Header() {
         {/* Open Terminal */}
         <button
           class="action-btn"
-          tooltipText="Open Terminal in current directory"
+          tooltipText="Open Terminal in Folder"
           onClicked={() => FS.openTerminal(FS.currentPath())}
         >
           <label class="icon" label={Lucide["terminal"]} />

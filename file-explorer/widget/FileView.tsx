@@ -141,8 +141,8 @@ export default function FileView() {
                   minChildrenPerLine: 2,
                   selectionMode: Gtk.SelectionMode.NONE,
                   homogeneous: true,
-                  columnSpacing: 10,
-                  rowSpacing: 10,
+                  columnSpacing: 12,
+                  rowSpacing: 12,
                 })
                 flowBox.get_style_context().add_class("file-grid-flowbox")
 
@@ -151,7 +151,7 @@ export default function FileView() {
 
                   const cardBtn = (
                     <button
-                      class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
+                      class={`grid-file-card ${item.isDir ? "is-folder" : "is-file"} type-${item.category} ${isSelected ? "selected" : ""}`}
                       onClicked={() => handleItemClick(item)}
                       onButtonPressEvent={(_, event) => {
                         const [, button] = event.get_button()
@@ -165,12 +165,12 @@ export default function FileView() {
                     >
                       <box
                         orientation={Gtk.Orientation.VERTICAL}
-                        spacing={4}
+                        spacing={6}
                         halign={Gtk.Align.CENTER}
                         valign={Gtk.Align.CENTER}
                       >
                         <label
-                          class={`grid-icon icon ${item.isDir ? "folder-icon" : "file-icon"}`}
+                          class={`grid-icon icon type-${item.category}`}
                           label={item.icon}
                         />
                         <label
@@ -217,7 +217,7 @@ export default function FileView() {
 
                   const rowBtn = (
                     <button
-                      class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} ${isSelected ? "selected" : ""}`}
+                      class={`list-file-row ${item.isDir ? "is-folder" : "is-file"} type-${item.category} ${isSelected ? "selected" : ""}`}
                       onClicked={() => handleItemClick(item)}
                       onButtonPressEvent={(_, event) => {
                         const [, button] = event.get_button()
@@ -231,7 +231,7 @@ export default function FileView() {
                     >
                       <box spacing={12} valign={Gtk.Align.CENTER}>
                         <label
-                          class={`list-icon icon ${item.isDir ? "folder-icon" : "file-icon"}`}
+                          class={`list-icon icon type-${item.category}`}
                           label={item.icon}
                         />
                         <label
