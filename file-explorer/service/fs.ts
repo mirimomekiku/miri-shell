@@ -28,11 +28,38 @@ function formatBytes(bytes: number): string {
 
 function getFileIcon(name: string, isDir: boolean): string {
   if (isDir) {
-    if (name === ".git") return Lucide["folder-git"]
+    const lower = name.toLowerCase()
+    if (lower === ".git") return Lucide["folder-git"]
+    if (["src", "service", "widget", "lib", "components"].includes(lower)) return Lucide["folder-code"] || Lucide["folder"]
+    if (["dist", "build", "out", "target"].includes(lower)) return Lucide["folder-archive"] || Lucide["folder"]
     return Lucide["folder"]
   }
 
   const ext = name.includes(".") ? name.split(".").pop()!.toLowerCase() : ""
+
+  // Spreadsheets & Tables
+  if (["xls", "xlsx", "csv", "tsv", "ods", "numbers"].includes(ext)) {
+    return Lucide["file-spreadsheet"] || Lucide["file-text"]
+  }
+
+  // Documents & Office (PDF, Word, Markdown, Text)
+  if ([
+    "pdf", "doc", "docx", "odt", "rtf", "pages",
+    "ppt", "pptx", "odp", "key",
+    "txt", "md", "markdown", "rst", "log", "tex", "epub"
+  ].includes(ext)) {
+    return Lucide["file-text"]
+  }
+
+  // Code & Config
+  if ([
+    "ts", "tsx", "js", "jsx", "py", "rs", "go", "c", "cpp", "h", "hpp",
+    "java", "kt", "lua", "sh", "bash", "zsh", "fish", "json", "yaml", "yml",
+    "toml", "xml", "html", "css", "scss", "sass", "vue", "svelte", "astro",
+    "graphql", "sql", "php", "rb", "swift", "dart", "env", "lock"
+  ].includes(ext)) {
+    return Lucide["file-code"]
+  }
 
   // Images
   if (["png", "jpg", "jpeg", "webp", "svg", "gif", "bmp", "ico", "tiff", "avif", "psd"].includes(ext)) {
@@ -52,26 +79,6 @@ function getFileIcon(name: string, isDir: boolean): string {
   // Archives
   if (["zip", "tar", "gz", "xz", "7z", "bz2", "rar", "iso", "tgz", "zst", "deb", "rpm", "apk"].includes(ext)) {
     return Lucide["archive"]
-  }
-
-  // Code & Config
-  if ([
-    "ts", "tsx", "js", "jsx", "py", "rs", "go", "c", "cpp", "h", "hpp",
-    "java", "kt", "lua", "sh", "bash", "zsh", "fish", "json", "yaml", "yml",
-    "toml", "xml", "html", "css", "scss", "sass", "vue", "svelte", "astro",
-    "graphql", "sql", "php", "rb", "swift", "dart", "env", "lock"
-  ].includes(ext)) {
-    return Lucide["file-code"]
-  }
-
-  // Documents & Office (PDF, Word, Excel, PowerPoint, Text, Markdown)
-  if ([
-    "pdf", "doc", "docx", "odt", "rtf", "pages",
-    "xls", "xlsx", "csv", "tsv", "ods", "numbers",
-    "ppt", "pptx", "odp", "key",
-    "txt", "md", "markdown", "rst", "log", "tex", "epub"
-  ].includes(ext)) {
-    return Lucide["file-text"]
   }
 
   // Executables & Binaries
