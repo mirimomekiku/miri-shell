@@ -10,13 +10,15 @@ export default function Workspaces() {
       class="Workspaces"
       spacing={6}
       valign={Gtk.Align.CENTER}
-      onScroll={(_, event) => {
+      onScrollEvent={(_, event) => {
+        const [, dir] = event.get_scroll_direction()
         const cur = Hyprland.focusedWorkspace()
-        if (event.direction === Gdk.ScrollDirection.UP) {
+        if (dir === Gdk.ScrollDirection.UP) {
           Hyprland.changeWorkspace(Math.max(1, cur - 1))
-        } else if (event.direction === Gdk.ScrollDirection.DOWN) {
+        } else if (dir === Gdk.ScrollDirection.DOWN) {
           Hyprland.changeWorkspace(Math.min(5, cur + 1))
         }
+        return false
       }}
     >
       {wsList.map((id) => {

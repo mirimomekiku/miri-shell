@@ -7,13 +7,14 @@ export default function AudioWidget() {
       class="Audio"
       valign={Gtk.Align.CENTER}
       onClicked={() => Audio.toggleMute()}
-      onScroll={(_, event) => {
-        const direction = event.direction
-        if (direction === Gdk.ScrollDirection.UP) {
+      onScrollEvent={(_, event) => {
+        const [, dir] = event.get_scroll_direction()
+        if (dir === Gdk.ScrollDirection.UP) {
           Audio.setVolume(Math.min(100, Audio.volume() + 5))
-        } else if (direction === Gdk.ScrollDirection.DOWN) {
+        } else if (dir === Gdk.ScrollDirection.DOWN) {
           Audio.setVolume(Math.max(0, Audio.volume() - 5))
         }
+        return false
       }}
     >
       <box spacing={6} valign={Gtk.Align.CENTER}>
