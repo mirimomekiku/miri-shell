@@ -103,7 +103,8 @@ $SUDO_CMD dnf install -y \
     gtk3-devel \
     gtk-layer-shell-devel \
     gtk4-devel \
-    gtk4-layer-shell-devel
+    gtk4-layer-shell-devel \
+    socat
 
 log_success "Base dependencies installed successfully."
 
@@ -123,15 +124,15 @@ else
     cd astal
 fi
 
-log_info "Step 3: Compiling and installing Astal C/GObject libraries (astal-io, astal-gtk3, astal-gtk4)..."
+log_info "Step 3: Compiling and installing Astal libraries..."
 
 build_and_install_astal_module() {
     local mod_path="$1"
     local mod_name="$2"
 
     if [ ! -d "$mod_path" ]; then
-        log_error "Astal module path '$mod_path' does not exist in the repository."
-        return 1
+        log_warn "Astal module '$mod_path' not found in repository, skipping."
+        return 0
     fi
 
     log_info "Building Astal module: $mod_name ($mod_path)..."
@@ -147,6 +148,15 @@ build_and_install_astal_module() {
 build_and_install_astal_module "lib/astal/io" "astal-io"
 build_and_install_astal_module "lib/astal/gtk3" "astal-gtk3"
 build_and_install_astal_module "lib/astal/gtk4" "astal-gtk4"
+
+# Astal Service libraries (Hyprland, Audio, Media, Tray, Battery, Apps)
+build_and_install_astal_module "lib/hyprland" "astal-hyprland"
+build_and_install_astal_module "lib/wireplumber" "astal-wireplumber"
+build_and_install_astal_module "lib/mpris" "astal-mpris"
+build_and_install_astal_module "lib/tray" "astal-tray"
+build_and_install_astal_module "lib/battery" "astal-battery"
+build_and_install_astal_module "lib/apps" "astal-apps"
+build_and_install_astal_module "lib/network" "astal-network"
 
 # Refresh dynamic linker cache and typelib paths
 $SUDO_CMD ldconfig 2>/dev/null || true

@@ -1,10 +1,10 @@
 import app from "ags/gtk3/app"
 import { Astal, Gtk, Gdk } from "ags/gtk3"
-import { execAsync } from "ags/process"
-import { createPoll } from "ags/time"
+import Workspaces from "./Workspaces"
+import ActiveTitle from "./ActiveTitle"
+import Clock from "./Clock"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-  const time = createPoll("", 1000, "date")
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
   return (
@@ -15,22 +15,21 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <centerbox>
-        <button
-          $type="start"
-          onClicked={() => execAsync("echo hello").then(console.log)}
-          halign={Gtk.Align.CENTER}
-        >
-          <label label="Welcome to AGS!" />
-        </button>
-        <box $type="center" />
-        <button
-          $type="end"
-          onClicked={() => print("hello")}
-          halign={Gtk.Align.CENTER}
-        >
-          <label label={time} />
-        </button>
+      <centerbox class="bar-inner">
+        {/* Left: Workspaces */}
+        <box $type="start" class="bar-section left" spacing={8} halign={Gtk.Align.START}>
+          <Workspaces />
+        </box>
+
+        {/* Center: Focused Window Title */}
+        <box $type="center" class="bar-section center" halign={Gtk.Align.CENTER}>
+          <ActiveTitle />
+        </box>
+
+        {/* Right: Clock & Status */}
+        <box $type="end" class="bar-section right" spacing={8} halign={Gtk.Align.END}>
+          <Clock />
+        </box>
       </centerbox>
     </window>
   )

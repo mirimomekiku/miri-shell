@@ -1,20 +1,101 @@
-// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
-$fg-color: #{"@theme_fg_color"};
-$bg-color: #{"@theme_bg_color"};
+// ==========================================
+// miri-shell Theme & Styles
+// ==========================================
+
+$bg-base: rgba(20, 22, 30, 0.85);
+$bg-surface: rgba(35, 38, 52, 0.7);
+$bg-hover: rgba(55, 60, 80, 0.8);
+$bg-active: #89b4fa;
+
+$fg-main: #cdd6f4;
+$fg-dim: #7f849c;
+$fg-active: #11111b;
+
+$border-color: rgba(255, 255, 255, 0.08);
+$accent-color: #89b4fa;
+$radius: 12px;
+
+* {
+  all: unset;
+  font-family: "JetBrains Mono", "Inter", "Cantarell", sans-serif;
+  font-size: 13px;
+}
 
 window.Bar {
   background: transparent;
-  color: $fg-color;
-  font-weight: bold;
+  color: $fg-main;
 
-  > centerbox {
-    background: $bg-color;
-    border-radius: 10px;
-    margin: 8px;
+  .bar-inner {
+    background: $bg-base;
+    border-bottom: 1px solid $border-color;
+    padding: 4px 12px;
   }
+}
 
-  button {
+// ------------------------------------------
+// Workspaces
+// ------------------------------------------
+.Workspaces {
+  padding: 2px 4px;
+
+  .workspace-btn {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0 8px;
     border-radius: 8px;
-    margin: 2px;
+    background: transparent;
+    color: $fg-dim;
+    transition: all 180ms ease-in-out;
+    margin: 0 2px;
+
+    label {
+      font-weight: bold;
+    }
+
+    &:hover {
+      background: $bg-hover;
+      color: $fg-main;
+    }
+
+    &.occupied {
+      color: $fg-main;
+      background: $bg-surface;
+    }
+
+    &.focused {
+      background: $bg-active;
+      color: $fg-active;
+      font-weight: 800;
+    }
+  }
+}
+
+// ------------------------------------------
+// Active Title
+// ------------------------------------------
+.ActiveTitle {
+  background: $bg-surface;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 4px 16px;
+
+  .title-text {
+    font-weight: 600;
+    color: $fg-main;
+  }
+}
+
+// ------------------------------------------
+// Clock
+// ------------------------------------------
+.Clock {
+  background: $bg-surface;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 4px 12px;
+
+  .time-label {
+    font-weight: 600;
+    color: $fg-main;
   }
 }
