@@ -7,8 +7,10 @@ import NetworkWidget from "./Network"
 import Clock from "./Clock"
 import ControlCenterWidget from "./ControlCenter"
 import MediaCard from "./MediaPopup"
+import NetworkMenu from "./NetworkMenu"
 import ControlCenter from "../service/controlcenter"
 import Media from "../service/media"
+import Network from "../service/network"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP } = Astal.WindowAnchor
@@ -20,6 +22,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP}
       application={app}
+      onKeyPressEvent={(_, event) => {
+        const [, keyval] = event.get_keyval()
+        if (keyval === Gdk.KEY_Escape) {
+          Network.setOpen(false)
+          ControlCenter.setOpen(false)
+          Media.setOpen(false)
+        }
+        return false
+      }}
     >
       <box class="BarContainer" orientation={Gtk.Orientation.VERTICAL} spacing={4} halign={Gtk.Align.CENTER}>
         {/* Top Pill Bar Row */}
@@ -33,7 +44,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           {/* 3. Workspaces (1 2 3 4 5) */}
           <Workspaces />
 
-          {/* 4. Network / Wi-Fi */}
+          {/* 4. Network / Wi-Fi (Click to toggle Wi-Fi Menu) */}
           <NetworkWidget />
 
           {/* 5. Battery */}
@@ -56,6 +67,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           transitionDuration={250}
         >
           <ControlCenterWidget />
+        </revealer>
+
+        {/* 3. Slide-down Wi-Fi Menu (Exclusive to clicking Wi-Fi icon) */}
+        <revealer
+          revealChild={Network.isOpen}
+          transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+          transitionDuration={250}
+        >
+          <NetworkMenu />
         </revealer>
       </box>
     </window>
